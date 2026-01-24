@@ -1,6 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DarkModeService } from './core/services/dark-mode.service';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +7,6 @@ import { DarkModeService } from './core/services/dark-mode.service';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit{
+export class App {
   protected readonly title = signal('TicketsSystem.Client');
-
-    constructor(private darkModeService: DarkModeService) { }
-  
-    ngOnInit(): void {
-      this.darkModeService.ngOnInit();
-    }
 }

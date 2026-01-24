@@ -1,1 +1,52 @@
-<p>main works!</p>
+<section class="flex flex-col gap-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h3 class="text-sm font-medium text-brand-text-muted">System Overview</h3>
+            <h1 class="text-4xl font-bold">Dashboard</h1>
+        </div>
+        <div class="">
+            <app-button label="Create New Ticket" heroIcon="heroPlus"></app-button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-card>
+            <div class="flex justify-between items-start mt-4">
+                <div class="flex p-2 rounded-lg bg-brand-primary/20">
+                    <ng-icon name="heroExclamationCircle" class="text-2xl text-brand-primary"></ng-icon>
+                </div>
+                <small class="text-green-500 font-medium">+4.5%</small>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-brand-text-muted text-sm">Open Incidents</h3>
+                <h2 class="font-bold text-3xl mt-1">12</h2>
+            </div>
+        </app-card>
+
+        <app-card>
+            <div class="flex justify-between items-start mt-4">
+                <div class="flex p-2 rounded-lg bg-amber-500/20">
+                    <ng-icon name="heroEllipsisHorizontal" class="text-2xl text-amber-500"></ng-icon>
+                </div>
+                <small class="text-green-500 font-medium">+12%</small>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-brand-text-muted text-sm">In Progress</h3>
+                <h2 class="font-bold text-3xl mt-1">28</h2>
+            </div>
+        </app-card>
+
+        <app-card>
+            <div class="flex justify-between items-start mt-4">
+                <div class="flex p-2 rounded-lg bg-green-500/20">
+                    <ng-icon name="heroCheckCircle" class="text-2xl text-green-500"></ng-icon>
+                </div>
+                <small class="text-red-500 font-medium">-2%</small>
+            </div>
+            <div class="mt-4">
+                <h3 class="text-brand-text-muted text-sm">Resolved Today</h3>
+                <h2 class="font-bold text-3xl mt-1">156</h2>
+            </div>
+        </app-card>
+    </div>
+</section>
