@@ -1,0 +1,206 @@
+<section class="max-w-5xl mx-auto flex flex-col gap-6">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <button
+                class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
+                <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
+            </button>
+            <div>
+                <div class="flex items-center gap-3">
+                    <h3 class="text-sm font-medium text-brand-text-muted">Ticket Details</h3>
+                    <span
+                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30">MEDIUM</span>
+                </div>
+                <h1 class="text-4xl font-bold flex items-center gap-3">
+                    Login Timeout Error
+                    <span class="text-xl text-brand-text-muted font-normal">#TCK-992</span>
+                </h1>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <app-button label="Edit Details" variant="outline"></app-button>
+            <app-button label="Resolve Ticket" variant="primary"></app-button>
+        </div>
+    </div>
+
+    <!-- AI Summary Box -->
+    <div
+        class="bg-gradient-to-r from-brand-secondary/10 via-brand-surface to-brand-primary/10 rounded-xl border border-brand-secondary/30 p-6 flex gap-4 shadow-sm items-start relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 text-brand-secondary/5 opacity-50 blur-xl pointer-events-none">
+            <ng-icon name="heroSparkles" class="text-[150px]"></ng-icon>
+        </div>
+        <div class="p-3 rounded-xl bg-brand-secondary/20 shadow-inner z-10">
+            <ng-icon name="heroSparkles" class="text-3xl text-brand-secondary"></ng-icon>
+        </div>
+        <div class="z-10 flex-1">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-bold text-brand-text flex items-center gap-2">
+                    AI Summary
+                </h3>
+                <span
+                    class="text-xs text-brand-secondary font-medium tracking-wide uppercase px-2 py-1 bg-brand-secondary/10 rounded-md border border-brand-secondary/20">Auto-Generated</span>
+            </div>
+            <p class="text-brand-text-muted leading-relaxed">
+                The user is experiencing intermittent login timeouts on the mobile application, specifically over
+                cellular networks. Multiple similar reports have arisen in the last 24 hours regarding the
+                authentication endpoint <code
+                    class="bg-brand-bg px-1 rounded text-brand-text text-sm">/api/v1/auth</code>.
+            </p>
+            <div class="mt-4 flex gap-2">
+                <span
+                    class="px-3 py-1 rounded bg-brand-surface border border-brand-border text-xs font-medium text-brand-text">Root
+                    Cause: Network Latency</span>
+                <span
+                    class="px-3 py-1 rounded bg-brand-surface border border-brand-border text-xs font-medium text-brand-text">Suggested
+                    Fix: Increase timeout limit to 15s</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            <!-- Ticket Info -->
+            <div class="bg-brand-surface rounded-xl border border-brand-border p-6 shadow-sm">
+                <h3 class="font-bold text-lg border-b border-brand-border pb-3 mb-4">Description</h3>
+                <p class="text-brand-text leading-relaxed whitespace-pre-line text-sm">
+                    Hi Support,
+
+                    Since yesterday morning, I cannot log in using the Android app while on 5G. It just loads for 10
+                    seconds and throws "Timeout". Works fine on WiFi. My colleagues are experiencing the same.
+
+                    Device: Samsung Galaxy S23
+                    App Version: 2.4.1
+
+                    Thanks!
+                </p>
+                <!-- Attachments -->
+                <div class="mt-6 border-t border-brand-border pt-4">
+                    <h4 class="text-sm font-medium text-brand-text-muted mb-3">Attachments (1)</h4>
+                    <div
+                        class="flex items-center gap-3 p-3 rounded-lg border border-brand-border bg-brand-bg/50 w-fit cursor-pointer hover:bg-brand-bg transition-colors">
+                        <ng-icon name="heroDocument" class="text-2xl text-blue-500"></ng-icon>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium text-brand-text">screenshot_error.png</span>
+                            <span class="text-xs text-brand-text-muted">1.2 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden shadow-sm flex flex-col">
+                <div class="p-4 border-b border-brand-border bg-brand-bg/20 flex items-center gap-2">
+                    <ng-icon name="heroChatBubbleLeftRight" class="text-brand-primary text-xl"></ng-icon>
+                    <h3 class="font-bold text-lg">Activity & Comments</h3>
+                </div>
+
+                <div class="p-6 flex flex-col gap-6 flex-1 bg-brand-bg/10">
+                    <!-- Comment 1 -->
+                    <div class="flex gap-4">
+                        <div
+                            class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                            JD</div>
+                        <div
+                            class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative">
+                            <div
+                                class="absolute top-0 -left-2 w-0 h-0 border-t-[10px] border-t-brand-surface border-l-[10px] border-l-transparent">
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm">John Doe (Support)</span>
+                                <span class="text-xs text-brand-text-muted">2 hours ago</span>
+                            </div>
+                            <p class="text-sm text-brand-text">I've escalated this to the backend team. It seems related
+                                to the recent gateway changes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Comment 2 -->
+                    <div class="flex gap-4 flex-row-reverse">
+                        <div
+                            class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                            B</div>
+                        <div
+                            class="flex-1 bg-brand-primary/10 border border-brand-primary/20 rounded-lg rounded-tr-none p-4 shadow-sm relative">
+                            <div
+                                class="absolute top-0 -right-2 w-0 h-0 border-t-[10px] border-t-brand-primary/10 border-r-[10px] border-r-transparent">
+                            </div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-brand-text-muted">1 hour ago</span>
+                                <span class="font-bold text-sm text-brand-primary">Backend Team</span>
+                            </div>
+                            <p class="text-sm text-brand-text">We've identified the bottleneck. A hotfix is being tested
+                                and will be deployed in 20 mins. Please ask the user to clear app cache later.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comment Input -->
+                <div class="p-4 border-t border-brand-border bg-brand-surface">
+                    <div class="flex gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold shrink-0">
+                            You</div>
+                        <div class="flex-1 flex flex-col gap-3">
+                            <textarea rows="3" placeholder="Write a comment..."
+                                class="w-full px-4 py-3 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors text-sm resize-y"></textarea>
+                            <div class="flex justify-between items-center">
+                                <button
+                                    class="text-brand-text-muted hover:text-brand-text transition-colors p-2 rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroPaperClip"></ng-icon></button>
+                                <app-button label="Add Comment" variant="primary"></app-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="col-span-1 flex flex-col gap-6">
+            <div class="bg-brand-surface rounded-xl border border-brand-border p-6 shadow-sm">
+                <h3 class="font-bold border-b border-brand-border pb-3 mb-4">Details</h3>
+                <div class="flex flex-col gap-4 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Status</span>
+                        <span class="font-medium flex items-center gap-1.5"><span
+                                class="w-2 h-2 rounded-full bg-amber-400"></span>In Progress</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Priority</span>
+                        <span class="font-medium text-blue-500">Medium</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Assignee</span>
+                        <span class="font-medium flex items-center gap-2">
+                            <div
+                                class="w-5 h-5 rounded-full bg-blue-500 text-[10px] text-white flex items-center justify-center">
+                                JD</div>
+                            John Doe
+                        </span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Reporter</span>
+                        <span class="font-medium">Alex Murphy</span>
+                    </div>
+                </div>
+
+                <h3 class="font-bold border-b border-brand-border pb-3 mb-4 mt-6">Timeline</h3>
+                <div class="flex flex-col gap-4 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Created</span>
+                        <span class="font-medium">2 days ago, 10:45 AM</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Updated</span>
+                        <span class="font-medium">1 hour ago</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-muted">Resolution</span>
+                        <span class="font-medium text-brand-text-muted italic">Pending</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

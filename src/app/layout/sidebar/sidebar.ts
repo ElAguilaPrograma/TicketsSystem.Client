@@ -3,6 +3,7 @@ import { AuthService } from '../../core/auth.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   heroShieldCheck,
   heroTicket,
@@ -12,13 +13,14 @@ import {
   heroArrowRightStartOnRectangle,
   heroMoon,
   heroSun,
+  heroSparkles
 } from '@ng-icons/heroicons/outline';
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [NgIcon, IconButton, ConfirmDialog, ButtonComponent],
+  imports: [NgIcon, IconButton, ConfirmDialog, ButtonComponent, RouterLink, RouterLinkActive],
   viewProviders: [
     provideIcons({
       heroShieldCheck,
@@ -28,7 +30,8 @@ import { DarkModeService } from '../../core/darkMode.service';
       heroCog6Tooth,
       heroArrowRightStartOnRectangle,
       heroMoon,
-      heroSun
+      heroSun,
+      heroSparkles
     }),
   ],
   templateUrl: './sidebar.html',

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { CardComponent } from "../../../../shared/components/card/card.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -36,7 +37,13 @@ export interface Ticket {
   styleUrl: './main.css',
 })
 export class Main {
-    tickets: Ticket[] = [
+  private router = inject(Router);
+
+  navigateToCreateTicket() {
+    this.router.navigate(['/ticket-form']);
+  }
+
+  tickets: Ticket[] = [
     {
       id: 'INC-1024',
       subject: 'Server Latency in US-East-1 Region',

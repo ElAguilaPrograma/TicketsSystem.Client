@@ -1,0 +1,165 @@
+<section class="flex flex-col gap-6 h-full">
+    <div class="flex justify-between items-center">
+        <div>
+            <h3 class="text-sm font-medium text-brand-text-muted">Settings</h3>
+            <h1 class="text-4xl font-bold">User Administration</h1>
+        </div>
+        <div class="flex gap-3">
+            <app-button label="Export Users" variant="outline"></app-button>
+            <app-button label="Add New User" variant="primary" heroIcon="heroUserPlus"
+                (click)="navigateToCreateUser()"></app-button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="p-5 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
+            <p class="text-sm text-brand-text-muted font-medium">Total Users</p>
+            <h2 class="text-3xl font-bold mt-1 text-brand-text">143</h2>
+        </div>
+        <div class="p-5 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
+            <p class="text-sm text-brand-text-muted font-medium">Active Now</p>
+            <h2 class="text-3xl font-bold mt-1 text-emerald-500">28</h2>
+        </div>
+        <div class="p-5 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
+            <p class="text-sm text-brand-text-muted font-medium">Admins</p>
+            <h2 class="text-3xl font-bold mt-1 text-brand-secondary">5</h2>
+        </div>
+        <div class="p-5 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
+            <p class="text-sm text-brand-text-muted font-medium">Support Agents</p>
+            <h2 class="text-3xl font-bold mt-1 text-brand-primary">32</h2>
+        </div>
+    </div>
+
+    <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden shadow-sm">
+        <div class="p-4 border-b border-brand-border flex gap-4 bg-brand-bg/30">
+            <div class="relative flex-1">
+                <ng-icon name="heroMagnifyingGlass"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg"></ng-icon>
+                <input type="text" placeholder="Search users by name, email or ID..."
+                    class="w-full pl-10 pr-4 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary transition-colors">
+            </div>
+            <select
+                class="px-4 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary">
+                <option>All Roles</option>
+                <option>Admin</option>
+                <option>Support Manager</option>
+                <option>Support L1</option>
+                <option>User</option>
+            </select>
+            <select
+                class="px-4 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary">
+                <option>Active</option>
+                <option>Inactive</option>
+                <option>Suspended</option>
+            </select>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-brand-bg/20 border-b border-brand-border">
+                        <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-brand-text-muted uppercase tracking-wider">
+                            User Info</th>
+                        <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-brand-text-muted uppercase tracking-wider">
+                            Role</th>
+                        <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-brand-text-muted uppercase tracking-wider">
+                            Status</th>
+                        <th
+                            class="px-6 py-4 text-left text-xs font-semibold text-brand-text-muted uppercase tracking-wider">
+                            Last Login</th>
+                        <th
+                            class="px-6 py-4 text-center text-xs font-semibold text-brand-text-muted uppercase tracking-wider">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center font-bold">
+                                    EM</div>
+                                <div>
+                                    <p class="font-bold text-sm text-brand-text">Elena Martinez</p>
+                                    <p class="text-xs text-brand-text-muted">elena.m@company.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center px-2 py-1 rounded text-xs font-bold text-brand-secondary bg-brand-secondary/10 border border-brand-secondary/20">ADMIN</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="flex items-center gap-1.5 text-sm"><span
+                                    class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Active</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-brand-text-muted">Just now</td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-center gap-2">
+                                <button
+                                    class="p-1.5 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroPencilSquare"></ng-icon></button>
+                                <button
+                                    class="p-1.5 text-brand-text-muted hover:text-red-500 transition-colors rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroTrash"></ng-icon></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center font-bold">
+                                    JD</div>
+                                <div>
+                                    <p class="font-bold text-sm text-brand-text">John Doe</p>
+                                    <p class="text-xs text-brand-text-muted">john.d@company.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span
+                                class="inline-flex items-center px-2 py-1 rounded text-xs font-bold text-blue-500 bg-blue-500/10 border border-blue-500/20">SUPPORT
+                                L1</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="flex items-center gap-1.5 text-sm"><span
+                                    class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Active</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-brand-text-muted">2 hours ago</td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-center gap-2">
+                                <button
+                                    class="p-1.5 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroPencilSquare"></ng-icon></button>
+                                <button
+                                    class="p-1.5 text-brand-text-muted hover:text-red-500 transition-colors rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroTrash"></ng-icon></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div
+            class="px-6 py-4 border-t border-brand-border flex justify-between items-center text-sm text-brand-text-muted bg-brand-surface">
+            <span>Showing 1 to 2 of 143 users</span>
+            <div class="flex gap-1">
+                <button
+                    class="px-3 py-1.5 border border-brand-border rounded hover:bg-brand-bg disabled:opacity-50 transition-colors"
+                    disabled>Previous</button>
+                <button
+                    class="px-3 py-1.5 bg-brand-primary text-white rounded hover:bg-brand-primary/90 transition-colors">1</button>
+                <button
+                    class="px-3 py-1.5 border border-brand-border rounded hover:bg-brand-bg transition-colors">2</button>
+                <button
+                    class="px-3 py-1.5 border border-brand-border rounded hover:bg-brand-bg transition-colors">3</button>
+                <button
+                    class="px-3 py-1.5 border border-brand-border rounded hover:bg-brand-bg transition-colors">Next</button>
+            </div>
+        </div>
+    </div>
+</section>
