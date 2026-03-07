@@ -12,6 +12,7 @@ import { TicketDetails } from './features/tickets/pages/ticket-details/ticket-de
 import { TicketChangeHistory } from './features/tickets/pages/ticket-change-history/ticket-change-history';
 import { UserAdmin } from './features/admin/pages/user-admin/user-admin';
 import { UserForm } from './features/admin/pages/user-form/user-form';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
@@ -20,15 +21,15 @@ export const routes: Routes = [
         path: "",
         component: MainLayout,
         children: [
-            { path: "main", component: Main },
-            { path: "control-panel", component: ControlPanel },
-            { path: "ticket-history", component: TicketHistory },
-            { path: "ticket-form", component: TicketForm },
-            { path: "ticket-edit", component: TicketEdit },
-            { path: "ticket-details", component: TicketDetails },
-            { path: "ticket-change-history", component: TicketChangeHistory },
-            { path: "user-admin", component: UserAdmin },
-            { path: "user-form", component: UserForm }
+            { path: "main", component: Main, canActivate: [authGuard] },
+            { path: "control-panel", component: ControlPanel, canActivate: [authGuard] },
+            { path: "ticket-history", component: TicketHistory, canActivate: [authGuard] },
+            { path: "ticket-form", component: TicketForm, canActivate: [authGuard] },
+            { path: "ticket-edit", component: TicketEdit, canActivate: [authGuard] },
+            { path: "ticket-details", component: TicketDetails, canActivate: [authGuard] },
+            { path: "ticket-change-history", component: TicketChangeHistory, canActivate: [authGuard] },
+            { path: "user-admin", component: UserAdmin, canActivate: [authGuard] },
+            { path: "user-form", component: UserForm, canActivate: [authGuard] }
         ]
     },
 
@@ -37,7 +38,7 @@ export const routes: Routes = [
         component: AltLayout,
         children: [
             { path: "home", component: Home },
-            { path: "login", component: Login },
+            { path: "login", component: Login }
         ]
     }
 ];

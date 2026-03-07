@@ -1,9 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { AuthService } from '../../../../core/auth.service';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { ILogin } from '../../../../api/interfaces/ILogin';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +16,8 @@ import { RouterLink } from "@angular/router";
 export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private authenticationService = inject(AuthenticationService);
+  private router = inject(Router);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,8 +26,13 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Form Submit:', this.loginForm.value);
-      // TODO: Implement actual login logic via AuthService
+      this.authenticationService.login(this.loginForm.value).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          this.router.navigate(['/main']);
+        },
+        error: (error) => alert('Login failed: ' + (error.error?.message || error.statusText || 'Unknown error'))
+      })
     } else {
       this.loginForm.markAllAsTouched();
     }

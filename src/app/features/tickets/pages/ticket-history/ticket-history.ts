@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroEye } from '@ng-icons/heroicons/outline';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-history',
@@ -12,6 +13,14 @@ import { heroEye } from '@ng-icons/heroicons/outline';
   styleUrl: './ticket-history.css',
 })
 export class TicketHistory {
+  constructor(private router: Router) { }
 
+  navigateToTicketHistoy(): void {
+    this.router.navigate(["/ticket-change-history"]);
+  }
+
+  navigateToTicketsDetails(): void{
+    this.router.navigate(["/ticket-details"]);
+  }
 }
 

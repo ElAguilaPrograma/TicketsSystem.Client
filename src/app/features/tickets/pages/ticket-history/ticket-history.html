@@ -55,7 +55,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 cursor-pointer transition-colors">
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 cursor-pointer transition-colors"
+                        (click)="navigateToTicketHistoy()">
                         <td class="px-6 py-4"><span class="text-cyan-400 font-medium">TCK-1024</span></td>
                         <td class="px-6 py-4"><span class="font-medium">Database migration failed on prod</span></td>
                         <td class="px-6 py-4"><span
@@ -68,7 +69,8 @@
                                 class="text-brand-text-muted hover:text-brand-primary"><ng-icon name="heroEye"
                                     class="text-xl"></ng-icon></button></td>
                     </tr>
-                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 cursor-pointer transition-colors">
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 cursor-pointer transition-colors"
+                        (click)="navigateToTicketsDetails()">
                         <td class="px-6 py-4"><span class="text-cyan-400 font-medium">TCK-1023</span></td>
                         <td class="px-6 py-4"><span class="font-medium">Missing translation in French site</span></td>
                         <td class="px-6 py-4"><span
