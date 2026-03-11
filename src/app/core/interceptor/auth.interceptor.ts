@@ -13,11 +13,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     withCredentials: true
   });
 
+  const isAuthEndpoint = req.url.includes('/Authentication/');
+
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
+      if (error.status === 401 && !isAuthEndpoint) {
         authenticationService.logout();
-        router.navigate(['/login']);
+        router.navigate(['/home']);
       }
       return throwError(() => error);
     })
