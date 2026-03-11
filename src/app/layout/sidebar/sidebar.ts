@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { AuthService } from '../../core/auth.service';
+import { AuthenticationService } from '../../api/services/authentication.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -40,7 +40,7 @@ import { DarkModeService } from '../../core/darkMode.service';
 export class Sidebar {
   isOpen = signal(false);
   showConfirmDialog = signal(false);
-  public authService = inject(AuthService);
+  public authenticationService = inject(AuthenticationService);
   public darkModeService = inject(DarkModeService);
 
   toggleSidebar() {
@@ -53,6 +53,6 @@ export class Sidebar {
 
   handleConfirm() {
     this.showConfirmDialog.set(false);
-    this.authService.logout();
+    this.authenticationService.logout();
   }
 }

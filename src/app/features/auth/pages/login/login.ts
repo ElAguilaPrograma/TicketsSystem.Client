@@ -2,7 +2,6 @@ import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { AuthService } from '../../../../core/auth.service';
 import { Router, RouterLink } from "@angular/router";
 import { AuthenticationService } from '../../../../api/services/authentication.service';
 import { ILogin } from '../../../../api/interfaces/ILogin';
@@ -15,7 +14,6 @@ import { ILogin } from '../../../../api/interfaces/ILogin';
 })
 export class Login {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
 
@@ -39,10 +37,6 @@ export class Login {
   }
 
   isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
-
-  login() {
-    this.authService.login();
+    return this.authenticationService.isLoggedIn();
   }
 }

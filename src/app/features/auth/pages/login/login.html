@@ -1,6 +1,5 @@
 <section class="flex items-center justify-center min-h-full p-4">
     <app-button label="Go back" class="absolute top-28 left-6" routerLink="/home"></app-button>
-    <app-button label="Dev Mode" class="absolute top-28 right-6" (click)="login()" routerLink="/main"></app-button>
     <app-card title="Welcome Back" subtitle="Please sign in to continue" class="w-full max-w-md">
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
 

@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { IconButton } from "../../shared/components/icon-button/icon-button";
 import { NavigationEnd, RouterModule } from '@angular/router';
-import { AuthService } from '../../core/auth.service';
+import { AuthenticationService } from '../../api/services/authentication.service';
 import { NgClass } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowRightEndOnRectangle } from '@ng-icons/heroicons/outline';
@@ -22,7 +22,7 @@ import { DarkModeService } from '../../core/darkMode.service';
 })
 export class Header {
   public darkModeService = inject(DarkModeService);
-  public authService = inject(AuthService);
+  public authService = inject(AuthenticationService);
   private router = inject(Router);
   private events$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),

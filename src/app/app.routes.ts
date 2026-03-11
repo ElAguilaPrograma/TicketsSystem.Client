@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Home } from './features/home/home';
 import { Login } from './features/auth/pages/login/login';
-import { Main } from './features/tickets/pages/main/main';
+import { Main } from './features/admin/pages/dashboard/dashboard';
 import { AltLayout } from './layout/alt-layout/alt-layout';
 import { ControlPanel } from './features/tickets/pages/control-panel/control-panel';
 import { TicketHistory } from './features/tickets/pages/ticket-history/ticket-history';

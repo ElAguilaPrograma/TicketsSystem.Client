@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIconComponent, provideIcons } from '@ng-icons/core';
 import { heroArrowRight, heroTicket, heroLockClosed, heroLockOpen } from '@ng-icons/heroicons/outline';
-import { AuthService } from '../../core/auth.service';
+import { AuthenticationService } from '../../api/services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +12,5 @@ import { AuthService } from '../../core/auth.service';
   viewProviders: [provideIcons({ heroArrowRight, heroTicket, heroLockClosed, heroLockOpen })]
 })
 export class Home {
-  public authService = inject(AuthService);
-
+  public authService = inject(AuthenticationService);
 }

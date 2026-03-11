@@ -33,8 +33,8 @@ export interface Ticket {
       heroEllipsisVertical
     })
   ],
-  templateUrl: './main.html',
-  styleUrl: './main.css',
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css',
 })
 export class Main {
   private router = inject(Router);
