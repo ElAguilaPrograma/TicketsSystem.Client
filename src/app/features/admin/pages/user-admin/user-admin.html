@@ -14,19 +14,19 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
             <p class="text-sm text-brand-text-muted font-medium">Total Users</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-text">143</h2>
+            <h2 class="text-2xl font-bold mt-1 text-brand-text">{{ usersCount.totalUsers }}</h2>
         </div>
         <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
-            <p class="text-sm text-brand-text-muted font-medium">Active Now</p>
-            <h2 class="text-2xl font-bold mt-1 text-emerald-500">28</h2>
+            <p class="text-sm text-brand-text-muted font-medium">Users</p>
+            <h2 class="text-2xl font-bold mt-1 text-emerald-500">{{ usersCount.users }}</h2>
         </div>
         <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
             <p class="text-sm text-brand-text-muted font-medium">Admins</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-secondary">5</h2>
+            <h2 class="text-2xl font-bold mt-1 text-brand-secondary">{{ usersCount.admins }}</h2>
         </div>
         <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
             <p class="text-sm text-brand-text-muted font-medium">Support Agents</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-primary">32</h2>
+            <h2 class="text-2xl font-bold mt-1 text-brand-primary">{{ usersCount.agents }}</h2>
         </div>
     </div>
 

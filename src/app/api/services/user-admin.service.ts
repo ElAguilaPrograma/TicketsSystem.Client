@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { IUser } from "../interfaces/IUser";
 import { IPagedResult } from "../interfaces/IPagedResult";
 import { Observable } from "rxjs";
+import { IUserCount } from "../interfaces/IUserCount";
 
 @Injectable({
     providedIn: 'root'
@@ -24,5 +25,9 @@ export class UserAdminService {
 
     activateAndDeactivateUsers(userId: string) {
         return this.http.post(`${this.apiUrl}/deactivateauser/${userId}`, { withCredentials: true });
+    }
+
+    getUsersCount() {
+        return this.http.get<IUserCount>(`${this.apiUrl}/getuserscount`, { withCredentials: true });
     }
 }

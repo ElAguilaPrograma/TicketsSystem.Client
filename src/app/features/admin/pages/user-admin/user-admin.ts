@@ -8,6 +8,7 @@ import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { IUser } from '../../../../api/interfaces/IUser';
 import { ConfirmDialog } from "../../../../shared/components/confirm-dialog/confirm-dialog";
 import { FormsModule } from '@angular/forms';
+import { IUserCount } from '../../../../api/interfaces/IUserCount';
 
 @Component({
   selector: 'app-user-admin',
@@ -39,9 +40,11 @@ export class UserAdmin implements OnInit {
   roleFilterSelected: string = 'All Roles';
   isActiveFilterSelected: string = 'All';
   querySearchSelected: string = '';
+  usersCount: IUserCount = {} as IUserCount;
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadUsersCount();
   }
 
   navigateToCreateUser() {
@@ -125,5 +128,18 @@ export class UserAdmin implements OnInit {
     this.querySearchSelected = query;
     this.currentPage = 1;
     this.loadUsers();
+  }
+
+  loadUsersCount(): void {
+    this.userAdminService.getUsersCount().subscribe({
+      next: (res) => {
+        this.usersCount = res;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = 'Error loading users count: ' + err;
+        console.error('[UserAdmin] Error loading users count:', err);
+      }
+    });
   }
 }
