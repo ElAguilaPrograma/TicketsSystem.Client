@@ -35,18 +35,23 @@
             <div class="relative flex-1">
                 <ng-icon name="heroMagnifyingGlass"
                     class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg"></ng-icon>
-                <input type="text" placeholder="Search users by name, email or ID..."
+                <input type="search" placeholder="Search users by name, email or ID..." (input)="searchUsers($event.target.value)"
                     class="w-full pl-10 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary transition-colors">
             </div>
-            <select
-                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat">
+            <select 
+                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat"
+                [(ngModel)]="roleFilterSelected"
+                (change)="loadUsers()">
                 <option>All Roles</option>
                 <option>Admin</option>
                 <option>Agent</option>
                 <option>User</option>
             </select>
             <select
-                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat">
+                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat"
+                [(ngModel)]="isActiveFilterSelected"
+                (change)="loadUsers()">
+                <option>All</option>
                 <option>Active</option>
                 <option>Inactive</option>
             </select>

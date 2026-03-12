@@ -13,6 +13,8 @@ import { TicketChangeHistory } from './features/tickets/pages/ticket-change-hist
 import { UserAdmin } from './features/admin/pages/user-admin/user-admin';
 import { UserForm } from './features/admin/pages/user-form/user-form';
 import { authGuard } from './core/guards/auth.guard';
+import { Unauthorized } from './errors/unauthorized/unauthorized';
+import { Forbidden } from './errors/forbidden/forbidden';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
@@ -38,7 +40,9 @@ export const routes: Routes = [
         component: AltLayout,
         children: [
             { path: "home", component: Home },
-            { path: "login", component: Login }
+            { path: "login", component: Login },
+            { path: "unauthorized", component: Unauthorized },
+            { path: "forbidden", component: Forbidden }
         ]
-    }
+    },
 ];

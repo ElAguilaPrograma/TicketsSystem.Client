@@ -1,0 +1,40 @@
+<!-- Toast Container — renders in top-right corner -->
+<div class="toast-wrapper">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast-card border-l-4"
+      [class]="'toast-card border-l-4 ' + accentClass(toast.type)"
+      role="alert"
+    >
+      <!-- Type Icon -->
+      <div
+        class="toast-icon-badge"
+        [class]="'toast-icon-badge ' + iconBgClass(toast.type)"
+      >
+        <ng-icon [name]="iconName(toast.type)" class="text-lg" />
+      </div>
+
+      <!-- Text content -->
+      <div class="toast-body">
+        <span class="toast-title">{{ toast.title }}</span>
+
+        @if (toast.subtitle) {
+          <span class="toast-subtitle">{{ toast.subtitle }}</span>
+        }
+
+        <span class="toast-message">{{ toast.message }}</span>
+      </div>
+
+      <!-- Dismiss button -->
+      @if (toast.dismissible !== false) {
+        <button
+          class="toast-close-btn"
+          (click)="dismiss(toast.id)"
+          aria-label="Cerrar notificación"
+        >
+          <ng-icon name="heroXMark" class="text-base" />
+        </button>
+      }
+    </div>
+  }
+</div>

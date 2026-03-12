@@ -7,10 +7,11 @@ import { Router } from '@angular/router';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { IUser } from '../../../../api/interfaces/IUser';
 import { ConfirmDialog } from "../../../../shared/components/confirm-dialog/confirm-dialog";
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-admin',
-  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog],
+  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule],
   viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower })],
   templateUrl: './user-admin.html',
   styleUrl: './user-admin.css',
@@ -35,6 +36,9 @@ export class UserAdmin implements OnInit {
   isOpen = signal(false);
   showConfirmDialog = signal(false);
   selectedUserId: string = '';
+  roleFilterSelected: string = 'All Roles';
+  isActiveFilterSelected: string = 'All';
+  querySearchSelected: string = '';
 
   ngOnInit(): void {
     this.loadUsers();
@@ -72,7 +76,7 @@ export class UserAdmin implements OnInit {
   loadUsers(): void {
     this.isLoading = true;
     this.disabledBotton = true;
-    this.userAdminService.getUsers(this.currentPage, this.pageSize).subscribe({
+    this.userAdminService.getUsers(this.currentPage, this.pageSize, this.roleFilterSelected, this.isActiveFilterSelected, this.querySearchSelected).subscribe({
       next: (res) => {
         this.users = res.data;
         this.totalCount = res.totalCount;
@@ -115,5 +119,11 @@ export class UserAdmin implements OnInit {
         console.error('[UserAdmin] Error activating and deactivating user:', err);
       }
     });
+  }
+
+  searchUsers(query: string) {
+    this.querySearchSelected = query;
+    this.currentPage = 1;
+    this.loadUsers();
   }
 }

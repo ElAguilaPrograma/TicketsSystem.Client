@@ -1,0 +1,61 @@
+import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { Router } from "@angular/router";
+import { catchError, throwError } from "rxjs";
+import { ToastService } from "../services/toast.service";
+
+export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
+    const router = inject(Router);
+    const toastService = inject(ToastService);
+
+    return next(req).pipe(
+        catchError((error: HttpErrorResponse) => {
+            switch (error.status) {
+                case 400:
+                    toastService.error(
+                        'Invalid application',
+                        error.error?.message ?? error.message,
+                        'Bad Request'
+                    );
+                    break;
+                case 401:
+                    toastService.warning(
+                        'Invalid or expired session.',
+                        'Please, log in',
+                        'Unauthorized'
+                    );
+                    router.navigate(['/unauthorized']);
+                    break;
+                case 403:
+                    toastService.warning(
+                        'Access denied',
+                        'You do not have permission to perform this action.',
+                        'Forbidden'
+                    );
+                    router.navigate(['/forbidden']);
+                    break;
+                case 404:
+                    toastService.info(
+                        'Not found',
+                        'The requested resource does not exist.',
+                        'Not Found'
+                    );
+                    break;
+                case 500:
+                    toastService.error(
+                        'Server error',
+                        'Something went wrong, please try again later.',
+                        'Internal Server Error'
+                    );
+                    break;
+                default:
+                    toastService.error(
+                        'Unexpected error',
+                        'Something went wrong, please try again.',
+                        `Error ${error.status}`
+                    );
+            }
+            return throwError(() => error);
+        })
+    );
+}
