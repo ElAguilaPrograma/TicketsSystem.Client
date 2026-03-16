@@ -99,7 +99,7 @@
                             <div class="flex justify-center gap-1">
                                 <button
                                     class="p-1 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"><ng-icon
-                                        name="heroPencilSquare"></ng-icon></button>
+                                        name="heroPencilSquare" (click)="navigateToEditUser(user.userId)"></ng-icon></button>
                                 <button [ngClass]="{
                                             'p-1 text-brand-text-muted hover:text-green-500 transition-colors rounded hover:bg-brand-bg': !user.isActive,
                                             'p-1 text-brand-text-muted hover:text-red-500 transition-colors rounded hover:bg-brand-bg': user.isActive

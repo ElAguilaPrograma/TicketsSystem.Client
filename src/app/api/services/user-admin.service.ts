@@ -1,11 +1,12 @@
 import { Injectable, inject } from "@angular/core";
 import { environment } from "../../env/enviroment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { IUser } from "../interfaces/IUser";
+import { IUser } from "../interfaces/user/IUser";
 import { IPagedResult } from "../interfaces/IPagedResult";
 import { Observable } from "rxjs";
-import { IUserCount } from "../interfaces/IUserCount";
-import { ICreateUser } from "../interfaces/ICreateUser";
+import { IUserCount } from "../interfaces/user/IUserCount";
+import { ICreateUser } from "../interfaces/user/ICreateUser";
+import { IUpdateUser } from "../interfaces/user/IUpdateUser";
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +27,14 @@ export class UserAdminService {
 
     createUser(user: ICreateUser) {
         return this.http.post(`${this.apiUrl}/createuser`, user, { withCredentials: true });
+    }
+
+    updateUser(user: IUpdateUser, userId: string) {
+        return this.http.put(`${this.apiUrl}/updateuser/${userId}`, user, { withCredentials: true });
+    }
+
+    getUserById(userId: string) {
+        return this.http.get<IUser>(`${this.apiUrl}/getuserbyid/${userId}`, { withCredentials: true });
     }
 
     exportUsers(role: string = "All Roles", isActive: string = "All", timezoneOffsetMinutes: number): Observable<Blob> {

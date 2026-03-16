@@ -15,6 +15,7 @@ import { UserForm } from './features/admin/pages/user-form/user-form';
 import { authGuard } from './core/guards/auth.guard';
 import { Unauthorized } from './errors/unauthorized/unauthorized';
 import { Forbidden } from './errors/forbidden/forbidden';
+import { UserEditForm } from './features/admin/pages/user-edit-form/user-edit-form';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
@@ -31,7 +32,8 @@ export const routes: Routes = [
             { path: "ticket-details", component: TicketDetails, canActivate: [authGuard] },
             { path: "ticket-change-history", component: TicketChangeHistory, canActivate: [authGuard] },
             { path: "user-admin", component: UserAdmin, canActivate: [authGuard] },
-            { path: "user-form", component: UserForm, canActivate: [authGuard] }
+            { path: "user-form", component: UserForm, canActivate: [authGuard] },
+            { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [authGuard] },
         ]
     },
 

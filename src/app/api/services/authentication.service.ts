@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from "@angular/core";
-import { ILogin } from "../interfaces/ILogin";
+import { ILogin } from "../interfaces/user/ILogin";
 import { environment } from "../../env/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { catchError, of, switchMap, tap } from "rxjs";

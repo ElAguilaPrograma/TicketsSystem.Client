@@ -5,10 +5,10 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
-import { IUser } from '../../../../api/interfaces/IUser';
+import { IUser } from '../../../../api/interfaces/user/IUser';
 import { ConfirmDialog } from "../../../../shared/components/confirm-dialog/confirm-dialog";
 import { FormsModule } from '@angular/forms';
-import { IUserCount } from '../../../../api/interfaces/IUserCount';
+import { IUserCount } from '../../../../api/interfaces/user/IUserCount';
 import { Select } from '../../../../shared/components/select/select';
 import { Searchbar } from "../../../../shared/components/searchbar/searchbar";
 
@@ -103,9 +103,9 @@ export class UserAdmin implements OnInit {
         this.setPageNumbers();
         this.isLoading = false;
         this.disabledBotton = false;
-        
+
         this.cdr.detectChanges();
-        
+
         console.log('[UserAdmin] Users loaded successfully:', this.users);
       },
       error: (err) => {
@@ -182,5 +182,9 @@ export class UserAdmin implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  navigateToEditUser(userId: string): void {
+    this.router.navigate(['/user-edit-form', userId]);
   }
 }

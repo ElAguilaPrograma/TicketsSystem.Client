@@ -17,7 +17,7 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
-import { ICurrentUserInfo } from '../../api/interfaces/ICurrentUserInfo';
+import { ICurrentUserInfo } from '../../api/interfaces/user/ICurrentUserInfo';
 
 @Component({
   selector: 'app-sidebar',
