@@ -142,4 +142,30 @@ export class UserAdmin implements OnInit {
       }
     });
   }
+
+  exportUsers(): void {
+    this.isLoading = true;
+    this.disabledBotton = true;
+    const timezoneOffsetMinutes = new Date().getTimezoneOffset();
+    this.userAdminService.exportUsers(this.roleFilterSelected, this.isActiveFilterSelected, timezoneOffsetMinutes).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'users.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.isLoading = false;
+        this.disabledBotton = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMessage = 'Error exporting users: ' + err;
+        console.error('[UserAdmin] Error exporting users:', err);
+        this.isLoading = false;
+        this.disabledBotton = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 }

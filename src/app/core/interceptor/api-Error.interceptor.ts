@@ -14,7 +14,7 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
                 case 400:
                     toastService.error(
                         'Invalid application',
-                        error.error?.message ?? error.message,
+                        error.error.errors.join(', '),
                         'Bad Request'
                     );
                     break;

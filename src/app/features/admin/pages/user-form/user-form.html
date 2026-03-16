@@ -15,62 +15,80 @@
             <h2 class="text-xl font-bold">User Information</h2>
             <p class="text-sm text-brand-text-muted mt-1">Provide the necessary details and assign roles carefully.</p>
         </div>
-        <div class="p-6 space-y-6">
+        <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+            <div class="p-6 space-y-6">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-brand-text">First Name <span
+                    <label class="block text-sm font-medium text-brand-text">Full Name <span
                             class="text-red-500">*</span></label>
-                    <input type="text" placeholder="e.g., Jane"
+                    <input type="text" placeholder="e.g., Jane" formControlName="fullName"
                         class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
+
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-brand-text">Last Name <span
+                    <label class="block text-sm font-medium text-brand-text">Email Address <span
                             class="text-red-500">*</span></label>
-                    <input type="text" placeholder="e.g., Doe"
+                    <input type="email" placeholder="jane.doe@company.com" formControlName="email"
                         class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
                 </div>
-            </div>
 
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-brand-text">Email Address <span
-                        class="text-red-500">*</span></label>
-                <input type="email" placeholder="jane.doe@company.com"
-                    class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Role <span
+                                class="text-red-500">*</span></label>
+                        <select formControlName="role"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
+                            <option value="user" selected>User</option>
+                            <option value="agent">Agent</option>
+                            <option value="admin">Administrator</option>
+                            <option value="super-admin">Super Administrator</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Account Status</label>
+                        <select formControlName="isActive"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
+                            <option value="true" selected>Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Password <span
+                                class="text-red-500">*</span></label>
+                        <input type="password" placeholder="********" formControlName="password"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"
+                            [class.border-red-500]="createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched">
+                        @if (createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched) {
+                            <p class="text-sm text-red-500">Password must be at least 5 characters long, contain at least
+                                one uppercase letter, one lowercase letter, and one number.</p>
+                        }
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Confirm Password <span
+                                class="text-red-500">*</span></label>
+                        <input type="password" placeholder="********" formControlName="confirmPassword"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"
+                            [class.border-red-500]="createUserForm.get('confirmPassword')?.invalid && createUserForm.get('confirmPassword')?.touched">
+                        @if (createUserForm.get('confirmPassword')?.invalid && createUserForm.get('confirmPassword')?.touched) {
+                            <p class="text-sm text-red-500">Passwords do not match.</p>
+                        }
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!--
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-brand-text">Role <span
-                            class="text-red-500">*</span></label>
-                    <select
-                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
-                        <option value="user" selected>User</option>
-                        <option value="support_l1">Support L1</option>
-                        <option value="support_mgr">Support Manager</option>
-                        <option value="admin">Administrator</option>
-                    </select>
+                    <label class="block text-sm font-medium text-brand-text">Notes (Optional)</label>
+                    <textarea rows="3" placeholder="Department, extra requirements..."
+                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"></textarea>
                 </div>
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-brand-text">Account Status</label>
-                    <select
-                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
-                        <option value="active" selected>Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
-                </div>
+                -->
             </div>
-
-            <div class="space-y-2">
-                <label class="block text-sm font-medium text-brand-text">Notes (Optional)</label>
-                <textarea rows="3" placeholder="Department, extra requirements..."
-                    class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"></textarea>
+            <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
+                <app-button label="Cancel" variant="outline" [routerLink]="['/user-admin']"></app-button>
+                <app-button label="Create User" variant="primary" type="submit" [disabled]="createUserForm.invalid"></app-button>
             </div>
-
-        </div>
-        <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
-            <app-button label="Cancel" variant="outline" [routerLink]="['/user-admin']"></app-button>
-            <app-button label="Create User" variant="primary"></app-button>
-        </div>
+        </form>
     </div>
 </section>

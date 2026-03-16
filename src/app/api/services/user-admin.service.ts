@@ -5,6 +5,7 @@ import { IUser } from "../interfaces/IUser";
 import { IPagedResult } from "../interfaces/IPagedResult";
 import { Observable } from "rxjs";
 import { IUserCount } from "../interfaces/IUserCount";
+import { ICreateUser } from "../interfaces/ICreateUser";
 
 @Injectable({
     providedIn: 'root'
@@ -21,6 +22,18 @@ export class UserAdminService {
             .set('isActive', isActive)
             .set('querySearch', querySearch);
         return this.http.get<IPagedResult<IUser>>(`${this.apiUrl}/getallusers`, { params, withCredentials: true });
+    }
+
+    createUser(user: ICreateUser) {
+        return this.http.post(`${this.apiUrl}/createuser`, user, { withCredentials: true });
+    }
+
+    exportUsers(role: string = "All Roles", isActive: string = "All", timezoneOffsetMinutes: number): Observable<Blob> {
+        const params = new HttpParams()
+            .set('role', role)
+            .set('isActive', isActive)
+            .set('timezoneOffsetMinutes', timezoneOffsetMinutes.toString());
+        return this.http.get(`${this.apiUrl}/exportusers`, { params, responseType: 'blob', withCredentials: true });
     }
 
     activateAndDeactivateUsers(userId: string) {

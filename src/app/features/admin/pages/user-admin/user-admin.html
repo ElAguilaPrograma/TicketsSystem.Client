@@ -5,7 +5,7 @@
             <h1 class="text-4xl font-bold">User Administration</h1>
         </div>
         <div class="flex gap-3">
-            <app-button label="Export Users" variant="outline"></app-button>
+            <app-button label="Export Users" variant="outline" (click)="exportUsers()"></app-button>
             <app-button label="Add New User" variant="primary" heroIcon="heroUserPlus"
                 (click)="navigateToCreateUser()"></app-button>
         </div>

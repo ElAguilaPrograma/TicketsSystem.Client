@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthenticationService } from '../../api/services/authentication.service';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { IconButton } from '../../shared/components/icon-button/icon-button';
@@ -17,6 +17,7 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
+import { ICurrentUserInfo } from '../../api/interfaces/ICurrentUserInfo';
 
 @Component({
   selector: 'app-sidebar',
@@ -37,11 +38,16 @@ import { DarkModeService } from '../../core/darkMode.service';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class Sidebar {
+export class Sidebar implements OnInit {
   isOpen = signal(false);
   showConfirmDialog = signal(false);
   public authenticationService = inject(AuthenticationService);
   public darkModeService = inject(DarkModeService);
+  public userInfo = signal<ICurrentUserInfo | null>(null);
+
+  ngOnInit(): void {
+    this.getUserInfo();
+  }
 
   toggleSidebar() {
     this.isOpen.update((v) => !v);
@@ -54,5 +60,17 @@ export class Sidebar {
   handleConfirm() {
     this.showConfirmDialog.set(false);
     this.authenticationService.logout();
+  }
+
+  getUserInfo() {
+    this.authenticationService.checkStatus$().subscribe({
+      next: (res) => {
+        this.userInfo.set(res);
+        console.log(this.userInfo());
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
   }
 }

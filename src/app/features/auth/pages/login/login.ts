@@ -4,7 +4,6 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { Router, RouterLink } from "@angular/router";
 import { AuthenticationService } from '../../../../api/services/authentication.service';
-import { ILogin } from '../../../../api/interfaces/ILogin';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +15,7 @@ export class Login {
   private fb = inject(FormBuilder);
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
+  errorMessage: string = '';
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -29,7 +29,11 @@ export class Login {
           console.log('Login successful:', response);
           this.router.navigate(['/main']);
         },
-        error: (error) => alert('Login failed: ' + (error.error?.message || error.statusText || 'Unknown error'))
+        error: (err) => {
+          this.errorMessage = err.error.error
+          console.log('Login failed:', this.errorMessage);
+          alert('Login failed: ' + (this.errorMessage || err.statusText || 'Unknown error'));
+        }
       })
     } else {
       this.loginForm.markAllAsTouched();

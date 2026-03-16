@@ -20,7 +20,6 @@ export class AuthenticationService {
 
     login(credentials: ILogin) {
         return this.http.post<any>(`${this.apiUrlAuth}/login`, credentials, { withCredentials: true }).pipe(
-            tap((res) => console.log(res)),
             switchMap(() => this.checkStatus$())
         );
     }

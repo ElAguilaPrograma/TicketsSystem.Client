@@ -66,8 +66,8 @@
             </div>
 
             <div class="flex flex-col grow min-w-0">
-                <span class="font-semibold text-sm truncate">Eduardo Muñoz</span>
-                <span class="text-gray-500 text-xs truncate">Admin</span>
+                <span class="font-semibold text-sm truncate">{{ userInfo()?.fullName }}</span>
+                <span class="text-gray-500 text-xs truncate">{{ userInfo()?.role }}</span>
             </div>
 
             <app-icon-button (click)="openConfirmDialog()">
