@@ -1,9 +1,11 @@
-<div [class]="containerClasses" [style.width]="width !== 'full' && width !== 'auto' ? width : null">
-    <ng-icon name="heroMagnifyingGlass" [class]="iconClasses"></ng-icon>
-    <input type="text" [class]="inputClasses" [placeholder]="placeholder" [(ngModel)]="searchValue"
-        (keyup.enter)="onSearch()" />
-    
-    @if (searchValue() !== '') {
-        <ng-icon name="heroXMark" [class]="iconClasses" class="rounded-full hover:bg-brand-primary/20 transition-colors" (click)="onClear()"></ng-icon>
+<div class="relative" [class.flex-1]="width === 'full'"
+    [style.width]="width !== 'full' && width !== 'auto' ? width : null">
+    <ng-icon name="heroMagnifyingGlass"
+        class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg"></ng-icon>
+    <input type="search" [placeholder]="placeholder" [(ngModel)]="searchValue" (input)="onSearch()" class="w-full pl-10 pr-10 py-2.5 rounded-lg bg-brand-surface border border-brand-border 
+        text-brand-text focus:outline-none focus:border-brand-primary transition-colors
+        appearance-none">
+    @if (searchValue()) {
+        <ng-icon name="heroXMark" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg cursor-pointer" (click)="onClear()"></ng-icon>
     }
 </div>

@@ -8,8 +8,8 @@
             <h1 class="text-lg font-bold leading-tight">Incident Dashboard</h1>
             }
             @else {
-            <h1 class="text-lg font-semibold leading-tight">Tickets System</h1>
-            <small>Manage your tickets</small>
+            <h1 class="text-lg font-semibold leading-tight">SupportFlow AI</h1>
+            <small>Manage your incidents</small>
             }
         </div>
     </div>
@@ -26,7 +26,7 @@
         </nav>
         }
         @if(this.authService.isLoggedIn() && !isHomeRoute()) {
-            <app-searchbar size="small" placeholder="Search tickets..." width="full" (search)="onSearchValueChange($event)"></app-searchbar>
+            <app-searchbar placeholder="Search tickets..." width="full" (search)="onSearchValueChange($event)"></app-searchbar>
             @if (notificationsCount() == 0) {
                 <app-icon-button>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

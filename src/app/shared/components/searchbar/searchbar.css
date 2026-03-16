@@ -1,0 +1,6 @@
+/* Hide native search clear button across browsers */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}

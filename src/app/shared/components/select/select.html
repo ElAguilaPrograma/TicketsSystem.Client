@@ -11,12 +11,14 @@
             [value]="value()"
             [disabled]="disabled"
             (change)="onSelectChange($event)"
-            class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors appearance-none"
+            class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-brand-border 
+                    focus:border-brand-primary focus:outline-none 
+                    transition-colors appearance-none"
             [class]="selectVariantClass">
             @for (option of options(); track option.value ?? option) {
                 <option [value]="option.value !== undefined ? option.value : option">{{ option.label !== undefined ? option.label : option }}</option>
             }
         </select>
-        <ng-icon name="heroChevronDown" class="absolute right-3 top-1/2 transform -translate-y-1/2"></ng-icon>
+        <ng-icon name="heroChevronDown" class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"></ng-icon>
     </div>
 </div>

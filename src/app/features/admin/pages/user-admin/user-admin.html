@@ -5,7 +5,8 @@
             <h1 class="text-4xl font-bold">User Administration</h1>
         </div>
         <div class="flex gap-3">
-            <app-button label="Export Users" variant="outline" (click)="exportUsers()"></app-button>
+            <app-button label="Export Users" variant="outline" heroIcon="heroDocumentChartBar" 
+                (click)="exportUsers()"></app-button>
             <app-button label="Add New User" variant="primary" heroIcon="heroUserPlus"
                 (click)="navigateToCreateUser()"></app-button>
         </div>
@@ -32,17 +33,17 @@
 
     <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm">
         <div class="p-4 border-b border-brand-border flex gap-4 bg-brand-bg/30">
-            <div class="relative flex-1">
-                <ng-icon name="heroMagnifyingGlass"
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg"></ng-icon>
-                <input type="search" placeholder="Search users by name, email or ID..."
-                    (input)="searchUsers($event.target.value)"
-                    class="w-full pl-10 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary transition-colors">
+            <div class="w-11/12">
+                <app-searchbar placeholder="Search users by name, email or ID..." (search)="searchUsers($event)"></app-searchbar>
+            </div>  
+            <div class="w-3/12">
+                <app-select label="Role" [options]="roleOptions" [showLabel]="false" variant="surface"
+                    [(ngModel)]="roleFilterSelected" (ngModelChange)="loadUsers()"></app-select>
             </div>
-            <app-select label="Role" [options]="roleOptions" [showLabel]="false" variant="surface"
-                [(ngModel)]="roleFilterSelected" (ngModelChange)="loadUsers()"></app-select>
-            <app-select label="Status" [options]="isActiveOptions" [showLabel]="false" variant="surface"
-                [(ngModel)]="isActiveFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+            <div class="w-3/12">
+                <app-select label="Status" [options]="isActiveOptions" [showLabel]="false" variant="surface"
+                    [(ngModel)]="isActiveFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+            </div>
         </div>
 
         <div class="overflow-x-auto min-h-[340px]">

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower } from '@ng-icons/heroicons/outline';
+import { heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { IUser } from '../../../../api/interfaces/IUser';
@@ -10,11 +10,12 @@ import { ConfirmDialog } from "../../../../shared/components/confirm-dialog/conf
 import { FormsModule } from '@angular/forms';
 import { IUserCount } from '../../../../api/interfaces/IUserCount';
 import { Select } from '../../../../shared/components/select/select';
+import { Searchbar } from "../../../../shared/components/searchbar/searchbar";
 
 @Component({
   selector: 'app-user-admin',
-  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select],
-  viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower })],
+  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select, Searchbar],
+  viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar })],
   templateUrl: './user-admin.html',
   styleUrl: './user-admin.css',
 })
