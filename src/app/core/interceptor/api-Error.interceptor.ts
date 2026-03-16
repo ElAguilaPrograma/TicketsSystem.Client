@@ -10,11 +10,23 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            let errorMessage = "An unexpected error occurred.";
+
+            if (error.error) {
+                if (typeof error.error === 'string') {
+                    errorMessage = error.error;
+                } else if (error.error.message) {
+                    errorMessage = error.error.message;
+                } else if (error.error.errors) {
+                    errorMessage = Object.values(error.error.errors).flat().join(', ');
+                }
+            }
+            
             switch (error.status) {
                 case 400:
                     toastService.error(
                         'Invalid application',
-                        error.error.errors.join(', '),
+                        errorMessage,
                         'Bad Request'
                     );
                     break;

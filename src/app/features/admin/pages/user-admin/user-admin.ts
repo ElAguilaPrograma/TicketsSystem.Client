@@ -11,10 +11,11 @@ import { FormsModule } from '@angular/forms';
 import { IUserCount } from '../../../../api/interfaces/user/IUserCount';
 import { Select } from '../../../../shared/components/select/select';
 import { Searchbar } from "../../../../shared/components/searchbar/searchbar";
+import { CardComponent } from '../../../../shared/components/card/card.component';
 
 @Component({
   selector: 'app-user-admin',
-  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select, Searchbar],
+  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select, Searchbar, CardComponent],
   viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar })],
   templateUrl: './user-admin.html',
   styleUrl: './user-admin.css',
@@ -128,9 +129,10 @@ export class UserAdmin implements OnInit {
 
   activateAndDeactivateUsers(userId: string) {
     this.userAdminService.activateAndDeactivateUsers(userId).subscribe({
-      next: () => {
+      next: (res) => {
         this.loadUsers();
         this.closeConfirmDialog();
+        console.log('[UserAdmin] User activated/deactivated successfully:', res);
       },
       error: (err) => {
         this.errorMessage = 'Error activating and deactivating user: ' + err;

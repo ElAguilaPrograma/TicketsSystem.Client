@@ -13,22 +13,10 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
-            <p class="text-sm text-brand-text-muted font-medium">Total Users</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-text">{{ usersCount.totalUsers }}</h2>
-        </div>
-        <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
-            <p class="text-sm text-brand-text-muted font-medium">Users</p>
-            <h2 class="text-2xl font-bold mt-1 text-emerald-500">{{ usersCount.users }}</h2>
-        </div>
-        <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
-            <p class="text-sm text-brand-text-muted font-medium">Admins</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-secondary">{{ usersCount.admins }}</h2>
-        </div>
-        <div class="p-4 border border-brand-border rounded-xl bg-brand-surface shadow-sm">
-            <p class="text-sm text-brand-text-muted font-medium">Support Agents</p>
-            <h2 class="text-2xl font-bold mt-1 text-brand-primary">{{ usersCount.agents }}</h2>
-        </div>
+        <app-card label="Total Users" [value]="usersCount.totalUsers"></app-card>
+        <app-card label="Users" [value]="usersCount.users" valueClass="text-emerald-500"></app-card>
+        <app-card label="Admins" [value]="usersCount.admins" valueClass="text-brand-secondary"></app-card>
+        <app-card label="Support Agents" [value]="usersCount.agents" valueClass="text-brand-primary"></app-card>
     </div>
 
     <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm">
