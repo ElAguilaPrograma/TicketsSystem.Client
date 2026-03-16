@@ -7,10 +7,11 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { UserValidations } from '../../../../core/validations/user-validations.validator';
+import { Select } from '../../../../shared/components/select/select';
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, ButtonComponent, NgIcon, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ButtonComponent, NgIcon, RouterLink, ReactiveFormsModule, Select],
   viewProviders: [provideIcons({ heroArrowLeft })],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
@@ -21,10 +22,21 @@ export class UserForm {
   private userAdminService = inject(UserAdminService);
   private userValidations = inject(UserValidations);
 
+  statusOptions = [
+    { label: 'Active', value: true },
+    { label: 'Inactive', value: false }
+  ];
+
+  roleOptions = [
+    { label: 'User', value: 'User' },
+    { label: 'Agent', value: 'Agent' },
+    { label: 'Administrator', value: 'Admin' }
+  ];
+
   createUserForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    role: ['user', [Validators.required, this.userValidations.validateRole()]],
+    role: ['User', [Validators.required, this.userValidations.validateRole()]],
     isActive: [true, [Validators.required]],
     password: ['', [Validators.required, this.userValidations.validatePassword()]],
     confirmPassword: ['', [Validators.required, this.userValidations.validateConfirmPassword()]]

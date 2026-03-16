@@ -1,88 +1,22 @@
-<div [class]="selectClasses" role="combobox" [attr.aria-expanded]="isOpen">
-  <!-- Label -->
-  @if (label) {
-  <label class="block text-sm font-semibold text-brand-text dark:text-white mb-2">
-    {{ label }}
-    @if (required) {
-    <span class="text-red-500">*</span>
+<div class="space-y-2">
+    @if (showLabel()) {
+        <label class="block text-sm font-medium text-brand-text">{{ label() }}
+            @if (required()) {
+                <span class="text-red-500">*</span>
+            }
+        </label>
     }
-  </label>
-  }
-
-  <!-- Select Button -->
-  <button
-    type="button"
-    [class]="inputClasses"
-    [disabled]="disabled"
-    (click)="toggleDropdown()"
-    [attr.aria-label]="label || 'Select option'"
-    #selectButton
-  >
-    <span class="block truncate">{{ getSelectedLabel() }}</span>
-    <svg
-      class="w-5 h-5 transition-transform duration-200"
-      [class.rotate-180]="isOpen"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-    </svg>
-  </button>
-
-  <!-- Dropdown Menu -->
-  @if (isOpen && !disabled) {
-  <div [class]="dropdownClasses" role="listbox">
-    <!-- Search Input (if searchable) -->
-    @if (searchable) {
-    <div class="sticky top-0 p-3 bg-white dark:bg-gray-800 border-b border-brand-border dark:border-gray-700">
-      <input
-        type="text"
-        placeholder="Buscar..."
-        class="w-full px-3 py-2 text-sm border-2 border-brand-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary dark:bg-gray-700 dark:text-white"
-        [value]="searchQuery"
-        (input)="onSearchInput($event.target.value)"
-        (click)="$event.stopPropagation()"
-      />
+    <div class="relative">
+        <select
+            [value]="value()"
+            [disabled]="disabled"
+            (change)="onSelectChange($event)"
+            class="w-full pl-4 pr-10 py-2.5 rounded-lg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors appearance-none"
+            [class]="selectVariantClass">
+            @for (option of options(); track option.value ?? option) {
+                <option [value]="option.value !== undefined ? option.value : option">{{ option.label !== undefined ? option.label : option }}</option>
+            }
+        </select>
+        <ng-icon name="heroChevronDown" class="absolute right-3 top-1/2 transform -translate-y-1/2"></ng-icon>
     </div>
-    }
-
-    <!-- Options List -->
-    @if (filteredOptions.length > 0) {
-    @for (option of filteredOptions; track option.value) {
-    <button
-      type="button"
-      [class.bg-brand-primary/10]="selectedValue === option.value"
-      [class.bg-gray-50 dark:bg-gray-700]="selectedValue !== option.value"
-      [class.hover:bg-brand-primary/20]="!option.disabled"
-      [class.opacity-50 dark:opacity-50 cursor-not-allowed]="option.disabled"
-      [disabled]="option.disabled"
-      class="w-full text-left px-4 py-2.5 transition-colors duration-150 border-b border-gray-100 dark:border-gray-700 last:border-b-0 text-sm font-medium text-brand-text dark:text-white"
-      (click)="selectOption(option)"
-      role="option"
-      [attr.aria-selected]="selectedValue === option.value"
-    >
-      <div class="flex items-center justify-between">
-        <span>{{ option.label }}</span>
-        @if (selectedValue === option.value) {
-        <svg class="w-5 h-5 text-brand-primary dark:text-brand-primary" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        }
-      </div>
-    </button>
-    }
-    } @else {
-    <div class="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm font-medium">
-      Sin opciones disponibles
-    </div>
-    }
-  </div>
-  }
-
-  <!-- Error Message -->
-  @if (errorMessage) {
-  <p class="mt-2 text-sm font-medium text-red-500 dark:text-red-400">{{ errorMessage }}</p>
-  }
 </div>
-

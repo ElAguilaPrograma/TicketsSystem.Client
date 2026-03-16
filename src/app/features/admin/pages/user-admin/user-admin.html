@@ -35,26 +35,14 @@
             <div class="relative flex-1">
                 <ng-icon name="heroMagnifyingGlass"
                     class="absolute left-3 top-1/2 -translate-y-1/2 text-brand-text-muted text-lg"></ng-icon>
-                <input type="search" placeholder="Search users by name, email or ID..." (input)="searchUsers($event.target.value)"
+                <input type="search" placeholder="Search users by name, email or ID..."
+                    (input)="searchUsers($event.target.value)"
                     class="w-full pl-10 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary transition-colors">
             </div>
-            <select 
-                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat"
-                [(ngModel)]="roleFilterSelected"
-                (change)="loadUsers()">
-                <option>All Roles</option>
-                <option>Admin</option>
-                <option>Agent</option>
-                <option>User</option>
-            </select>
-            <select
-                class="pl-3 pr-7 py-2 rounded-lg bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus:border-brand-primary appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-size-[1em_1em] bg-position-[right_0.5rem_center] bg-no-repeat"
-                [(ngModel)]="isActiveFilterSelected"
-                (change)="loadUsers()">
-                <option>All</option>
-                <option>Active</option>
-                <option>Inactive</option>
-            </select>
+            <app-select label="Role" [options]="roleOptions" [showLabel]="false" variant="surface"
+                [(ngModel)]="roleFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+            <app-select label="Status" [options]="isActiveOptions" [showLabel]="false" variant="surface"
+                [(ngModel)]="isActiveFilterSelected" (ngModelChange)="loadUsers()"></app-select>
         </div>
 
         <div class="overflow-x-auto min-h-[340px]">
@@ -80,47 +68,46 @@
                 </thead>
                 <tbody>
                     @for (user of users; track user.userId) {
-                        <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors">
-                            <td class="px-4 py-2.5">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center font-bold text-xs">
-                                        EM</div>
-                                    <div>
-                                        <p class="font-bold text-sm text-brand-text">{{ user.fullName }}</p>
-                                        <p class="text-xs text-brand-text-muted">{{ user.email }}</p>
-                                    </div>
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors">
+                        <td class="px-4 py-2.5">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center font-bold text-xs">
+                                    EM</div>
+                                <div>
+                                    <p class="font-bold text-sm text-brand-text">{{ user.fullName }}</p>
+                                    <p class="text-xs text-brand-text-muted">{{ user.email }}</p>
                                 </div>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <span
-                                    class="flex w-4/12 justify-center items-center px-1.5 py-0.5 rounded text-[11px] 
+                            </div>
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <span class="flex w-4/12 justify-center items-center px-1.5 py-0.5 rounded text-[11px] 
                                     font-bold text-brand-secondary bg-brand-secondary/10 border 
                                     border-brand-secondary/20">{{ user.role }}</span>
-                            </td>
-                            <td class="px-4 py-2.5">
-                                <span class="flex items-center gap-1.5 text-xs">
-                                    <span [ngClass]="'w-2 h-2 rounded-full ' + (user.isActive ? 'bg-emerald-500' : 'bg-red-500')"></span>
-                                    {{ user.isActive ? 'Active' : 'Inactive' }}
-                                </span>
-                            </td>
-                            <td class="px-4 py-2.5 text-xs text-brand-text-muted"> {{ user.createdAt | date: 'MMM dd, yyyy HH:mm' }}</td>
-                            <td class="px-4 py-2.5">
-                                <div class="flex justify-center gap-1">
-                                    <button
-                                        class="p-1 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"><ng-icon
-                                            name="heroPencilSquare"></ng-icon></button>
-                                    <button
-                                        [ngClass]="{
+                        </td>
+                        <td class="px-4 py-2.5">
+                            <span class="flex items-center gap-1.5 text-xs">
+                                <span
+                                    [ngClass]="'w-2 h-2 rounded-full ' + (user.isActive ? 'bg-emerald-500' : 'bg-red-500')"></span>
+                                {{ user.isActive ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2.5 text-xs text-brand-text-muted"> {{ user.createdAt | date: 'MMM dd, yyyy
+                            HH:mm' }}</td>
+                        <td class="px-4 py-2.5">
+                            <div class="flex justify-center gap-1">
+                                <button
+                                    class="p-1 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"><ng-icon
+                                        name="heroPencilSquare"></ng-icon></button>
+                                <button [ngClass]="{
                                             'p-1 text-brand-text-muted hover:text-green-500 transition-colors rounded hover:bg-brand-bg': !user.isActive,
                                             'p-1 text-brand-text-muted hover:text-red-500 transition-colors rounded hover:bg-brand-bg': user.isActive
-                                        }"
-                                        (click)="selectedUserId = user.userId; openConfirmDialog()">
-                                        <ng-icon name="heroPower"></ng-icon>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                        }" (click)="selectedUserId = user.userId; openConfirmDialog()">
+                                    <ng-icon name="heroPower"></ng-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -131,8 +118,7 @@
             <div class="flex gap-1">
                 <button
                     class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === 1 || disabledBotton"
-                    (click)="goToPreviousPage()">
+                    [disabled]="currentPage === 1 || disabledBotton" (click)="goToPreviousPage()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
@@ -140,18 +126,15 @@
                 </button>
 
                 @for (page of pageNumbers; track page) {
-                    <button
-                        class="px-3 py-1.5 border border-brand-border rounded disabled:cursor-not-allowed transition-colors"
-                        [class.bg-brand-primary]="page === currentPage"
-                        [class.text-white]="page === currentPage"
-                        [class.hover\:bg-brand-bg]="page !== currentPage"
-                        (click)="goToPage(page)"
-                        disabled>{{ page }}</button>
+                <button
+                    class="px-3 py-1.5 border border-brand-border rounded disabled:cursor-not-allowed transition-colors"
+                    [class.bg-brand-primary]="page === currentPage" [class.text-white]="page === currentPage"
+                    [class.hover\:bg-brand-bg]="page !== currentPage" (click)="goToPage(page)" disabled>{{ page
+                    }}</button>
                 }
                 <button
                     class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === totalPages || disabledBotton"
-                    (click)="goToNextPage()">
+                    [disabled]="currentPage === totalPages || disabledBotton" (click)="goToNextPage()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -162,5 +145,6 @@
     </div>
 </section>
 
-<app-confirm-dialog [(isOpen)]="showConfirmDialog" title="Activate / Deactivate user" message="Do you want to change the user status?"
-    (confirm)="activateAndDeactivateUsers(selectedUserId)" (cancel)="closeConfirmDialog()"></app-confirm-dialog>
+<app-confirm-dialog [(isOpen)]="showConfirmDialog" title="Activate / Deactivate user"
+    message="Do you want to change the user status?" (confirm)="activateAndDeactivateUsers(selectedUserId)"
+    (cancel)="closeConfirmDialog()"></app-confirm-dialog>

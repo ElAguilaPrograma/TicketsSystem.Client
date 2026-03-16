@@ -9,10 +9,11 @@ import { IUser } from '../../../../api/interfaces/IUser';
 import { ConfirmDialog } from "../../../../shared/components/confirm-dialog/confirm-dialog";
 import { FormsModule } from '@angular/forms';
 import { IUserCount } from '../../../../api/interfaces/IUserCount';
+import { Select } from '../../../../shared/components/select/select';
 
 @Component({
   selector: 'app-user-admin',
-  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule],
+  imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select],
   viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower })],
   templateUrl: './user-admin.html',
   styleUrl: './user-admin.css',
@@ -41,6 +42,19 @@ export class UserAdmin implements OnInit {
   isActiveFilterSelected: string = 'All';
   querySearchSelected: string = '';
   usersCount: IUserCount = {} as IUserCount;
+
+  roleOptions = [
+    { label: 'All Roles', value: 'All Roles' },
+    { label: 'Admin', value: 'Admin' },
+    { label: 'Agent', value: 'Agent' },
+    { label: 'User', value: 'User' }
+  ];
+
+  isActiveOptions = [
+    { label: 'All', value: 'All' },
+    { label: 'Active', value: 'Active' },
+    { label: 'Inactive', value: 'Inactive' }
+  ];
 
   ngOnInit(): void {
     this.loadUsers();
