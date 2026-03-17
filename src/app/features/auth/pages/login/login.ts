@@ -4,6 +4,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { Router, RouterLink } from "@angular/router";
 import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserInfo';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,6 @@ export class Login {
   private fb = inject(FormBuilder);
   private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
-  errorMessage: string = '';
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -25,14 +25,15 @@ export class Login {
   onSubmit() {
     if (this.loginForm.valid) {
       this.authenticationService.login(this.loginForm.value).subscribe({
-        next: (response) => {
-          console.log('Login successful:', response);
-          this.router.navigate(['/main']);
+        next: (res) => {
+          if (res?.role === 'Admin') {
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.router.navigate(['/ticket-main']);
+          }
         },
         error: (err) => {
-          this.errorMessage = err.error.error
-          console.log('Login failed:', this.errorMessage);
-          alert('Login failed: ' + (this.errorMessage || err.statusText || 'Unknown error'));
+          alert('Login failed: ' + (err.error.error || err.statusText || 'Unknown error'));
         }
       })
     } else {

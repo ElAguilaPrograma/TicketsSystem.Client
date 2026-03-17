@@ -16,6 +16,7 @@ import { authGuard } from './core/guards/auth.guard';
 import { Unauthorized } from './errors/unauthorized/unauthorized';
 import { Forbidden } from './errors/forbidden/forbidden';
 import { UserEditForm } from './features/admin/pages/user-edit-form/user-edit-form';
+import { TicketMain } from './features/tickets/pages/ticket-main/ticket-main';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
@@ -24,7 +25,8 @@ export const routes: Routes = [
         path: "",
         component: MainLayout,
         children: [
-            { path: "main", component: Main, canActivate: [authGuard] },
+            { path: "dashboard", component: Main, canActivate: [authGuard] },
+            { path: "ticket-main", component: TicketMain, canActivate: [authGuard] },
             { path: "control-panel", component: ControlPanel, canActivate: [authGuard] },
             { path: "ticket-history", component: TicketHistory, canActivate: [authGuard] },
             { path: "ticket-form", component: TicketForm, canActivate: [authGuard] },

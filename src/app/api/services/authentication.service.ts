@@ -4,6 +4,7 @@ import { environment } from "../../env/enviroment";
 import { HttpClient } from "@angular/common/http";
 import { catchError, of, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
+import { ICurrentUserInfo } from "../interfaces/user/ICurrentUserInfo";
 
 @Injectable({
     providedIn: 'root'
@@ -19,13 +20,13 @@ export class AuthenticationService {
     readonly userRole = computed(() => this.currentUser()?.role ?? '');
 
     login(credentials: ILogin) {
-        return this.http.post<any>(`${this.apiUrlAuth}/login`, credentials, { withCredentials: true }).pipe(
+        return this.http.post<ICurrentUserInfo>(`${this.apiUrlAuth}/login`, credentials, { withCredentials: true }).pipe(
             switchMap(() => this.checkStatus$())
         );
     }
 
     checkStatus$() {
-        return this.http.get<any>(`${this.apiUrlAuth}/getcurrentuser`, { withCredentials: true }).pipe(
+        return this.http.get<ICurrentUserInfo>(`${this.apiUrlAuth}/getcurrentuser`, { withCredentials: true }).pipe(
             tap(user => this.currentUser.set(user)),
             catchError(() => {
                 this.currentUser.set(null);

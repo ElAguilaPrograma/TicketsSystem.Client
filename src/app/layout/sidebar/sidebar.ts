@@ -13,7 +13,8 @@ import {
   heroArrowRightStartOnRectangle,
   heroMoon,
   heroSun,
-  heroSparkles
+  heroSparkles,
+  heroHome
 } from '@ng-icons/heroicons/outline';
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
@@ -32,7 +33,8 @@ import { ICurrentUserInfo } from '../../api/interfaces/user/ICurrentUserInfo';
       heroArrowRightStartOnRectangle,
       heroMoon,
       heroSun,
-      heroSparkles
+      heroSparkles,
+      heroHome
     }),
   ],
   templateUrl: './sidebar.html',

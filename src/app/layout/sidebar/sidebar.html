@@ -20,17 +20,11 @@
     </div>
 
     <nav class="flex flex-col gap-1 px-4 grow mt-2">
-        <a routerLink="/main"
+        <a routerLink="/ticket-main"
             routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
             class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
-            <ng-icon name="heroChartBar" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
-            <span class="text-sm font-medium">Dashboard</span>
-        </a>
-        <a routerLink="/control-panel"
-            routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
-            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
-            <ng-icon name="heroSparkles" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
-            <span class="text-sm font-medium">Control Panel</span>
+            <ng-icon name="heroHome" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+            <span class="text-sm font-medium">Ticket Main</span>
         </a>
         <a routerLink="/ticket-history"
             routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
@@ -38,12 +32,28 @@
             <ng-icon name="heroTicket" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
             <span class="text-sm font-medium">Ticket History</span>
         </a>
-        <a routerLink="/user-admin"
-            routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
-            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
-            <ng-icon name="heroUser" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
-            <span class="text-sm font-medium">User Admin</span>
-        </a>
+        @if (userInfo()?.role === 'Admin' || userInfo()?.role === 'Agent') {
+            <a routerLink="/control-panel"
+                routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
+                <ng-icon name="heroSparkles" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+                <span class="text-sm font-medium">Control Panel</span>
+            </a>
+        }
+        @if (userInfo()?.role === 'Admin') {
+            <a routerLink="/dashboard"
+                routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
+                <ng-icon name="heroChartBar" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a routerLink="/user-admin"
+                routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
+                <ng-icon name="heroUser" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+                <span class="text-sm font-medium">User Admin</span>
+            </a>
+        } 
     </nav>
 
     <div class="px-3 py-3">
