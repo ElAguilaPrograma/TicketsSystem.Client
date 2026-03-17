@@ -35,6 +35,10 @@ export class AuthenticationService {
         );
     }
 
+    getCurrentUserRole() {
+        return this.currentUser()?.role;
+    }
+
     logout() {
         this.http.post(`${this.apiUrlAuth}/logout`, {}, { withCredentials: true })
             .subscribe({ error: () => { } });

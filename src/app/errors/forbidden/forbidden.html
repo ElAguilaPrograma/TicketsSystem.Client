@@ -1,22 +1,15 @@
-<div class="min-h-full bg-brand-bg flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-  <div
-    class="max-w-md w-full space-y-8 text-center bg-white dark:bg-[#101828] p-10 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
-    <div>
-      <h2 class="mt-6 text-9xl font-extrabold text-brand-secondary">
-        403
-      </h2>
-      <h3 class="mt-4 text-3xl font-bold text-brand-text tracking-tight">
-        Access Forbidden
-      </h3>
-      <p class="mt-4 text-base text-gray-500 dark:text-gray-400">
-        Sorry, you don't have permission to access this area. If you believe this is an error, please contact your
-        administrator.
+<div class="h-full flex flex-col justify-center items-center px-6 py-12">
+  <app-card class=" max-w-md w-full text-center shadow-lg border-brand-border/40">
+    <div class="flex flex-col items-center py-6 px-2">
+      <div class="w-20 h-20 bg-brand-secondary/10 text-brand-secondary rounded-full flex items-center justify-center mb-6 ring-8 ring-brand-secondary/5">
+        <ng-icon name="heroShieldExclamation" class="text-4xl"></ng-icon>
+      </div>
+      <h1 class="text-5xl font-extrabold text-brand-secondary tracking-tight mb-3">403</h1>
+      <h2 class="text-2xl font-bold text-brand-text mb-3">Access Forbidden</h2>
+      <p class="text-brand-text-muted mb-8 leading-relaxed">
+        Sorry, you don't have permission to access this area. If you believe this is an error, please contact your administrator.
       </p>
+      <app-button routerLink="/" label="Go Back Home" variant="secondary" heroIcon="heroArrowSmallLeft" class="w-full sm:w-auto"></app-button>
     </div>
-    <div class="mt-8">
-      <app-button routerLink="/" label="Go Back Home" class="" type="button" variant="secondary" heroIcon="heroArrowSmallLeft">
-
-      </app-button>
-    </div>
-  </div>
+  </app-card>
 </div>
