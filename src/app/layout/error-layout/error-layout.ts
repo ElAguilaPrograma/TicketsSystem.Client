@@ -9,6 +9,5 @@ import { DarkModeService } from '../../core/darkMode.service';
   styleUrl: './error-layout.css',
 })
 export class ErrorLayout {
-  // Injecting the service to initialize the theme when this layout is loaded
   public darkModeService = inject(DarkModeService);
 }

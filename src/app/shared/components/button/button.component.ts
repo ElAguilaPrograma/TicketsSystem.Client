@@ -11,7 +11,7 @@ import { NgIcon } from "@ng-icons/core";
 export class ButtonComponent {
     @Input() label: string = '';
     @Input() type: 'button' | 'submit' | 'reset' = 'button';
-    @Input() variant: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' = 'primary';
+    @Input() variant: 'primary' | 'secondary' | 'thirdary' | 'outline' | 'ghost' | 'danger' = 'primary';
     @Input() fullWidth: boolean = false;
     @Input() disabled: boolean = false;
     @Input() icon?: string; // name of the icon (e.g., PrimeIcons or arbitrary class)
@@ -30,6 +30,9 @@ export class ButtonComponent {
                 break;
             case 'secondary':
                 variantClasses = 'bg-brand-secondary text-white hover:bg-brand-secondary/90 focus:ring-brand-secondary shadow-lg shadow-brand-secondary/30';
+                break;
+            case 'thirdary':
+                variantClasses = 'bg-brand-thirdary text-white hover:bg-brand-thirdary/90 focus:ring-brand-thirdary shadow-lg shadow-brand-thirdary/30';
                 break;
             case 'outline':
                 variantClasses = 'border-2 border-brand-primary text-brand-primary hover:bg-brand-primary/10 focus:ring-brand-primary';

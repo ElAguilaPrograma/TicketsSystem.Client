@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { catchError, of, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { ICurrentUserInfo } from "../interfaces/user/ICurrentUserInfo";
+import { SignalRService } from "./signalR.service";
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +14,9 @@ export class AuthenticationService {
     private readonly apiUrlAuth = `${environment.apiUrl}/Authentication`;
     private http = inject(HttpClient);
     private router = inject(Router);
+    private signalRService = inject(SignalRService);
 
-    private currentUser = signal<any | null>(null);
+    private currentUser = signal<ICurrentUserInfo | null>(null);
 
     readonly isLoggedIn = computed(() => this.currentUser() !== null);
     readonly userRole = computed(() => this.currentUser()?.role ?? '');
@@ -27,9 +29,15 @@ export class AuthenticationService {
 
     checkStatus$() {
         return this.http.get<ICurrentUserInfo>(`${this.apiUrlAuth}/getcurrentuser`, { withCredentials: true }).pipe(
-            tap(user => this.currentUser.set(user)),
+            tap(user => {
+                this.currentUser.set(user);
+                if (user) {
+                    this.signalRService.startConnection();
+                }
+            }),
             catchError(() => {
                 this.currentUser.set(null);
+                this.signalRService.stopConnection();
                 return of(null);
             })
         );
@@ -39,9 +47,20 @@ export class AuthenticationService {
         return this.currentUser()?.role;
     }
 
+    getCurrentUserId() {
+        return this.currentUser()?.userId;
+    }
+
+    getCurrentUserInfo() {
+        return this.currentUser();
+    }
+
     logout() {
         this.http.post(`${this.apiUrlAuth}/logout`, {}, { withCredentials: true })
-            .subscribe({ error: () => { } });
+            .subscribe({ 
+                next: () => this.signalRService.stopConnection(),
+                error: () => this.signalRService.stopConnection() 
+            });
         this.currentUser.set(null);
         this.router.navigate(['/home']);
     }

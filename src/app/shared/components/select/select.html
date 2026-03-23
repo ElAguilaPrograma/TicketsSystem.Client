@@ -16,7 +16,11 @@
                     transition-colors appearance-none"
             [class]="selectVariantClass">
             @for (option of options(); track option.value ?? option) {
-                <option [value]="option.value !== undefined ? option.value : option">{{ option.label !== undefined ? option.label : option }}</option>
+                <option 
+                    [value]="option.value !== undefined ? option.value : option"
+                    [selected]="value() == (option.value !== undefined ? option.value : option)">
+                    {{ option.label !== undefined ? option.label : option }}
+                </option>
             }
         </select>
         <ng-icon name="heroChevronDown" class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"></ng-icon>

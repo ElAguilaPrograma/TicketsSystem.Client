@@ -60,7 +60,16 @@ export class Select implements ControlValueAccessor {
     const target = event.target as HTMLSelectElement;
     let newVal: any = target.value;
     if (newVal === 'true') newVal = true;
-    if (newVal === 'false') newVal = false;
+    else if (newVal === 'false') newVal = false;
+    else if (!isNaN(Number(newVal)) && newVal.trim() !== '') {
+        const isNumericOption = this.options().some(opt => {
+            const optVal = opt.value !== undefined ? opt.value : opt;
+            return typeof optVal === 'number';
+        });
+        if (isNumericOption) {
+            newVal = Number(newVal);
+        }
+    }
 
     this.value.set(newVal);
     this.onChange(newVal);

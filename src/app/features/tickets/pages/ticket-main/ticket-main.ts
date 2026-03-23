@@ -1,60 +1,79 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroPlus, heroEye, heroTicket } from '@ng-icons/heroicons/outline';
-
+import { heroPlus, heroEye, heroTicket, heroArrowTopRightOnSquare } from '@ng-icons/heroicons/outline';
+import { Label } from '../../../../shared/components/label/label';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { Searchbar } from '../../../../shared/components/searchbar/searchbar';
 import { Select } from '../../../../shared/components/select/select';
+import { ICurrentUserTicketsCount } from '../../../../api/interfaces/tickets/ICurrentUserTicketsCount';
+import { TicketService } from '../../../../api/services/ticket.service';
+import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 
 @Component({
   selector: 'app-ticket-main',
-  imports: [CommonModule, FormsModule, NgIcon, ButtonComponent, CardComponent, Searchbar, Select],
-  viewProviders: [provideIcons({ heroPlus, heroEye, heroTicket })],
+  imports: [CommonModule, FormsModule, NgIcon, ButtonComponent, CardComponent, Searchbar, Select, Label],
+  viewProviders: [provideIcons({ heroPlus, heroEye, heroTicket, heroArrowTopRightOnSquare })],
   templateUrl: './ticket-main.html',
   styleUrl: './ticket-main.css',
 })
 export class TicketMain implements OnInit {
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
+  private ticketService = inject(TicketService);
 
-  // Mock data for UI demonstration
-  ticketsCount = {
-    total: 12,
-    open: 4,
-    inProgress: 3,
-    closed: 5
+  ticketsCount: ICurrentUserTicketsCount = {
+    totalTickets: 0,
+    ticketsOpen: 0,
+    ticketsReopen: 0,
+    ticketsClosed: 0
   };
 
   statusFilter: string = 'All';
+  priorityFilter: string = 'All';
   searchQuery: string = '';
+  currentUserOnly: boolean = true;
+
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalCount: number = 0;
+  totalPages: number = 0;
+
+  pageNumbers: number[] = [];
 
   statusOptions = [
     { label: 'All Statuses', value: 'All' },
     { label: 'Open', value: 'Open' },
-    { label: 'In Progress', value: 'In Progress' },
-    { label: 'Closed', value: 'Closed' }
+    { label: 'In Progress', value: 'InProgress' },
+    { label: 'On Hold', value: 'OnHold' },
+    { label: 'Closed', value: 'Closed' },
+    { label: 'Reopened', value: 'Reopened' }
   ];
 
-  recentTickets: any[] = [
-    { id: '1001', subject: 'Login issue on mobile app', status: 'Open', priority: 'High', createdAt: new Date(Date.now() - 3600000 * 2) },
-    { id: '1002', subject: 'Request for software installation', status: 'In Progress', priority: 'Medium', createdAt: new Date(Date.now() - 86400000) },
-    { id: '1003', subject: 'Unable to access shared drive', status: 'Closed', priority: 'High', createdAt: new Date(Date.now() - 86400000 * 2) },
-    { id: '1004', subject: 'Monitor display flickering', status: 'Open', priority: 'Low', createdAt: new Date(Date.now() - 86400000 * 3) }
+  priorityOptions = [
+    { label: 'All Priorities', value: 'All' },
+    { label: 'Critical', value: 'Critical' },
+    { label: 'High', value: 'High' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'Low', value: 'Low' }
   ];
+
+  recentTickets: IReadTickets[] = [];
 
   ngOnInit(): void {
     this.loadTickets();
+    this.loadTicketsCount();
   }
 
   navigateToCreateTicket(): void {
     this.router.navigate(['/ticket-form']);
   }
 
-  viewTicket(id: string): void {
-    this.router.navigate(['/ticket-details', id]);
+  navigateToViewTicket(ticketId: string): void {
+    this.router.navigate(['/ticket-details', ticketId]);
   }
 
   searchTickets(query: string): void {
@@ -63,32 +82,41 @@ export class TicketMain implements OnInit {
   }
 
   loadTickets(): void {
-    console.log(`Loading tickets with status: ${this.statusFilter} and query: ${this.searchQuery}`);
+    this.ticketService.getTickets(
+      this.currentPage,
+      this.pageSize,
+      null,
+      this.currentUserOnly,
+      this.statusFilter,
+      this.priorityFilter,
+      null,
+      null,
+      this.searchQuery
+    ).subscribe({
+      next: (res) => {
+        this.recentTickets = res.data;
+        this.totalCount = res.totalCount;
+        this.totalPages = res.totalPages;
+        this.currentPage = res.page;
+        this.cdr.detectChanges();
+        console.log(res);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
-  getStatusClass(status: string): string {
-    switch (status) {
-      case 'Open':
-        return 'text-brand-primary bg-brand-primary/10 border-brand-primary/20';
-      case 'In Progress':
-        return 'text-amber-600 bg-amber-500/10 border-amber-500/20';
-      case 'Closed':
-        return 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20';
-      default:
-        return 'text-brand-text-muted bg-brand-bg/50 border-brand-border';
-    }
+  loadTicketsCount(): void {
+    this.ticketService.getCurrentUserTicketsCount().subscribe({
+      next: (data) => {
+        this.ticketsCount = data;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
-  getPriorityClass(priority: string): string {
-    switch (priority) {
-      case 'High':
-        return 'bg-red-500';
-      case 'Medium':
-        return 'bg-amber-500';
-      case 'Low':
-        return 'bg-emerald-500';
-      default:
-        return 'bg-brand-border';
-    }
-  }
 }
