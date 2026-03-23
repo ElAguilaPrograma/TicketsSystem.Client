@@ -67,4 +67,12 @@ export class TicketService {
     public updateTicket(ticketData: IUpdateTicket, ticketId: string): Observable<void> {
         return this.http.put<void>(`${this.apiUrl}/updateticketinfo/${ticketId}`, ticketData, { withCredentials: true });
     }
+
+    public updateTicketUser(ticketData: IUpdateTicket, ticketId: string): Observable<void> {
+        return this.http.put<void>(`${this.apiUrl}/updateticketuser/${ticketId}`, ticketData, { withCredentials: true });
+    }
+
+    public assignTicketToMe(ticketId: string): Observable<void> {
+        return this.http.post<void>(`${this.apiUrl}/accepttickets/${ticketId}`, { withCredentials: true });
+    }
 }

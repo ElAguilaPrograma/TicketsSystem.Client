@@ -83,21 +83,37 @@ export class TicketEdit implements OnInit {
 
   onSubmit(): void {
     if (this.updateTicketForm.valid) {
-      console.log(this.updateTicketForm.value);
-      this.ticketService.updateTicket(this.updateTicketForm.value, this.ticketId).subscribe({
-        next: () => {
-          console.log("Ticket updated successfully");
-          this.router.navigate(['/ticket-details', this.ticketId]);
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      })
+      if (!this.isUserAdminOrAgent()) {
+        this.ticketService.updateTicketUser(this.updateTicketForm.value, this.ticketId).subscribe({
+          next: () => {
+            console.log("Ticket updated successfully");
+            this.router.navigate(['/ticket-details', this.ticketId]);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        });
+      }
+      else {
+        this.ticketService.updateTicket(this.updateTicketForm.value, this.ticketId).subscribe({
+          next: () => {
+            console.log("Ticket updated successfully");
+            this.router.navigate(['/ticket-details', this.ticketId]);
+          },
+          error: (err) => {
+            console.log(err);
+          }
+        });
+      }
     }
   }
 
   isUserAdminOrAgent(): boolean {
     return this.currentUserRole === 'Admin' || this.currentUserRole === 'Agent';
+  }
+
+  isUserAgentAssigned(): boolean {
+    return this.currentUserRole === 'Agent' && this.ticketData.assignedToUserId === this.authService.getCurrentUserId();
   }
 }
 

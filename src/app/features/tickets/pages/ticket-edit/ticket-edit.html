@@ -83,8 +83,10 @@
                         class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">We are getting P99 latency above 4 seconds in the US-East region. Started happening directly after the v2.3 deployment.</textarea>
                 </div>
             </div>
-            <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-between items-center">
-                <button class="text-red-500 hover:text-red-400 font-medium transition-colors">Abandon Ticket</button>
+            <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex items-center" [ngClass]="isUserAgentAssigned() ? 'justify-between' : 'justify-end'">
+                @if (isUserAgentAssigned()) {
+                    <button class="text-red-500 hover:text-red-400 font-medium transition-colors">Abandon Ticket</button>
+                }
                 <div class="flex gap-3">
                     <app-button label="Discard changes" variant="outline" [routerLink]="['/ticket-details', ticketId]"></app-button>
                     <app-button label="Save Changes" variant="primary" type="submit"></app-button>

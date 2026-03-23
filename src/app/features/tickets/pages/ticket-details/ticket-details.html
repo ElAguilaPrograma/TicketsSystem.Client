@@ -29,11 +29,22 @@
             </div>
         </div>
         <div class="flex gap-2">
-            @if (ticketData.closedAt) {
+            @if (canEditTicket()) {
+                <app-button label="Edit Details" variant="outline" [routerLink]="['/ticket-edit', ticketId]"></app-button>
+            }
+            @if (ticketData.closedAt && isUserAdminOrAgent()) {
                 <app-button label="Reopen Ticket" variant="thirdary" (click)="openReopenTicketConfirmDialog()"></app-button>
-            } @else {
-                <app-button label="Edit Details" variant="outline" [routerLink]="['/ticket-edit', ticketId]" ></app-button>
-                <app-button label="Resolve Ticket" variant="primary" (click)="openCloseTicketConfirmDialog()"></app-button>
+            } 
+            @if (!ticketData.closedAt) {
+                @if (canAssignToMe()) {
+                    <app-button label="Assign to Me" variant="thirdary" (click)="assignTicketToMe()"></app-button>
+                }
+                @if (canAdminAssignTicket()) {
+                    <app-button label="Assign" variant="thirdary" (click)="adminAssignTicketPlaceholder()"></app-button>
+                }
+                @if (canResolveTicket()) {
+                    <app-button label="Resolve Ticket" variant="primary" (click)="openCloseTicketConfirmDialog()"></app-button>
+                }
             }
         </div>
     </div>
@@ -246,7 +257,12 @@
                             <div
                                 class="w-5 h-5 rounded-full bg-blue-500 text-[10px] text-white flex items-center justify-center">
                                 JD</div>
-                            {{ ticketData.assignedToUser ?? "TBD" }}
+                            @if (ticketData.assignedToUserId === currentUserInfo?.userId) {
+                                Me
+                            }
+                            @else {
+                                {{ ticketData.assignedToUser ?? "TBD" }}
+                            }
                         </span>
                     </div>
                     <div class="flex justify-between">

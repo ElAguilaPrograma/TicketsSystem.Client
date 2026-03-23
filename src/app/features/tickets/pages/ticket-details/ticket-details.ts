@@ -249,8 +249,47 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.reopenTicket();
   }
 
-  navigateToEditPage() {
-    this.router.navigate(['/ticket-edit', this.ticketId]);
+  isUserAdminOrAgent(): boolean {
+    return this.currentUserInfo?.role === 'Admin' || this.currentUserInfo?.role === 'Agent';
   }
+
+  canEditTicket(): boolean {
+    if (this.ticketData?.closedAt) return false;
+
+    const isAdmin = this.currentUserInfo?.role === 'Admin';
+    const isAssignedAgent = this.currentUserInfo?.role === 'Agent' && this.ticketData.assignedToUserId === this.currentUserInfo?.userId;
+    const isCreator = this.ticketData.createdByUserId === this.currentUserInfo?.userId;
+    return isAdmin || isAssignedAgent || isCreator;
+  }
+
+  canResolveTicket(): boolean {
+    const isAdmin = this.currentUserInfo?.role === 'Admin';
+    const isAssignedAgent = this.currentUserInfo?.role === 'Agent' && this.ticketData.assignedToUserId === this.currentUserInfo?.userId;
+    return isAdmin || isAssignedAgent;
+  }
+
+  canAssignToMe(): boolean {
+    return this.currentUserInfo?.role === 'Agent' && !this.ticketData.assignedToUserId;
+  }
+
+  canAdminAssignTicket(): boolean {
+    return this.currentUserInfo?.role === 'Admin' && !this.ticketData.assignedToUserId;
+  }
+
+  adminAssignTicketPlaceholder(): void {
+    console.log('Admin assign ticket logic not yet implemented.');
+  }
+
+  assignTicketToMe(): void {
+    this.ticketService.assignTicketToMe(this.ticketId).subscribe({
+      next: () => {
+        location.reload();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    })
+  }
+
 }
 

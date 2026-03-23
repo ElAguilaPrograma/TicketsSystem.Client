@@ -34,7 +34,7 @@ export const routes: Routes = [
             { path: "control-panel", component: ControlPanel, canActivate: [roleGuard(['Admin', 'Agent'])] },
             { path: "ticket-history", component: TicketHistory },
             { path: "ticket-form", component: TicketForm },
-            { path: "ticket-edit/:ticketId", component: TicketEdit, canActivate: [roleGuard(['Admin', 'Agent'])] },
+            { path: "ticket-edit/:ticketId", component: TicketEdit },
             { path: "ticket-details/:ticketId", component: TicketDetails },
             { path: "ticket-change-history", component: TicketChangeHistory },
             { path: "user-admin", component: UserAdmin, canActivate: [roleGuard(['Admin'])] },
