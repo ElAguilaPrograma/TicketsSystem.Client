@@ -1,0 +1,213 @@
+/* ───────────────────────────
+   Notification Container
+   ─────────────────────────── */
+.notif-wrapper {
+  position: fixed;
+  top: 5.5rem;
+  left: 1.5rem;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 26rem;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* ── Individual Card ─────── */
+.notif-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.10),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+  animation: notif-slide-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notif-clickable {
+  cursor: pointer;
+}
+
+.notif-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.14),
+    0 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+.notif-clickable:active {
+  transform: scale(0.97);
+}
+
+/* ── Exit animation (on click navigate) ─── */
+.notif-exit {
+  animation: notif-click-out 0.35s cubic-bezier(0.55, 0, 1, 0.45) forwards !important;
+  pointer-events: none;
+}
+
+/* ── Icon badge ──────────── */
+.notif-icon-badge {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+}
+
+/* ── Text body ───────────── */
+.notif-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--text-main);
+}
+
+.notif-subtitle {
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--text-muted);
+}
+
+.notif-message {
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: var(--text-muted);
+}
+
+/* ── Close button ────────── */
+.notif-close-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.notif-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--text-main);
+}
+
+:root.dark .notif-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ═══════════════════════════
+   URGENCY THEMES
+   ═══════════════════════════ */
+
+/* ── 🔴 Critical ─────────── */
+.notif-accent--critical {
+  border-left-color: #ef4444;
+}
+.notif-icon--critical {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  animation: notif-pulse-critical 2s ease-in-out infinite;
+}
+:root.dark .notif-icon--critical {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+/* ── 🟠 High ─────────────── */
+.notif-accent--high {
+  border-left-color: #f59e0b;
+}
+.notif-icon--high {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+:root.dark .notif-icon--high {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+/* ── 🔵 Update ───────────── */
+.notif-accent--update {
+  border-left-color: #06b6d4;
+}
+.notif-icon--update {
+  background-color: rgba(6, 182, 212, 0.12);
+  color: #0891b2;
+}
+:root.dark .notif-icon--update {
+  background-color: rgba(6, 182, 212, 0.2);
+  color: #22d3ee;
+}
+
+/* ── ⚪ Info ──────────────── */
+.notif-accent--info {
+  border-left-color: #64748b;
+}
+.notif-icon--info {
+  background-color: rgba(100, 116, 139, 0.10);
+  color: #475569;
+}
+:root.dark .notif-icon--info {
+  background-color: rgba(100, 116, 139, 0.18);
+  color: #94a3b8;
+}
+
+/* ═══════════════════════════
+   ANIMATIONS
+   ═══════════════════════════ */
+
+/* Slide in from the left */
+@keyframes notif-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Click-out: scale down + fade */
+@keyframes notif-click-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-8px);
+  }
+}
+
+/* Critical pulse glow on icon */
+@keyframes notif-pulse-critical {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(239, 68, 68, 0.15);
+  }
+}

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ElementRef, ViewChild, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip } from '@ng-icons/heroicons/outline';
@@ -26,6 +26,7 @@ import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/conf
 export class TicketDetails implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private location = inject(Location);
   private cdr = inject(ChangeDetectorRef);
   private ticketService = inject(TicketService);
   private authService = inject(AuthenticationService);
@@ -291,5 +292,8 @@ export class TicketDetails implements OnInit, OnDestroy {
     })
   }
 
+  goBack(): void {
+    this.location.back();
+  }
 }
 

@@ -3,16 +3,25 @@ import * as signalR from '@microsoft/signalr';
 import { environment } from '../../env/enviroment';
 import { Subject } from 'rxjs';
 import { ITicketsReadComment } from '../interfaces/ticket-comment/ITicketsReadComment';
+import { IReadTickets } from '../interfaces/tickets/IReadTickets';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
   private hubConnection?: signalR.HubConnection;
-  
+
   // Subject para notificar nuevos comentarios en tiempo real
   private ticketCommentSubject = new Subject<ITicketsReadComment>();
   public ticketComment$ = this.ticketCommentSubject.asObservable();
+
+  // Subject para notificar nuevos tickets
+  private newTicketSubject = new Subject<IReadTickets>();
+  public newTicket$ = this.newTicketSubject.asObservable();
+
+  // Subject para notificar cambios de estado de ticket
+  private ticketStatusChangedSubject = new Subject<IReadTickets>();
+  public ticketStatusChanged$ = this.ticketStatusChangedSubject.asObservable();
 
   constructor() { }
 
@@ -20,8 +29,8 @@ export class SignalRService {
    * Inicia la conexión con el Hub de SignalR
    */
   public startConnection(): void {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected || 
-        this.hubConnection?.state === signalR.HubConnectionState.Connecting) {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Connected ||
+      this.hubConnection?.state === signalR.HubConnectionState.Connecting) {
       return;
     }
 
@@ -59,7 +68,15 @@ export class SignalRService {
       this.ticketCommentSubject.next(comment);
     });
 
-    // Puedes agregar más eventos según los definidos en TicketHubService.cs
-    // this.hubConnection?.on('ReceiveNewTicket', (ticket: any) => { ... });
+    // Escuchar nuevos tickets (Evento: ReceiveNewTicket)
+    this.hubConnection?.on('ReceiveNewTicket', (ticket: IReadTickets) => {
+      this.newTicketSubject.next(ticket);
+    });
+
+    // Escuchar cambios de estado de ticket (Evento: ReceiveNewTicketStatusChange)
+    this.hubConnection?.on('ReceiveNewTicketStatusChange', (ticket: IReadTickets) => {
+      this.ticketStatusChangedSubject.next(ticket);
+    });
   }
 }
+

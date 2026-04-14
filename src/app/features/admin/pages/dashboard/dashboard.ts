@@ -9,7 +9,11 @@ import {
   heroEllipsisHorizontal,
   heroCheckCircle,
   heroPlus,
-  heroEllipsisVertical
+  heroEllipsisVertical,
+  heroClock,
+  heroChartBar,
+  heroTicket,
+  heroFire
 } from '@ng-icons/heroicons/outline';
 
 export interface Ticket {
@@ -30,7 +34,11 @@ export interface Ticket {
       heroEllipsisHorizontal,
       heroCheckCircle,
       heroPlus,
-      heroEllipsisVertical
+      heroEllipsisVertical,
+      heroClock,
+      heroChartBar,
+      heroTicket,
+      heroFire
     })
   ],
   templateUrl: './dashboard.html',
@@ -38,6 +46,26 @@ export interface Ticket {
 })
 export class Main {
   private router = inject(Router);
+
+  // Mock KPIs
+  totalTickets: number = 245;
+  openTickets: number = 40;
+  resolvedToday: number = 15;
+  avgResolutionTime: string = '4.2 hrs';
+
+  // Mock Chart Data
+  priorityStats = {
+    critical: { count: 12, percentage: 15 },
+    high: { count: 35, percentage: 40 },
+    medium: { count: 28, percentage: 30 },
+    low: { count: 15, percentage: 15 }
+  };
+
+  statusStats = {
+    open: { count: 25, percentage: 30 },
+    inProgress: { count: 15, percentage: 20 },
+    resolved: { count: 45, percentage: 50 }
+  };
 
   navigateToCreateTicket() {
     this.router.navigate(['/ticket-form']);

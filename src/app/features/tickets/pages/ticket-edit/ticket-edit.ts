@@ -115,5 +115,17 @@ export class TicketEdit implements OnInit {
   isUserAgentAssigned(): boolean {
     return this.currentUserRole === 'Agent' && this.ticketData.assignedToUserId === this.authService.getCurrentUserId();
   }
+
+  abandonTicket(){
+    this.ticketService.abandonTicket(this.ticketId).subscribe({
+      next: () => {
+        console.log("Ticket abandoned successfully");
+        this.router.navigate(['/ticket-details', this.ticketId]);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 }
 

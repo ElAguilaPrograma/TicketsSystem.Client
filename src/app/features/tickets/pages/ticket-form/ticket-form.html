@@ -53,7 +53,7 @@
             </div>
             <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
                 <app-button label="Cancel" variant="outline" routerLink="/ticket-main"></app-button>
-                <app-button label="Create Ticket" variant="primary" type="submit"></app-button>
+                <app-button label="Create Ticket" variant="primary" type="submit" [disabled]="createTicketForm.invalid"></app-button>
             </div>
         </div>
     </form>

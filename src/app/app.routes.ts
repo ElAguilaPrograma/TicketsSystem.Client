@@ -19,6 +19,8 @@ import { UserEditForm } from './features/admin/pages/user-edit-form/user-edit-fo
 import { TicketMain } from './features/tickets/pages/ticket-main/ticket-main';
 import { roleGuard } from './core/guards/role.guard';
 import { ErrorLayout } from './layout/error-layout/error-layout';
+import { NotificationsView } from './features/notifications-view/notifications-view';
+import { Myworkspace } from './features/tickets/pages/myworkspace/myworkspace';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
@@ -31,15 +33,17 @@ export const routes: Routes = [
         children: [
             { path: "dashboard", component: Main, canActivate: [roleGuard(['Admin'])] },
             { path: "ticket-main", component: TicketMain },
-            { path: "control-panel", component: ControlPanel, canActivate: [roleGuard(['Admin', 'Agent'])] },
+            { path: "control-panel", component: ControlPanel },
             { path: "ticket-history", component: TicketHistory },
             { path: "ticket-form", component: TicketForm },
             { path: "ticket-edit/:ticketId", component: TicketEdit },
             { path: "ticket-details/:ticketId", component: TicketDetails },
-            { path: "ticket-change-history", component: TicketChangeHistory },
+            { path: "ticket-change-history/:ticketId", component: TicketChangeHistory },
             { path: "user-admin", component: UserAdmin, canActivate: [roleGuard(['Admin'])] },
             { path: "user-form", component: UserForm, canActivate: [roleGuard(['Admin'])] },
             { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [roleGuard(['Admin'])] },
+            { path: "notifications", component: NotificationsView },
+            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])] },
         ]
     },
 

@@ -33,6 +33,12 @@
             <span class="text-sm font-medium">Ticket History</span>
         </a>
         @if (userInfo()?.role === 'Admin' || userInfo()?.role === 'Agent') {
+            <a routerLink="/my-workspace"
+                routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
+                class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
+                <ng-icon name="heroBriefcase" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+                <span class="text-sm font-medium">My Workspace</span>
+            </a>
             <a routerLink="/control-panel"
                 routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
                 class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
@@ -53,7 +59,13 @@
                 <ng-icon name="heroUser" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
                 <span class="text-sm font-medium">User Admin</span>
             </a>
-        } 
+        }
+        <a routerLink="/notifications"
+            routerLinkActive="!bg-brand-primary !text-white !font-bold shadow-md shadow-brand-primary/20"
+            class="flex items-center gap-3 px-3 py-3 rounded-lg transition-all group text-brand-text-muted hover:text-brand-text hover:bg-brand-bg relative">
+            <ng-icon name="heroRadio" class="text-xl group-hover:scale-110 transition-transform"></ng-icon>
+            <span class="text-sm font-medium">Notifications</span>
+        </a>
     </nav>
 
     <div class="px-3 py-3">

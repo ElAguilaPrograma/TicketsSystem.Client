@@ -41,7 +41,7 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
                 case 403:
                     toastService.warning(
                         'Access denied',
-                        'You do not have permission to perform this action.',
+                        'You do not have permission to perform this action.' + errorMessage,
                         'Forbidden'
                     );
                     router.navigate(['/forbidden']);

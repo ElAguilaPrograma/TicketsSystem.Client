@@ -14,7 +14,9 @@ import {
   heroMoon,
   heroSun,
   heroSparkles,
-  heroHome
+  heroHome,
+  heroRadio,
+  heroBriefcase
 } from '@ng-icons/heroicons/outline';
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
@@ -34,7 +36,9 @@ import { ICurrentUserInfo } from '../../api/interfaces/user/ICurrentUserInfo';
       heroMoon,
       heroSun,
       heroSparkles,
-      heroHome
+      heroHome,
+      heroRadio,
+      heroBriefcase
     }),
   ],
   templateUrl: './sidebar.html',

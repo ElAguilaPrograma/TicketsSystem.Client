@@ -1,7 +1,7 @@
 <section class="max-w-5xl mx-auto flex flex-col gap-6">
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <button [routerLink]="['/ticket-main']"
+            <button (click)="goBack()"
                 class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
                 <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
             </button>
