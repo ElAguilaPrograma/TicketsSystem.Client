@@ -12,7 +12,7 @@ import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-control-panel',
-  imports: [CommonModule, ButtonComponent, CardComponent, NgIcon, RouterLink],
+  imports: [CommonModule, ButtonComponent, CardComponent, NgIcon],
   viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight })],
   templateUrl: './control-panel.html',
   styleUrl: './control-panel.css',
