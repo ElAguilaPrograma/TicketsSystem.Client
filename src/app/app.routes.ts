@@ -26,7 +26,7 @@ export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
 
     {
-        // Si hay fallos con la autenticación, usar canActivateChild para que se verifique la autenticación en cada ruta hija
+        // If there are authentication issues, use canActivateChild to validate auth on each child route
         path: "",
         component: MainLayout,
         canActivate: [authGuard],

@@ -37,12 +37,12 @@
         <div class="px-5 pt-5 pb-4 md:px-6 border-b border-brand-border bg-brand-surface">
             <div class="flex items-start justify-between gap-4">
                 <div class="space-y-1.5">
-                    <p class="text-xs uppercase tracking-[0.18em] text-brand-primary font-semibold">Incidencias Frecuentes</p>
-                    <h2 class="text-xl md:text-2xl font-bold text-brand-text">Atajos para reportar más rápido</h2>
-                    <p class="text-sm text-brand-text-muted">Selecciona una categoría común y crea tu ticket en segundos.</p>
+                    <p class="text-xs uppercase tracking-[0.18em] text-brand-primary font-semibold">Frequent Incidents</p>
+                    <h2 class="text-xl md:text-2xl font-bold text-brand-text">Shortcuts to report issues faster</h2>
+                    <p class="text-sm text-brand-text-muted">Choose a common category and create your ticket in seconds.</p>
                 </div>
                 <span class="hidden sm:inline-flex items-center rounded-full border border-brand-border bg-brand-bg px-3 py-1 text-xs font-medium text-brand-text-muted">
-                    4 categorías sugeridas
+                    4 suggested categories
                 </span>
             </div>
         </div>
@@ -50,41 +50,41 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-5 md:p-6 bg-brand-bg/30">
             <article class="incident-card">
                 <span class="incident-card__tag">Software</span>
-                <h3 class="incident-card__title">Instalación de aplicaciones</h3>
-                <p class="incident-card__description">Solicitud para instalar herramientas corporativas o actualizaciones necesarias para tu trabajo.</p>
+                <h3 class="incident-card__title">Application installation</h3>
+                <p class="incident-card__description">Request support to install corporate tools or required software updates.</p>
                 <button class="incident-card__action"
-                    (click)="navigateToCreateTicketWithPreset('Instalación de aplicaciones', 'Necesito apoyo para instalar o actualizar una aplicación corporativa en mi equipo.', 2)">
-                    Crear ticket
+                    (click)="navigateToCreateTicketWithPreset('Application installation', 'I need support installing or updating a corporate application on my device.', 2)">
+                    Create ticket
                 </button>
             </article>
 
             <article class="incident-card">
-                <span class="incident-card__tag">Accesos</span>
-                <h3 class="incident-card__title">Obtener credenciales</h3>
-                <p class="incident-card__description">Alta de usuario, recuperación de contraseña o acceso a sistemas internos.</p>
+                <span class="incident-card__tag">Access</span>
+                <h3 class="incident-card__title">Get credentials</h3>
+                <p class="incident-card__description">User onboarding, password recovery, or access to internal systems.</p>
                 <button class="incident-card__action"
-                    (click)="navigateToCreateTicketWithPreset('Obtener credenciales', 'Requiero creación de cuenta o recuperación de credenciales para acceder a sistemas internos.', 3)">
-                    Crear ticket
+                    (click)="navigateToCreateTicketWithPreset('Get credentials', 'I need account creation or credential recovery to access internal systems.', 3)">
+                    Create ticket
                 </button>
             </article>
 
             <article class="incident-card">
-                <span class="incident-card__tag">Red</span>
-                <h3 class="incident-card__title">Problemas de conexión</h3>
-                <p class="incident-card__description">Sin internet, lentitud en VPN o desconexiones intermitentes en red corporativa.</p>
+                <span class="incident-card__tag">Network</span>
+                <h3 class="incident-card__title">Connection issues</h3>
+                <p class="incident-card__description">No internet, slow VPN, or intermittent disconnects on the corporate network.</p>
                 <button class="incident-card__action"
-                    (click)="navigateToCreateTicketWithPreset('Problemas de conexión', 'Tengo fallas de conectividad (internet/VPN) que afectan mi trabajo.', 4)">
-                    Crear ticket
+                    (click)="navigateToCreateTicketWithPreset('Connection issues', 'I am experiencing connectivity problems (internet/VPN) that affect my work.', 4)">
+                    Create ticket
                 </button>
             </article>
 
             <article class="incident-card">
-                <span class="incident-card__tag">Soporte</span>
-                <h3 class="incident-card__title">Equipo bloqueado o lento</h3>
-                <p class="incident-card__description">Pantallas congeladas, reinicios inesperados o bajo rendimiento del equipo.</p>
+                <span class="incident-card__tag">Support</span>
+                <h3 class="incident-card__title">Device is frozen or slow</h3>
+                <p class="incident-card__description">Frozen screens, unexpected restarts, or poor device performance.</p>
                 <button class="incident-card__action"
-                    (click)="navigateToCreateTicketWithPreset('Equipo bloqueado o lento', 'Mi equipo presenta lentitud, bloqueos o reinicios inesperados.', 3)">
-                    Crear ticket
+                    (click)="navigateToCreateTicketWithPreset('Device is frozen or slow', 'My device is running slowly, freezing, or restarting unexpectedly.', 3)">
+                    Create ticket
                 </button>
             </article>
         </div>

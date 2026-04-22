@@ -77,9 +77,9 @@ export class NotificationsView implements OnInit, OnDestroy {
 
   getTypeLabel(type: string): string {
     switch (type) {
-      case 'NewTicket': return 'Nuevo Ticket';
-      case 'UpdateTicket': return 'Actualización';
-      default: return 'Notificación';
+      case 'NewTicket': return 'New Ticket';
+      case 'UpdateTicket': return 'Update';
+      default: return 'Notification';
     }
   }
 
@@ -91,11 +91,11 @@ export class NotificationsView implements OnInit, OnDestroy {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 1) return 'Ahora';
-    if (diffMins < 60) return `Hace ${diffMins}m`;
-    if (diffHours < 24) return `Hace ${diffHours}h`;
-    if (diffDays < 7) return `Hace ${diffDays}d`;
-    return created.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return created.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
   }
 
   private loadNotifications(): void {

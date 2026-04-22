@@ -24,7 +24,7 @@
         (click)="switchTab('unread')"
       >
         <ng-icon name="heroEnvelope" class="text-lg"></ng-icon>
-        <span>Sin Leer</span>
+        <span>Unread</span>
         @if (noReadNotifications.length > 0) {
           <span class="nv-tab-count">{{ noReadNotifications.length }}</span>
         }
@@ -35,7 +35,7 @@
         (click)="switchTab('read')"
       >
         <ng-icon name="heroEnvelopeOpen" class="text-lg"></ng-icon>
-        <span>Leídas</span>
+        <span>Read</span>
         @if (readNotifications.length > 0) {
           <span class="nv-tab-count nv-tab-count--muted">{{ readNotifications.length }}</span>
         }

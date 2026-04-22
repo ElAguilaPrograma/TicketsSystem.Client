@@ -5,10 +5,15 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { ICurrentUserTicketsCount } from '../../../../api/interfaces/tickets/ICurrentUserTicketsCount';
 import { TicketService } from '../../../../api/services/ticket.service';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  heroPlus
+} from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-ticket-main',
   imports: [CommonModule, ButtonComponent, CardComponent],
+  viewProviders: [provideIcons({ heroPlus })],
   templateUrl: './ticket-main.html',
   styleUrl: './ticket-main.css',
 })

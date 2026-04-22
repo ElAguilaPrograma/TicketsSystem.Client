@@ -11,22 +11,22 @@ import { IReadTickets } from '../interfaces/tickets/IReadTickets';
 export class SignalRService {
   private hubConnection?: signalR.HubConnection;
 
-  // Subject para notificar nuevos comentarios en tiempo real
+  // Subject used to notify new comments in real time
   private ticketCommentSubject = new Subject<ITicketsReadComment>();
   public ticketComment$ = this.ticketCommentSubject.asObservable();
 
-  // Subject para notificar nuevos tickets
+  // Subject used to notify new tickets
   private newTicketSubject = new Subject<IReadTickets>();
   public newTicket$ = this.newTicketSubject.asObservable();
 
-  // Subject para notificar cambios de estado de ticket
+  // Subject used to notify ticket status changes
   private ticketStatusChangedSubject = new Subject<IReadTickets>();
   public ticketStatusChanged$ = this.ticketStatusChangedSubject.asObservable();
 
   constructor() { }
 
   /**
-   * Inicia la conexión con el Hub de SignalR
+    * Starts the SignalR Hub connection
    */
   public startConnection(): void {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected ||
@@ -36,7 +36,7 @@ export class SignalRService {
 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.hubUrl, {
-        withCredentials: true // Envía la cookie 'AuthToken' HttpOnly automáticamente
+        withCredentials: true // Sends the HttpOnly 'AuthToken' cookie automatically
       })
       .withAutomaticReconnect()
       .build();
@@ -50,7 +50,7 @@ export class SignalRService {
   }
 
   /**
-   * Detiene la conexión (útil al cerrar sesión)
+    * Stops the connection (useful on logout)
    */
   public stopConnection(): void {
     if (this.hubConnection) {
@@ -60,20 +60,20 @@ export class SignalRService {
   }
 
   /**
-   * Registra los escuchadores para los eventos definidos en el backend
+   * Registers listeners for backend-defined events
    */
   private registerOnEvents(): void {
-    // Escuchar nuevos comentarios (Evento: ReceiveNewTicketComment)
+    // Listen for new comments (event: ReceiveNewTicketComment)
     this.hubConnection?.on('ReceiveNewTicketComment', (comment: ITicketsReadComment) => {
       this.ticketCommentSubject.next(comment);
     });
 
-    // Escuchar nuevos tickets (Evento: ReceiveNewTicket)
+    // Listen for new tickets (event: ReceiveNewTicket)
     this.hubConnection?.on('ReceiveNewTicket', (ticket: IReadTickets) => {
       this.newTicketSubject.next(ticket);
     });
 
-    // Escuchar cambios de estado de ticket (Evento: ReceiveNewTicketStatusChange)
+    // Listen for ticket status changes (event: ReceiveNewTicketStatusChange)
     this.hubConnection?.on('ReceiveNewTicketStatusChange', (ticket: IReadTickets) => {
       this.ticketStatusChangedSubject.next(ticket);
     });

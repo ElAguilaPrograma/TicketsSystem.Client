@@ -24,8 +24,8 @@ export class SignalrNotificationInitializer implements OnDestroy {
     this.subs.push(
       this.signalR.newTicket$.subscribe(ticket => {
         this.notifications.high(
-          'Nuevo Ticket',
-          `"${ticket.title}" creado por ${ticket.createdByUser ?? 'un usuario'}`,
+          'New Ticket',
+          `"${ticket.title}" created by ${ticket.createdByUser ?? 'a user'}`,
           `/ticket-details/${ticket.ticketId}`
         );
       })
@@ -35,8 +35,8 @@ export class SignalrNotificationInitializer implements OnDestroy {
     this.subs.push(
       this.signalR.ticketStatusChanged$.subscribe(ticket => {
         this.notifications.update(
-          'Estado Actualizado',
-          `"${ticket.title}" cambió a ${ticket.statusName ?? 'nuevo estado'}`,
+          'Status Updated',
+          `"${ticket.title}" changed to ${ticket.statusName ?? 'a new status'}`,
           `/ticket-details/${ticket.ticketId}`
         );
       })
@@ -46,7 +46,7 @@ export class SignalrNotificationInitializer implements OnDestroy {
     this.subs.push(
       this.signalR.ticketComment$.subscribe(comment => {
         this.notifications.info(
-          'Nuevo Comentario',
+          'New Comment',
           `${comment.createdByUser}: "${comment.content.substring(0, 80)}${comment.content.length > 80 ? '…' : ''}"`,
           `/ticket-details/${comment.ticketId}`
         );

@@ -21,7 +21,7 @@
 
     <!-- Dismiss button -->
     @if (n.dismissible !== false) {
-    <button class="notif-close-btn" (click)="dismiss($event, n.id)" aria-label="Cerrar notificación">
+    <button class="notif-close-btn" (click)="dismiss($event, n.id)" aria-label="Close notification">
       <ng-icon name="heroXMark" class="text-base" />
     </button>
     }

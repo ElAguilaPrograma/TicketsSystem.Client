@@ -13,7 +13,8 @@ import {
   heroClock,
   heroChartBar,
   heroTicket,
-  heroFire
+  heroFire,
+  heroDocumentChartBar
 } from '@ng-icons/heroicons/outline';
 
 export interface Ticket {
@@ -38,7 +39,8 @@ export interface Ticket {
       heroClock,
       heroChartBar,
       heroTicket,
-      heroFire
+      heroFire,
+      heroDocumentChartBar
     })
   ],
   templateUrl: './dashboard.html',
@@ -69,6 +71,10 @@ export class Main {
 
   navigateToCreateTicket() {
     this.router.navigate(['/ticket-form']);
+  }
+
+  ExportToExcel() {
+    // Placeholder for export functionality
   }
 
   tickets: Ticket[] = [
