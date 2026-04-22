@@ -102,7 +102,7 @@ export class TicketMain implements OnInit {
         console.log(res);
       },
       error: (error) => {
-        console.error(error);
+        console.error(error.error);
       }
     });
   }

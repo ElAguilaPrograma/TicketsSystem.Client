@@ -62,7 +62,9 @@
           } @else {
             <div class="nv-list">
               @for (n of noReadNotifications; track n.notificationId) {
-                <div class="nv-item nv-item--unread" (click)="toogleNotificationReadStatus(n.notificationId)">
+                <div class="nv-item nv-item--unread" 
+                  (click)="toogleNotificationReadStatus(n.notificationId)
+                  ; sendToContent(n)">
                   <div class="nv-item-indicator"></div>
                   <div class="nv-item-icon" [class]="'nv-item-icon nv-item-icon--' + n.type">
                     <ng-icon [name]="getTypeIcon(n.type)" class="text-lg"></ng-icon>

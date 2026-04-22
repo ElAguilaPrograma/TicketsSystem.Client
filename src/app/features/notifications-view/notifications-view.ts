@@ -112,6 +112,7 @@ export class NotificationsView implements OnInit, OnDestroy {
         this.readNotifications = all.filter(n => n.isRead);
         this.loading = false;
         this.cdr.detectChanges();
+        console.log('Notifications loaded:', all);
       },
       error: () => {
         this.loading = false;
@@ -143,4 +144,19 @@ export class NotificationsView implements OnInit, OnDestroy {
       }
     });
   }
+
+  public sendToContent(notification: INotificationRead): void {
+    if (notification.type === 'NewTicket' || notification.type === 'UpdateTicket') {
+      this.router.navigate(['/ticket-details', notification.contentId]);
+    }
+  }
+}
+
+export enum NotificationsTypes {
+    NewTicket = 1,
+    UpdateTicket = 2,
+    UpdateUserChanges = 3,
+    AssingTicketToAgent = 4,
+    CreateANewComment = 5,
+    UpdateAComment = 6,
 }

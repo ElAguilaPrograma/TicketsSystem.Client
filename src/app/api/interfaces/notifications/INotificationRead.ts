@@ -1,6 +1,7 @@
 export interface INotificationRead {
     notificationId: string;
     userId: string;
+    contentId: string;
     type: string;
     message: string;
     isRead: boolean;
