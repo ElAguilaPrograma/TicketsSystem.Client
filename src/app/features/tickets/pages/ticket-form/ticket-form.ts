@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft, heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
 import { Select } from "../../../../shared/components/select/select";
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TicketService } from '../../../../api/services/ticket.service';
 
 @Component({
@@ -15,10 +15,11 @@ import { TicketService } from '../../../../api/services/ticket.service';
   templateUrl: './ticket-form.html',
   styleUrl: './ticket-form.css',
 })
-export class TicketForm {
+export class TicketForm implements OnInit {
   private fb = inject(FormBuilder);
   private ticketService = inject(TicketService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   priorityOptions = [
     { label: 'Critical', value: 4 },
@@ -32,6 +33,24 @@ export class TicketForm {
     description: ['', Validators.required],
     priorityId: [1, Validators.required],
   });
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      const title = params.get('title')?.trim();
+      const description = params.get('description')?.trim();
+      const priorityRaw = params.get('priorityId');
+      const parsedPriority = Number(priorityRaw);
+      const priorityId = Number.isInteger(parsedPriority) && parsedPriority >= 1 && parsedPriority <= 4
+        ? parsedPriority
+        : 1;
+
+      this.createTicketForm.patchValue({
+        title: title ?? '',
+        description: description ?? '',
+        priorityId,
+      });
+    });
+  }
 
   onSubmit() {
     if (this.createTicketForm.valid) {
