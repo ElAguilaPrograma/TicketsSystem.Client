@@ -5,7 +5,22 @@
     <div class="flex items-center gap-3">
         <div class="flex flex-col">
             @if (this.authService.isLoggedIn() && !this.isHomeRoute()) {
-                <h1 class="text-lg font-bold leading-tight">SupportFlow AI</h1>
+                <nav class="flex flex-wrap items-center gap-1.5 text-sm md:text-base font-bold leading-tight" aria-label="Breadcrumb">
+                    @if (this.breadcrumbService.breadcrumbs().length === 0) {
+                        <span class="text-brand-text">SupportFlow AI</span>
+                    }
+                    @for (crumb of this.breadcrumbService.breadcrumbs(); track crumb.url; let first = $first) {
+                        @if (!first) {
+                            <span class="text-brand-text-muted/70">-&gt;</span>
+                        }
+                        @if (!crumb.isActive) {
+                            <a [routerLink]="crumb.url" class="text-brand-text hover:text-brand-primary transition-colors">{{ crumb.label }}</a>
+                        }
+                        @else {
+                            <span class="text-brand-primary">{{ crumb.label }}</span>
+                        }
+                    }
+                </nav>
             }
             @else {
                 <h1 class="text-lg font-semibold leading-tight">SupportFlow AI</h1>

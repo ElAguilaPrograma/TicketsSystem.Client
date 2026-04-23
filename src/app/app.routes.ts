@@ -31,19 +31,19 @@ export const routes: Routes = [
         component: MainLayout,
         canActivate: [authGuard],
         children: [
-            { path: "dashboard", component: Main, canActivate: [roleGuard(['Admin'])] },
-            { path: "ticket-main", component: TicketMain },
-            { path: "control-panel", component: ControlPanel },
-            { path: "ticket-history", component: TicketHistory },
-            { path: "ticket-form", component: TicketForm },
-            { path: "ticket-edit/:ticketId", component: TicketEdit },
-            { path: "ticket-details/:ticketId", component: TicketDetails },
-            { path: "ticket-change-history/:ticketId", component: TicketChangeHistory },
-            { path: "user-admin", component: UserAdmin, canActivate: [roleGuard(['Admin'])] },
-            { path: "user-form", component: UserForm, canActivate: [roleGuard(['Admin'])] },
-            { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [roleGuard(['Admin'])] },
-            { path: "notifications", component: NotificationsView },
-            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])] },
+            { path: "dashboard", component: Main, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Dashboard' } },
+            { path: "ticket-main", component: TicketMain, data: { breadcrumb: 'Ticket Main' } },
+            { path: "control-panel", component: ControlPanel, data: { breadcrumb: 'Control Panel' } },
+            { path: "ticket-history", component: TicketHistory, data: { breadcrumb: 'Ticket History' } },
+            { path: "ticket-form", component: TicketForm, data: { breadcrumb: 'Ticket Form' } },
+            { path: "ticket-edit/:ticketId", component: TicketEdit, data: { breadcrumb: 'Edit Ticket' } },
+            { path: "ticket-details/:ticketId", component: TicketDetails, data: { breadcrumb: 'Ticket Details' } },
+            { path: "ticket-change-history/:ticketId", component: TicketChangeHistory, data: { breadcrumb: 'Ticket Change History' } },
+            { path: "user-admin", component: UserAdmin, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'User Administration' } },
+            { path: "user-form", component: UserForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Create User' } },
+            { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Edit User' } },
+            { path: "notifications", component: NotificationsView, data: { breadcrumb: 'Notifications' } },
+            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])], data: { breadcrumb: 'My Workspace' } },
         ]
     },
 
@@ -51,8 +51,8 @@ export const routes: Routes = [
         path: "",
         component: AltLayout,
         children: [
-            { path: "home", component: Home },
-            { path: "login", component: Login }
+            { path: "home", component: Home, data: { breadcrumb: 'Home' } },
+            { path: "login", component: Login, data: { breadcrumb: 'Login' } }
         ]
     },
 
@@ -60,8 +60,8 @@ export const routes: Routes = [
         path: "",
         component: ErrorLayout,
         children: [
-            { path: "unauthorized", component: Unauthorized },
-            { path: "forbidden", component: Forbidden }
+            { path: "unauthorized", component: Unauthorized, data: { breadcrumb: 'Unauthorized' } },
+            { path: "forbidden", component: Forbidden, data: { breadcrumb: 'Forbidden' } }
         ]
     }
 ];

@@ -8,12 +8,12 @@ import { heroArrowRightEndOnRectangle } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, filter, startWith } from 'rxjs'
-import { Searchbar } from "../../shared/components/searchbar/searchbar";
 import { DarkModeService } from '../../core/darkMode.service';
+import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-header',
-  imports: [IconButton, RouterModule, NgClass, NgIcon, Searchbar],
+  imports: [IconButton, RouterModule, NgClass, NgIcon],
   viewProviders: [
     provideIcons({ heroArrowRightEndOnRectangle })
   ],
@@ -23,6 +23,7 @@ import { DarkModeService } from '../../core/darkMode.service';
 export class Header {
   public darkModeService = inject(DarkModeService);
   public authService = inject(AuthenticationService);
+  public breadcrumbService = inject(BreadcrumbService);
   private router = inject(Router);
   private events$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),
