@@ -6,6 +6,7 @@ import { heroArrowLeft, heroPencil, heroArrowRight, heroUser, heroPlus, heroAdju
 import { ActivatedRoute, Router } from '@angular/router';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { ITicketHistoryGroup } from '../../../../api/interfaces/tickets/history/ITicketHistoryGroup';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-ticket-change-history',
@@ -19,7 +20,7 @@ import { ITicketHistoryGroup } from '../../../../api/interfaces/tickets/history/
 })
 export class TicketChangeHistory implements OnInit {
   private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private breadcrumbService = inject(BreadcrumbService);
   private ticketService = inject(TicketService);
 
   ticketId = signal<string>('');
@@ -74,6 +75,6 @@ export class TicketChangeHistory implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/ticket-details', this.ticketId()]);
+    this.breadcrumbService.goBack(`/ticket-details/${this.ticketId()}`);
   }
 }

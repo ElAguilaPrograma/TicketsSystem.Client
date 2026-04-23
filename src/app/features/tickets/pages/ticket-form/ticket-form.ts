@@ -5,12 +5,13 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft, heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
 import { Select } from "../../../../shared/components/select/select";
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TicketService } from '../../../../api/services/ticket.service';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-ticket-form',
-  imports: [CommonModule, ButtonComponent, NgIcon, Select, RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, ButtonComponent, NgIcon, Select, FormsModule, ReactiveFormsModule],
   viewProviders: [provideIcons({ heroArrowLeft, heroArrowUpOnSquare })],
   templateUrl: './ticket-form.html',
   styleUrl: './ticket-form.css',
@@ -20,6 +21,7 @@ export class TicketForm implements OnInit {
   private ticketService = inject(TicketService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private breadcrumbService = inject(BreadcrumbService);
 
   priorityOptions = [
     { label: 'Critical', value: 4 },
@@ -63,6 +65,10 @@ export class TicketForm implements OnInit {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.breadcrumbService.goBack('/ticket-main');
   }
 }
 

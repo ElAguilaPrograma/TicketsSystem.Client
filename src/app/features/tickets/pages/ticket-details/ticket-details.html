@@ -39,8 +39,8 @@
                 @if (canAssignToMe()) {
                     <app-button label="Assign to Me" variant="thirdary" (click)="assignTicketToMe()"></app-button>
                 }
-                @if (canAdminAssignTicket()) {
-                    <app-button label="Assign" variant="thirdary" (click)="adminAssignTicketPlaceholder()"></app-button>
+                @if (canAdminAcceptTicket()) {
+                    <app-button label="Accept Ticket" variant="thirdary" (click)="assignTicketToMe()"></app-button>
                 }
                 @if (canResolveTicket()) {
                     <app-button label="Resolve Ticket" variant="primary" (click)="openCloseTicketConfirmDialog()"></app-button>

@@ -3,17 +3,18 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft } from '@ng-icons/heroicons/outline';
-import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '../../../../shared/components/select/select';
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserInfo';
 import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-ticket-edit',
-  imports: [CommonModule, ButtonComponent, NgIcon, RouterLink, Select, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, ButtonComponent, NgIcon, Select, FormsModule, ReactiveFormsModule],
   viewProviders: [provideIcons({ heroArrowLeft })],
   templateUrl: './ticket-edit.html',
   styleUrl: './ticket-edit.css',
@@ -24,6 +25,7 @@ export class TicketEdit implements OnInit {
   private fb = inject(FormBuilder);
   private ticketService = inject(TicketService);
   private authService = inject(AuthenticationService)
+  private breadcrumbService = inject(BreadcrumbService);
   ticketData: IReadTickets = {} as IReadTickets;
   currentUserRole: string | null = this.authService.getCurrentUserRole() ?? null;
 
@@ -66,6 +68,7 @@ export class TicketEdit implements OnInit {
           priorityId: res.priorityId,
           assignedToUserId: res.assignedToUserId ? res.assignedToUserId : null
         });
+        console.log(this.ticketData);
       },
       error: (err) => {
         console.log(err);
@@ -83,8 +86,12 @@ export class TicketEdit implements OnInit {
 
   onSubmit(): void {
     if (this.updateTicketForm.valid) {
+      const payload = this.updateTicketForm.getRawValue();
+
       if (!this.isUserAdminOrAgent()) {
-        this.ticketService.updateTicketUser(this.updateTicketForm.value, this.ticketId).subscribe({
+        payload.statusId = this.ticketData.statusId;
+
+        this.ticketService.updateTicketUser(payload, this.ticketId).subscribe({
           next: () => {
             console.log("Ticket updated successfully");
             this.router.navigate(['/ticket-details', this.ticketId]);
@@ -95,7 +102,7 @@ export class TicketEdit implements OnInit {
         });
       }
       else {
-        this.ticketService.updateTicket(this.updateTicketForm.value, this.ticketId).subscribe({
+        this.ticketService.updateTicket(payload, this.ticketId).subscribe({
           next: () => {
             console.log("Ticket updated successfully");
             this.router.navigate(['/ticket-details', this.ticketId]);
@@ -126,6 +133,10 @@ export class TicketEdit implements OnInit {
         console.log(err);
       }
     });
+  }
+
+  goBack(): void {
+    this.breadcrumbService.goBack(`/ticket-details/${this.ticketId}`);
   }
 }
 

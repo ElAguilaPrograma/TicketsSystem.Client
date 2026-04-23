@@ -96,7 +96,7 @@
           } @else {
             <div class="nv-list">
               @for (n of readNotifications; track n.notificationId) {
-                <div class="nv-item nv-item--read">
+                <div class="nv-item nv-item--read" (click)="sendToContent(n)">
                   <div class="nv-item-icon nv-item-icon--read">
                     <ng-icon [name]="getTypeIcon(n.type)" class="text-lg"></ng-icon>
                   </div>

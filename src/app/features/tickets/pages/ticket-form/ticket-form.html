@@ -1,8 +1,8 @@
 <section class="max-w-3xl mx-auto flex flex-col gap-6">
     <div class="flex items-center gap-4">
-        <button
+        <button (click)="goBack()"
             class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
-            <ng-icon name="heroArrowLeft" class="text-xl" routerLink="/ticket-main"></ng-icon>
+            <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
         </button>
         <div>
             <h3 class="text-sm font-medium text-brand-text-muted">Ticket Management</h3>
@@ -52,7 +52,7 @@
 
             </div>
             <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
-                <app-button label="Cancel" variant="outline" routerLink="/ticket-main"></app-button>
+                <app-button label="Cancel" variant="outline" (click)="goBack()"></app-button>
                 <app-button label="Create Ticket" variant="primary" type="submit" [disabled]="createTicketForm.invalid"></app-button>
             </div>
         </div>

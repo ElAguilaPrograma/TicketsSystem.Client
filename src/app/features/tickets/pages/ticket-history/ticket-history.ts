@@ -10,6 +10,7 @@ import { Searchbar } from '../../../../shared/components/searchbar/searchbar';
 import { FormsModule } from '@angular/forms';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
+import { AuthenticationService } from '../../../../api/services/authentication.service';
 
 @Component({
   selector: 'app-ticket-history',
@@ -24,9 +25,11 @@ export class TicketHistory implements OnInit {
   private ticketService = inject(TicketService);
   private cdr = inject(ChangeDetectorRef);
   private datePipe = inject(DatePipe);
+  private authService = inject(AuthenticationService);
 
-  activeTab: 'my-tickets' | 'assigned' | 'all' = 'my-tickets';
+  activeTab: 'my-tickets' | 'all' = 'my-tickets';
   recentTickets: IReadTickets[] = [];
+  isAdmin: boolean = this.authService.getCurrentUserRole() === 'Admin';
 
   currentPage: number = 1;
   pageSize: number = 8;
@@ -62,7 +65,11 @@ export class TicketHistory implements OnInit {
     this.loadTickets();
   }
 
-  switchTab(tab: 'my-tickets' | 'assigned' | 'all'): void {
+  switchTab(tab: 'my-tickets' | 'all'): void {
+    if (tab === 'all' && !this.isAdmin) {
+      return;
+    }
+
     if (this.activeTab !== tab) {
       this.activeTab = tab;
       this.currentPage = 1;
@@ -70,9 +77,6 @@ export class TicketHistory implements OnInit {
       if (tab === 'my-tickets') {
         this.currentUserOnly = true;
         this.assignedToMeOnly = false;
-      } else if (tab === 'assigned') {
-        this.currentUserOnly = false;
-        this.assignedToMeOnly = true;
       } else {
         this.currentUserOnly = false;
         this.assignedToMeOnly = false;

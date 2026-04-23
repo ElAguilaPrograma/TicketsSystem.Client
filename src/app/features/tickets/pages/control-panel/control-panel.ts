@@ -122,7 +122,6 @@ export class ControlPanel implements OnInit {
   }
 
   navigateToDetails(ticketId: string) {
-    const url = this.router.createUrlTree(['/ticket-details', ticketId]);
-    window.open(url.toString(), '_blank');
+    this.router.navigate(['/ticket-details', ticketId]);
   }
 }

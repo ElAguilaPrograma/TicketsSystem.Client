@@ -3,15 +3,16 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft } from '@ng-icons/heroicons/outline';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { UserValidations } from '../../../../core/validations/user-validations.validator';
 import { Select } from '../../../../shared/components/select/select';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-user-form',
-  imports: [CommonModule, ButtonComponent, NgIcon, RouterLink, ReactiveFormsModule, Select],
+  imports: [CommonModule, ButtonComponent, NgIcon, ReactiveFormsModule, Select],
   viewProviders: [provideIcons({ heroArrowLeft })],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
@@ -21,6 +22,7 @@ export class UserForm {
   private router = inject(Router);
   private userAdminService = inject(UserAdminService);
   private userValidations = inject(UserValidations);
+  private breadcrumbService = inject(BreadcrumbService);
 
   statusOptions = [
     { label: 'Active', value: true },
@@ -56,6 +58,10 @@ export class UserForm {
     } else {
       this.createUserForm.markAllAsTouched();
     }
+  }
+
+  goBack(): void {
+    this.breadcrumbService.goBack('/user-admin');
   }
 
 }

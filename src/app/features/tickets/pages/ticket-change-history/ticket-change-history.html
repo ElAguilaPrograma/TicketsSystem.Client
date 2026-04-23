@@ -49,11 +49,11 @@
                         @if (group.changes.length === 1) {
                             <p class="mb-2"><span class="font-semibold">{{ group.changes[0].fieldName }} changed:</span></p>
                             <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs font-medium mt-2">
-                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text-muted truncate max-w-full sm:max-w-[200px]" [title]="group.changes[0].oldValue || 'None'">
+                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text-muted truncate max-w-full sm:max-w-50" [title]="group.changes[0].oldValue || 'None'">
                                     {{ group.changes[0].oldValue || 'None' }}
                                 </span>
                                 <ng-icon name="heroArrowRight" class="text-brand-text-muted hidden sm:block"></ng-icon>
-                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text truncate max-w-full sm:max-w-[200px]" [title]="group.changes[0].newValue || 'None'">
+                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text truncate max-w-full sm:max-w-50" [title]="group.changes[0].newValue || 'None'">
                                     {{ group.changes[0].newValue || 'None' }}
                                 </span>
                             </div>

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ElementRef, ViewChild, signal } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip } from '@ng-icons/heroicons/outline';
@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserInfo';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -26,12 +27,12 @@ import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/conf
 export class TicketDetails implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private location = inject(Location);
   private cdr = inject(ChangeDetectorRef);
   private ticketService = inject(TicketService);
   private authService = inject(AuthenticationService);
   private ticketCommentService = inject(TicketCommentService);
   private signalRService = inject(SignalRService);
+  private breadcrumbService = inject(BreadcrumbService);
   private commentSubscription?: Subscription;
 
   ticketId: string = "";
@@ -255,30 +256,28 @@ export class TicketDetails implements OnInit, OnDestroy {
   }
 
   canEditTicket(): boolean {
+    const isAdmin = this.currentUserInfo?.role === 'Admin';
+    if (isAdmin) return true;
+
     if (this.ticketData?.closedAt) return false;
 
-    const isAdmin = this.currentUserInfo?.role === 'Admin';
     const isAssignedAgent = this.currentUserInfo?.role === 'Agent' && this.ticketData.assignedToUserId === this.currentUserInfo?.userId;
     const isCreator = this.ticketData.createdByUserId === this.currentUserInfo?.userId;
-    return isAdmin || isAssignedAgent || isCreator;
+    return isAssignedAgent || isCreator;
   }
 
   canResolveTicket(): boolean {
-    const isAdmin = this.currentUserInfo?.role === 'Admin';
+    const isAdminWithAcceptedTicket = this.currentUserInfo?.role === 'Admin' && !!this.ticketData.assignedToUserId;
     const isAssignedAgent = this.currentUserInfo?.role === 'Agent' && this.ticketData.assignedToUserId === this.currentUserInfo?.userId;
-    return isAdmin || isAssignedAgent;
+    return isAdminWithAcceptedTicket || isAssignedAgent;
   }
 
   canAssignToMe(): boolean {
     return this.currentUserInfo?.role === 'Agent' && !this.ticketData.assignedToUserId;
   }
 
-  canAdminAssignTicket(): boolean {
+  canAdminAcceptTicket(): boolean {
     return this.currentUserInfo?.role === 'Admin' && !this.ticketData.assignedToUserId;
-  }
-
-  adminAssignTicketPlaceholder(): void {
-    console.log('Admin assign ticket logic not yet implemented.');
   }
 
   assignTicketToMe(): void {
@@ -293,7 +292,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.location.back();
+    this.breadcrumbService.goBack('/ticket-main');
   }
 }
 

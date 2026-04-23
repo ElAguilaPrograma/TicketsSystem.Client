@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <div class="bg-brand-surface rounded-xl border border-brand-border flex flex-col min-h-[500px]">
+    <div class="bg-brand-surface rounded-xl border border-brand-border flex flex-col min-h-125">
         <!-- Tabs -->
         <div class="flex border-b border-brand-border px-6 pt-4 gap-6">
             <button class="pb-3 text-sm transition-colors relative"
@@ -18,25 +18,19 @@
                 (click)="switchTab('my-tickets')">
                 My Tickets
                 @if (activeTab === 'my-tickets') {
-                    <div class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-primary"></div>
+                    <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
                 }
             </button>
-            <button class="pb-3 text-sm transition-colors relative"
-                [ngClass]="activeTab === 'assigned' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
-                (click)="switchTab('assigned')">
-                Assigned To Me
-                @if (activeTab === 'assigned') {
-                    <div class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-primary"></div>
-                }
-            </button>
-            <button class="pb-3 text-sm transition-colors relative"
-                [ngClass]="activeTab === 'all' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
-                (click)="switchTab('all')">
-                All Tickets
-                @if (activeTab === 'all') {
-                    <div class="absolute bottom-0 left-0 w-full h-[2px] bg-brand-primary"></div>
-                }
-            </button>
+            @if (isAdmin) {
+                <button class="pb-3 text-sm transition-colors relative"
+                    [ngClass]="activeTab === 'all' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
+                    (click)="switchTab('all')">
+                    All Tickets
+                    @if (activeTab === 'all') {
+                        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
+                    }
+                </button>
+            }
         </div>
 
         <div class="p-4 bg-brand-bg/50 flex gap-4 border-b border-brand-border">

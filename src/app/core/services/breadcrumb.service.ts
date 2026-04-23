@@ -99,4 +99,10 @@ export class BreadcrumbService {
     }
     return cleanUrl;
   }
+
+  goBack(fallbackUrl: string = '/ticket-main'): void {
+    const trail = this.breadcrumbs();
+    const previous = trail.length > 1 ? trail[trail.length - 2].url : fallbackUrl;
+    this.router.navigateByUrl(previous);
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { UserValidations } from '../../../../core/validations/user-validations.validator';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
@@ -8,10 +8,11 @@ import { NgIcon, provideIcons } from "@ng-icons/core";
 import { Select } from '../../../../shared/components/select/select';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { heroArrowLeft, heroLockClosed, heroEyeSlash } from '@ng-icons/heroicons/outline';
+import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-user-edit-form',
-  imports: [ButtonComponent, NgIcon, Select, RouterLink, ReactiveFormsModule, ConfirmDialog],
+  imports: [ButtonComponent, NgIcon, Select, ReactiveFormsModule, ConfirmDialog],
   viewProviders: [provideIcons({ heroArrowLeft, heroLockClosed, heroEyeSlash })],
   templateUrl: './user-edit-form.html',
   styleUrl: './user-edit-form.css',
@@ -22,6 +23,7 @@ export class UserEditForm implements OnInit{
   private route = inject(ActivatedRoute);
   private userAdminService = inject(UserAdminService);
   private userValidations = inject(UserValidations);
+  private breadcrumbService = inject(BreadcrumbService);
 
   userId: string = "";
   editPassword: boolean = false;
@@ -100,5 +102,9 @@ export class UserEditForm implements OnInit{
     } else {
       this.updateUserForm.markAllAsTouched();
     }
+  }
+
+  goBack(): void {
+    this.breadcrumbService.goBack('/user-admin');
   }
 }
