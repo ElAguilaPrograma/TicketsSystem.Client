@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden shadow-sm flex flex-col relative group"
+            <div #publicCommentsCard class="comments-resize-target bg-brand-surface rounded-xl border border-brand-border overflow-hidden shadow-sm flex flex-col relative group"
                 [class.cursor-pointer]="ticketCommentsNotInternal.length > 4"
                 (click)="openCommentsModal()">
                 <div class="p-4 border-b border-brand-border bg-brand-bg/20 flex items-center gap-2">
@@ -117,12 +117,12 @@
                     [class.group-hover:blur-sm]="ticketCommentsNotInternal.length > 4">
                     @for (comment of recentCommentsNotInternal; track comment.commentId) {
                         @if (checkIfIsAUserComment(comment.userId)) {
-                            <div class="flex gap-4">
+                            <div class="flex gap-4 transition-all duration-300 ease-in-out">
                                 <div
                                     class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
                                     {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}</div>
                                 <div
-                                    class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative">
+                                    class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative transition-all duration-300 ease-in-out">
                                     <div
                                         class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent">
                                     </div>
@@ -135,12 +135,12 @@
                             </div>
                         }
                         @else {
-                            <div class="flex gap-4 flex-row-reverse">
+                            <div class="flex gap-4 flex-row-reverse transition-all duration-300 ease-in-out">
                                 <div
                                     class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
                                     {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}</div>
                                 <div
-                                    class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative">
+                                    class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative transition-all duration-300 ease-in-out">
                                     <div
                                         class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent">
                                     </div>
@@ -295,7 +295,7 @@
             </div>
 
             @if (currentUserInfo?.role !== 'User') {
-                <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm flex flex-col overflow-hidden relative group"
+                <div #internalCommentsCard class="comments-resize-target bg-brand-surface rounded-xl border border-brand-border shadow-sm flex flex-col overflow-hidden relative group"
                     [class.cursor-pointer]="ticketCommentsInternal.length > 2"
                     (click)="openInternalCommentsModal()">
                     <div class="p-4 border-b border-brand-border bg-amber-500/10 flex flex-col gap-1">
@@ -306,14 +306,14 @@
                         <span class="text-xs text-brand-text-muted italic">Only Agents can see this content</span>
                     </div>
                     
-                    <div class="p-4 flex flex-col gap-4 flex-1 bg-brand-bg/5 max-h-100 overflow-y-auto transition-all duration-300"
+                    <div class="p-4 flex flex-col gap-4 flex-1 bg-brand-bg/5 max-h-96 overflow-y-auto transition-all duration-300"
                         [class.group-hover:blur-sm]="ticketCommentsInternal.length > 2">
                         @for (comment of recentCommentsInternal; track comment.commentId) {
-                            <div class="flex gap-3">
+                            <div class="flex gap-3 transition-all duration-300 ease-in-out">
                                 <div class="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-md shrink-0 text-xs">
                                     {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'A' }}
                                 </div>
-                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-3 shadow-sm relative text-sm">
+                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-3 shadow-sm relative text-sm transition-all duration-300 ease-in-out">
                                     <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
                                     <div class="flex justify-between items-center mb-1">
                                         <span class="font-bold text-xs">{{ comment.createdByUser }}</span>
@@ -352,163 +352,129 @@
             }
         </div>
     </div>
-
-    @if (isCommentsModalOpen) {
-        <div class="fixed inset-0 z-1000 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300"
-             [class.opacity-100]="isCommentsModalAnimating"
-             [class.opacity-0]="!isCommentsModalAnimating" 
-             aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeCommentsModal()"></div>
-
-            <div class="relative bg-brand-surface rounded-2xl shadow-2xl w-full max-w-3xl h-[85vh] flex flex-col transform transition-all border border-brand-border duration-200"
-                 [class.scale-100]="isCommentsModalAnimating"
-                 [class.scale-95]="!isCommentsModalAnimating">
-                
-                <div class="px-6 py-4 border-b border-brand-border flex items-center justify-between bg-brand-surface rounded-t-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-brand-primary/10 rounded-lg text-brand-primary">
-                            <ng-icon name="heroChatBubbleLeftRight" class="text-xl"></ng-icon>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-brand-text" id="modal-title">All Comments</h2>
-                            <p class="text-sm text-brand-text-muted">{{ ticketCommentsNotInternal.length }} comments on this ticket</p>
-                        </div>
-                    </div>
-                    <button (click)="closeCommentsModal()" class="text-brand-text-muted hover:text-brand-text hover:bg-brand-bg p-2 rounded-lg transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="p-6 overflow-y-auto flex-1 bg-brand-bg/30 flex flex-col gap-6" id="modal-comments-container" #commentsScrollContainer>
-                    @for (comment of ticketCommentsNotInternal; track comment.commentId) {
-                        @if (checkIfIsAUserComment(comment.userId)) {
-                            <div class="flex gap-4">
-                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
-                                    {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}</div>
-                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm">
-                                    <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
-                                        <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
-                                    </div>
-                                    <p class="text-sm text-brand-text">{{ comment.content }}</p>
-                                </div>
-                            </div>
-                        } @else {
-                            <div class="flex gap-4 flex-row-reverse">
-                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
-                                    {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}
-                                </div>
-                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative">
-                                    <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
-                                        <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
-                                    </div>
-                                    <p class="text-sm text-brand-text">{{ comment.content }}</p>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="px-6 py-4 border-t border-brand-border bg-brand-surface rounded-b-2xl">
-                    <div class="flex gap-3">
-                        <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold shrink-0">
-                            You
-                        </div>
-                        <div class="flex-1 flex flex-col gap-3">
-                            <textarea rows="3" placeholder="Write a comment..." [(ngModel)]="commentContentNotInternal"
-                                class="w-full px-4 py-3 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors text-sm resize-none"></textarea>
-                            <div class="flex justify-between items-center">
-                                <button class="text-brand-text-muted hover:text-brand-text transition-colors p-2 rounded hover:bg-brand-bg">
-                                    <ng-icon name="heroPaperClip"></ng-icon>
-                                </button>
-                                <app-button label="Add Comment" variant="primary" (click)="createTicketCommentNotInternal()"></app-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (isInternalCommentsModalOpen) {
-        <div class="fixed inset-0 z-1000 flex items-center justify-center p-4 sm:p-6 transition-opacity duration-300"
-             [class.opacity-100]="isInternalCommentsModalAnimating"
-             [class.opacity-0]="!isInternalCommentsModalAnimating" 
-             aria-labelledby="modal-internal-title" role="dialog" aria-modal="true">
-            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="closeInternalCommentsModal()"></div>
-
-            <div class="relative bg-brand-surface rounded-2xl shadow-2xl w-full max-w-2xl h-[85vh] flex flex-col transform transition-all border border-brand-border duration-200"
-                 [class.scale-100]="isInternalCommentsModalAnimating"
-                 [class.scale-95]="!isInternalCommentsModalAnimating">
-                
-                <div class="px-6 py-4 border-b border-brand-border flex items-center justify-between bg-amber-500/10 rounded-t-2xl">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2 bg-amber-500/20 rounded-lg text-amber-600">
-                            <ng-icon name="heroDocument" class="text-xl"></ng-icon>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-amber-600" id="modal-internal-title">Internal Comments</h2>
-                            <p class="text-sm text-amber-600/70">{{ ticketCommentsInternal.length }} internal notes on this ticket</p>
-                        </div>
-                    </div>
-                    <button (click)="closeInternalCommentsModal()" class="text-amber-600/60 hover:text-amber-600 hover:bg-amber-500/20 p-2 rounded-lg transition-colors">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <div class="p-6 overflow-y-auto flex-1 bg-brand-bg/30 flex flex-col gap-6" #internalCommentsScrollContainer>
-                    @for (comment of ticketCommentsInternal; track comment.commentId) {
-                        @if (checkIfIsAUserComment(comment.userId)) {
-                            <div class="flex gap-4">
-                                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
-                                    {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'A' }}
-                                </div>
-                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm">
-                                    <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
-                                        <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
-                                    </div>
-                                    <p class="text-brand-text">{{ comment.content }}</p>
-                                </div>
-                            </div>
-                        } @else {
-                            <div class="flex gap-4 flex-row-reverse">
-                                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
-                                    {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'A' }}
-                                </div>
-                                <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm">
-                                    <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
-                                        <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
-                                    </div>
-                                    <p class="text-brand-text">{{ comment.content }}</p>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-                
-                <div class="px-6 py-4 border-t border-brand-border bg-brand-surface rounded-b-2xl">
-                    <div class="flex flex-col gap-3">
-                        <textarea rows="3" placeholder="Write an internal note..." [(ngModel)]="commentContentInternal"
-                            class="w-full px-4 py-3 rounded-lg bg-brand-bg border border-brand-border focus:border-amber-500 focus:outline-none transition-colors text-sm resize-none"></textarea>
-                        <div class="flex justify-end">
-                            <app-button label="Add Note" variant="primary" (click)="createTicketCommentInternal()"></app-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
 </section>
+
+<!-- Comments Modal -->
+<app-modal [isOpen]="isCommentsModalOpen" (close)="closeCommentsModal()"
+    title="All Comments" size="lg" [customHeader]="true" [scrollableBody]="false">
+
+    <div modal-header class="flex items-center gap-3">
+        <div class="p-2 bg-brand-primary/10 rounded-lg text-brand-primary">
+            <ng-icon name="heroChatBubbleLeftRight" class="text-xl"></ng-icon>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-brand-text">All Comments</h2>
+            <p class="text-sm text-brand-text-muted">{{ ticketCommentsNotInternal.length }} comments on this ticket</p>
+        </div>
+    </div>
+
+    <div class="comments-resize-target comments-hide-scrollbar flex flex-col gap-6 overflow-y-auto custom-scrollbar" style="max-height: 50vh;" #commentsScrollContainer id="modal-comments-container">
+        @for (comment of ticketCommentsNotInternal; track comment.commentId) {
+            @if (checkIfIsAUserComment(comment.userId)) {
+                <div class="flex gap-4 transition-all duration-300 ease-in-out">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                        {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}</div>
+                    <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm transition-all duration-300 ease-in-out">
+                        <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
+                            <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
+                        </div>
+                        <p class="text-sm text-brand-text">{{ comment.content }}</p>
+                    </div>
+                </div>
+            } @else {
+                <div class="flex gap-4 flex-row-reverse transition-all duration-300 ease-in-out">
+                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                        {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'U' }}
+                    </div>
+                    <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative transition-all duration-300 ease-in-out">
+                        <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
+                            <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
+                        </div>
+                        <p class="text-sm text-brand-text">{{ comment.content }}</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div modal-footer class="w-full">
+        <div class="w-full bg-brand-surface rounded-xl border border-brand-border py-2 px-4 transition-all duration-200 focus-within:border-brand-primary focus-within:shadow-sm focus-within:ring-1 focus-within:ring-brand-primary/20">
+            <textarea rows="2" placeholder="Write a comment..." [(ngModel)]="commentContentNotInternal"
+                class="w-full bg-transparent text-sm text-brand-text placeholder-brand-text-muted/50 focus:outline-none resize-none"></textarea>
+            <div class="flex items-center justify-between pt-3 mt-3 border-t border-brand-border/50">
+                <div class="flex items-center gap-1">
+                    <button class="text-brand-text-muted hover:text-brand-primary hover:bg-brand-primary/10 p-2 rounded-lg transition-colors" title="Attach file">
+                        <ng-icon name="heroPaperClip" class="text-lg"></ng-icon>
+                    </button>
+                </div>
+                <app-button label="Add Comment" variant="primary" (click)="createTicketCommentNotInternal()"></app-button>
+            </div>
+        </div>
+    </div>
+</app-modal>
+
+<!-- Internal Comments Modal -->
+<app-modal [isOpen]="isInternalCommentsModalOpen" (close)="closeInternalCommentsModal()"
+    title="Internal Comments" size="lg" [customHeader]="true" [scrollableBody]="false">
+
+    <div modal-header class="flex items-center gap-3">
+        <div class="p-2 bg-amber-500/20 rounded-lg text-amber-600">
+            <ng-icon name="heroDocument" class="text-xl"></ng-icon>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold text-amber-600">Internal Comments</h2>
+            <p class="text-sm text-amber-600/70">{{ ticketCommentsInternal.length }} internal notes on this ticket</p>
+        </div>
+    </div>
+
+    <div class="comments-resize-target comments-hide-scrollbar flex flex-col gap-6 overflow-y-auto custom-scrollbar" style="max-height: 50vh;" #internalCommentsScrollContainer>
+        @for (comment of ticketCommentsInternal; track comment.commentId) {
+            @if (checkIfIsAUserComment(comment.userId)) {
+                <div class="flex gap-4 transition-all duration-300 ease-in-out">
+                    <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                        {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'A' }}
+                    </div>
+                    <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm transition-all duration-300 ease-in-out">
+                        <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
+                            <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
+                        </div>
+                        <p class="text-brand-text">{{ comment.content }}</p>
+                    </div>
+                </div>
+            } @else {
+                <div class="flex gap-4 flex-row-reverse transition-all duration-300 ease-in-out">
+                    <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+                        {{ comment.createdByUser ? comment.createdByUser.charAt(0).toUpperCase() : 'A' }}
+                    </div>
+                    <div class="flex-1 bg-brand-surface border border-brand-border rounded-lg rounded-tl-none p-4 shadow-sm relative text-sm transition-all duration-300 ease-in-out">
+                        <div class="absolute top-0 -left-2 w-0 h-0 border-t-8 border-t-brand-surface border-l-8 border-l-transparent"></div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-sm">{{ comment.createdByUser }}</span>
+                            <span class="text-xs text-brand-text-muted">{{ comment.createdAt | date: 'short' }}</span>
+                        </div>
+                        <p class="text-brand-text">{{ comment.content }}</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div modal-footer class="w-full">
+        <div class="w-full bg-amber-50/50 dark:bg-amber-900/10 rounded-xl border border-amber-200/60 dark:border-amber-700/30 py-2 px-4 transition-all duration-200 focus-within:border-amber-500 focus-within:shadow-sm focus-within:ring-1 focus-within:ring-amber-500/20">
+            <textarea rows="2" placeholder="Write an internal note..." [(ngModel)]="commentContentInternal"
+                class="w-full bg-transparent text-sm text-brand-text placeholder-brand-text-muted/50 focus:outline-none resize-none"></textarea>
+            <div class="flex items-center justify-end pt-3 mt-3 border-t border-amber-200/40 dark:border-amber-700/20">
+                <app-button label="Add Note" variant="primary" (click)="createTicketCommentInternal()"></app-button>
+            </div>
+        </div>
+    </div>
+</app-modal>
 
 <app-confirm-dialog [(isOpen)]="closeTicketConfirmDialogOpen" title="Resolve Ticket" 
     message="Are you sure you want to mark the ticket as resolved?" (confirm)="handleCloseTicketConfirm()"></app-confirm-dialog>

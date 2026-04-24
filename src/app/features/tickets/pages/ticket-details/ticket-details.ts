@@ -16,15 +16,17 @@ import { FormsModule } from '@angular/forms';
 import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserInfo';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-ticket-details',
-  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, ConfirmDialog],
+  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, ConfirmDialog, ModalComponent],
   viewProviders: [provideIcons({ heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip })],
   templateUrl: './ticket-details.html',
   styleUrl: './ticket-details.css',
 })
 export class TicketDetails implements OnInit, OnDestroy {
+  private readonly resizeAnimationMs = 320;
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -36,7 +38,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   private commentSubscription?: Subscription;
 
   ticketId: string = "";
-  ticketData: IReadTickets = {} as IReadTickets; // tambien se puede poner { title = '' } y asi para inicializar todas las propiedades
+  ticketData: IReadTickets = {} as IReadTickets;
   currentUserInfo: ICurrentUserInfo | null = this.authService.getCurrentUserInfo();
 
   ticketsComments: ITicketsReadComment[] = [];
@@ -51,6 +53,7 @@ export class TicketDetails implements OnInit, OnDestroy {
 
   closeTicketConfirmDialogOpen = signal(false);
   closeReopenTicketConfirmDialogOpen = signal(false);
+  private hasLoadedCommentsOnce = false;
   
   get recentCommentsNotInternal(): ITicketsReadComment[] {
     return this.ticketCommentsNotInternal.slice(-4);
@@ -60,28 +63,22 @@ export class TicketDetails implements OnInit, OnDestroy {
     return this.ticketCommentsInternal.slice(-2);
   }
 
-  @ViewChild('commentsScrollContainer') private commentsScrollContainer?: ElementRef;
-  @ViewChild('internalCommentsScrollContainer') private internalCommentsScrollContainer?: ElementRef;
-
-  isCommentsModalAnimating: boolean = false;
-  isInternalCommentsModalAnimating: boolean = false;
+  @ViewChild('publicCommentsCard') private publicCommentsCard?: ElementRef<HTMLElement>;
+  @ViewChild('internalCommentsCard') private internalCommentsCard?: ElementRef<HTMLElement>;
+  @ViewChild('commentsScrollContainer') private commentsScrollContainer?: ElementRef<HTMLElement>;
+  @ViewChild('internalCommentsScrollContainer') private internalCommentsScrollContainer?: ElementRef<HTMLElement>;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.ticketId = params.get('ticketId')!;
     })
-    console.log("currentUserId", this.authService.getCurrentUserId());
     this.loadTicketDetails();
     this.loadTicketComments();
     
     this.commentSubscription = this.signalRService.ticketComment$.subscribe(newComment => {
       if (newComment.ticketId === this.ticketId) {
         if (!this.ticketsComments.some(c => c.commentId === newComment.commentId)) {
-          this.ticketsComments.push(newComment);
-          this.ticketCommentsNotInternal = this.ticketsComments.filter(comment => !comment.isInternal);
-          this.ticketCommentsInternal = this.ticketsComments.filter(comment => comment.isInternal);
-          this.cdr.detectChanges();
-        this.scrollToBottom();
+          this.applyCommentsState([...this.ticketsComments, newComment]);
         }
       }
     });
@@ -94,17 +91,80 @@ export class TicketDetails implements OnInit, OnDestroy {
   loadTicketComments(): void {
     this.ticketCommentService.getTicketComments(this.ticketId).subscribe({
       next: (response) => {
-        this.ticketsComments = response;
-        this.ticketCommentsNotInternal = this.ticketsComments.filter(comment => !comment.isInternal);
-        this.ticketCommentsInternal = this.ticketsComments.filter(comment => comment.isInternal);
-        this.cdr.detectChanges();
-        this.scrollToBottom();
-        console.log("ticketsComments", this.ticketsComments);
-        console.log("ticketCommentsNotInternal", this.ticketCommentsNotInternal);
-        console.log("ticketCommentsInternal", this.ticketCommentsInternal);
+        this.applyCommentsState(response);
       },
       error: (error) => console.error(error)
     });
+  }
+
+  private getResizableContainers(): HTMLElement[] {
+    const containers = [
+      this.publicCommentsCard?.nativeElement,
+      this.internalCommentsCard?.nativeElement,
+      this.commentsScrollContainer?.nativeElement,
+      this.internalCommentsScrollContainer?.nativeElement,
+    ];
+
+    return containers.filter((container): container is HTMLElement => !!container);
+  }
+
+  private captureHeights(containers: HTMLElement[]): Map<HTMLElement, number> {
+    const heights = new Map<HTMLElement, number>();
+
+    for (const container of containers) {
+      heights.set(container, container.getBoundingClientRect().height);
+    }
+
+    return heights;
+  }
+
+  private animateContainerResize(previousHeights: Map<HTMLElement, number>): void {
+    if (!previousHeights.size) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      for (const [container, previousHeight] of previousHeights) {
+        const nextHeight = container.getBoundingClientRect().height;
+
+        if (Math.abs(nextHeight - previousHeight) < 1) {
+          continue;
+        }
+
+        container.style.height = `${previousHeight}px`;
+        container.style.overflow = 'hidden';
+        container.style.transition = 'none';
+        void container.offsetHeight;
+
+        container.style.transition = `height ${this.resizeAnimationMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+        container.style.height = `${nextHeight}px`;
+
+        window.setTimeout(() => {
+          container.style.height = '';
+          container.style.overflow = '';
+          container.style.transition = '';
+        }, this.resizeAnimationMs + 50);
+      }
+    });
+  }
+
+  private applyCommentsState(comments: ITicketsReadComment[]): void {
+    const shouldAnimateResize = this.hasLoadedCommentsOnce;
+    const containers = shouldAnimateResize ? this.getResizableContainers() : [];
+    const previousHeights = shouldAnimateResize ? this.captureHeights(containers) : new Map<HTMLElement, number>();
+
+    this.ticketsComments = comments;
+    this.ticketCommentsNotInternal = this.ticketsComments.filter(comment => !comment.isInternal);
+    this.ticketCommentsInternal = this.ticketsComments.filter(comment => comment.isInternal);
+    this.cdr.detectChanges();
+
+    if (shouldAnimateResize) {
+      this.animateContainerResize(previousHeights);
+      this.scrollToBottom(this.resizeAnimationMs);
+    } else {
+      this.scrollToBottom();
+      this.hasLoadedCommentsOnce = true;
+    }
   }
 
   createTicketCommentNotInternal(): void {
@@ -144,7 +204,6 @@ export class TicketDetails implements OnInit, OnDestroy {
       next: (response) => {
         this.ticketData = response;
         this.cdr.detectChanges();
-        console.log(this.ticketData);
       },
       error: (error) => {
         console.error(error);
@@ -177,46 +236,26 @@ export class TicketDetails implements OnInit, OnDestroy {
   openCommentsModal(): void {
     if (this.ticketCommentsNotInternal.length > 4) {
       this.isCommentsModalOpen = true;
-      this.cdr.detectChanges(); 
-      setTimeout(() => {
-        this.isCommentsModalAnimating = true;
-        this.cdr.detectChanges(); 
-        this.scrollToBottom();
-      }, 50); 
+      setTimeout(() => this.scrollToBottom(80), 150);
     }
   }
 
   closeCommentsModal(): void {
-    this.isCommentsModalAnimating = false;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.isCommentsModalOpen = false;
-      this.cdr.detectChanges();
-    }, 200);
+    this.isCommentsModalOpen = false;
   }
 
   openInternalCommentsModal(): void {
     if (this.ticketCommentsInternal.length > 2) {
       this.isInternalCommentsModalOpen = true;
-      this.cdr.detectChanges();
-      setTimeout(() => {
-        this.isInternalCommentsModalAnimating = true;
-        this.cdr.detectChanges();
-        this.scrollToBottom();
-      }, 50);
+      setTimeout(() => this.scrollToBottom(80), 150);
     }
   }
 
   closeInternalCommentsModal(): void {
-    this.isInternalCommentsModalAnimating = false;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.isInternalCommentsModalOpen = false;
-      this.cdr.detectChanges();
-    }, 200);
+    this.isInternalCommentsModalOpen = false;
   }
 
-  scrollToBottom(): void {
+  scrollToBottom(delay = 50): void {
     setTimeout(() => {
       try {
         if (this.isCommentsModalOpen && this.commentsScrollContainer) {
@@ -226,7 +265,7 @@ export class TicketDetails implements OnInit, OnDestroy {
           this.internalCommentsScrollContainer.nativeElement.scrollTop = this.internalCommentsScrollContainer.nativeElement.scrollHeight;
         }
       } catch (err) { }
-    }, 50);
+    }, delay);
   }
 
   checkIfIsAUserComment(userCommentId: string): boolean {
@@ -295,4 +334,3 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.breadcrumbService.goBack('/ticket-main');
   }
 }
-

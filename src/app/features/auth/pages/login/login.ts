@@ -28,7 +28,11 @@ export class Login {
         next: (res) => {
           if (res?.role === 'Admin') {
             this.router.navigate(['/dashboard']);
-          } else {
+          } 
+          else if (res?.role === 'Agent') {
+            this.router.navigate(['/control-panel']);
+          }
+          else {
             this.router.navigate(['/ticket-main']);
           }
         },

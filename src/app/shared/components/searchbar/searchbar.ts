@@ -6,7 +6,7 @@ import { IconButton } from "../icon-button/icon-button";
 
 @Component({
   selector: 'app-searchbar',
-  imports: [NgIcon, FormsModule, IconButton],
+  imports: [NgIcon, FormsModule],
   viewProviders: [provideIcons({ heroMagnifyingGlass, heroXMark })],
   templateUrl: './searchbar.html',
   styleUrl: './searchbar.css'

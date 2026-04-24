@@ -116,12 +116,14 @@
                 [class.border-transparent]="activeTab !== 'unassigned'" [class.text-brand-text-muted]="activeTab !== 'unassigned'">
                 Unassigned Tickets
             </button>
+           @if (isAdmin) {
             <button type="button" (click)="switchTab('assigned')"
                 class="px-4 py-2 font-medium transition-colors border-b-2"
                 [class.border-brand-primary]="activeTab === 'assigned'" [class.text-brand-primary]="activeTab === 'assigned'"
                 [class.border-transparent]="activeTab !== 'assigned'" [class.text-brand-text-muted]="activeTab !== 'assigned'">
                 Assigned Tickets
             </button>
+           } 
         </div>
         
         <div class="flex-1 overflow-y-auto p-6 bg-brand-bg/30">
@@ -130,7 +132,6 @@
                     <div (click)="navigateToDetails(ticket.ticketId)" 
                          class="group relative p-5 bg-brand-surface rounded-xl border border-brand-border hover:border-brand-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
                         
-                        <!-- Decorative top bar -->
                         <div class="absolute top-0 left-0 w-full h-0.75" [ngClass]="getPriorityColor(ticket.priorityName)"></div>
 
                         <div>

@@ -19,6 +19,10 @@ export class SignalRService {
   private newTicketSubject = new Subject<IReadTickets>();
   public newTicket$ = this.newTicketSubject.asObservable();
 
+  // Subject used to notify new tickets created to control panel
+  private newTicketToControlPanelSubject = new Subject<IReadTickets>();
+  public newTicketToControlPanel$ = this.newTicketToControlPanelSubject.asObservable();
+
   // Subject used to notify ticket status changes
   private ticketStatusChangedSubject = new Subject<IReadTickets>();
   public ticketStatusChanged$ = this.ticketStatusChangedSubject.asObservable();
@@ -71,6 +75,11 @@ export class SignalRService {
     // Listen for new tickets (event: ReceiveNewTicket)
     this.hubConnection?.on('ReceiveNewTicket', (ticket: IReadTickets) => {
       this.newTicketSubject.next(ticket);
+    });
+
+    // Listen for ticket created on control panel
+    this.hubConnection?.on('ReceiveTicket', (ticket: IReadTickets) => {
+      this.newTicketToControlPanelSubject.next(ticket);
     });
 
     // Listen for ticket status changes (event: ReceiveNewTicketStatusChange)

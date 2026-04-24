@@ -9,6 +9,7 @@ import { TicketService } from '../../../../api/services/ticket.service';
 import { SignalRService } from '../../../../api/services/signalR.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 import { Router, RouterLink } from "@angular/router";
+import { AuthenticationService } from '../../../../api/services/authentication.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -23,6 +24,7 @@ export class ControlPanel implements OnInit {
   private signalrService = inject(SignalRService);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthenticationService);
 
   todaysTicketsCount: number = 0;
   allTickets: IReadTickets[] = [];
@@ -32,12 +34,14 @@ export class ControlPanel implements OnInit {
   isModalOpen = signal(false);
   modalAnimationState = signal(false);
   activeTab: 'unassigned' | 'assigned' = 'unassigned';
+  isAdmin: boolean = false;
 
   ngOnInit() {
     this.loadTodaysCount();
     this.loadInitialLiveTickets();
+    this.isAdmin = this.authService.getCurrentUserRole() === 'Admin';
     
-    this.signalrService.newTicket$
+    this.signalrService.newTicketToControlPanel$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((newTicket) => {
         if (!this.allTickets.some(t => t.ticketId === newTicket.ticketId)) {

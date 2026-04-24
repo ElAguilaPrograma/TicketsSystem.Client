@@ -1,31 +1,57 @@
-@if (isOpen) {
-<div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
-    (click)="onOverlayClick($event)">
+@if (isVisible) {
+<div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+     [class.opacity-100]="isAnimating"
+     [class.opacity-0]="!isAnimating"
+     (click)="onOverlayClick($event)">
 
     <div
-        [class]="'relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full flex flex-col max-h-[90vh] transform transition-all animate-in zoom-in-95 duration-200 border border-gray-100 dark:border-gray-800 ' + maxWidthClass">
+        #modalPanel
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-labelledby]="titleId"
+        tabindex="-1"
+        [class]="'relative bg-brand-surface rounded-2xl shadow-2xl w-full flex flex-col max-h-[85vh] transform border border-brand-border transition-all duration-300 ' + maxWidthClass"
+        [class.scale-100]="isAnimating"
+        [class.opacity-100]="isAnimating"
+        [class.scale-95]="!isAnimating"
+        [class.opacity-0]="!isAnimating">
 
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-            <h3 class="text-xl font-bold text-brand-text">{{ title }}</h3>
+        @if (customHeader) {
+            <div class="flex items-center justify-between px-6 py-4 border-b border-brand-border">
+                <ng-content select="[modal-header]"></ng-content>
+                @if (showCloseButton) {
+                <app-icon-button [label]="closeButtonAriaLabel" (click)="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </app-icon-button>
+                }
+            </div>
+        } @else {
+            <div class="flex items-center justify-between px-6 py-4 border-b border-brand-border">
+                <h3 [id]="titleId" class="text-xl font-bold text-brand-text">{{ title }}</h3>
+                @if (showCloseButton) {
+                <app-icon-button [label]="closeButtonAriaLabel" (click)="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </app-icon-button>
+                }
+            </div>
+        }
 
-            @if (showCloseButton) {
-            <app-icon-button (click)="closeModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </app-icon-button>
-            }
-        </div>
-
-        <div class="p-6 overflow-y-auto custom-scrollbar">
+        <div class="p-6 overflow-y-auto custom-scrollbar" [class.flex-1]="scrollableBody" [class.overflow-y-auto]="scrollableBody">
             <ng-content></ng-content>
         </div>
 
-        <div
-            class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-800/50 rounded-b-2xl">
-            <ng-content select="[modal-footer]"></ng-content>
-        </div>
+        @if (showFooter) {
+            <div
+                class="flex items-center justify-end gap-3 px-6 py-4 border-t border-brand-border bg-brand-bg/30 rounded-b-2xl">
+                <ng-content select="[modal-footer]"></ng-content>
+            </div>
+        }
 
     </div>
 </div>

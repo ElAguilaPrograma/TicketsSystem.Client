@@ -48,7 +48,7 @@
         </div>
 
         <!-- Table from ticket-main -->
-        <div class="overflow-x-auto flex-1">
+        <div class="overflow-hidden flex-1">
             <table class="w-full table-fixed">
                 <thead>
                     <tr class="bg-brand-bg/20 border-b border-brand-border">
@@ -63,9 +63,10 @@
                 </thead>
                 <tbody>
                     @for (ticket of recentTickets; track ticket.ticketId) {
-                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors">
-                        <td class="px-6 py-4" (click)="navigateToTicketsDetails(ticket.ticketId)">
-                            <div class="flex flex-col cursor-pointer">
+                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors cursor-pointer" 
+                        (click)="navigateToTicketsDetails(ticket.ticketId)">
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col">
                                 <span class="text-brand-text font-medium hover:text-brand-primary transition-colors">{{ ticket.title }}</span>
                                 <span class="text-brand-text-muted font-medium text-xs truncate">{{ ticket.description }}</span>
                             </div>

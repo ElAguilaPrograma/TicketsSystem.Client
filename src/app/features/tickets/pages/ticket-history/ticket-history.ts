@@ -32,7 +32,7 @@ export class TicketHistory implements OnInit {
   isAdmin: boolean = this.authService.getCurrentUserRole() === 'Admin';
 
   currentPage: number = 1;
-  pageSize: number = 8;
+  pageSize: number = 5;
   totalPages: number = 1;
   totalCount: number = 0;
   disabledBotton: boolean = false;
