@@ -1,0 +1,60 @@
+<section class="max-w-3xl mx-auto flex flex-col gap-6">
+    <div class="flex items-center gap-4">
+        <button (click)="goBack()"
+            class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
+            <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
+        </button>
+        <div>
+            <h3 class="text-sm font-medium text-brand-text-muted">Ticket Management</h3>
+            <h1 class="text-4xl font-bold">Create New Ticket</h1>
+        </div>
+    </div>
+
+    <form [formGroup]="createTicketForm" (ngSubmit)="onSubmit()">
+        <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden">
+            <div class="p-6 border-b border-brand-border">
+                <h2 class="text-xl font-bold">Ticket Information</h2>
+                <p class="text-sm text-brand-text-muted mt-1">Please provide accurate details to help us resolve the issue
+                    swiftly.</p>
+            </div>
+            <div class="p-6 space-y-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Title <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" placeholder="e.g., Cannot connect to database" formControlName="title"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
+                    </div>
+
+                    <div class="space-y-2">
+                        <app-select label="Priority" [options]="priorityOptions" [showLabel]="true" variant="primary"
+                            [required]="true" formControlName="priorityId"></app-select>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-brand-text">Description <span
+                            class="text-red-500">*</span></label>
+                    <textarea rows="6" placeholder="Describe the issue in detail..." formControlName="description"
+                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"></textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-brand-text">Attachments</label>
+                    <div
+                        class="border-2 border-dashed border-brand-border rounded-lg p-8 flex flex-col items-center justify-center text-brand-text-muted bg-brand-bg/50 hover:bg-brand-bg transition-colors cursor-pointer">
+                        <ng-icon name="heroArrowUpOnSquare" class="text-3xl mb-2"></ng-icon>
+                        <p class="font-medium">Click to upload or drag and drop</p>
+                        <p class="text-xs mt-1">SVG, PNG, JPG or PDF (max. 5MB)</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
+                <app-button label="Cancel" variant="outline" (click)="goBack()"></app-button>
+                <app-button label="Create Ticket" variant="primary" type="submit" [disabled]="createTicketForm.invalid"></app-button>
+            </div>
+        </div>
+    </form>
+</section>

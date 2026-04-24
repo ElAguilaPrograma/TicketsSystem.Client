@@ -1,0 +1,188 @@
+<section class="flex flex-col gap-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h3 class="text-sm font-medium text-brand-text-muted">Daily Operations</h3>
+            <h1 class="text-4xl font-bold">Control Panel</h1>
+        </div>
+        <div>
+            <app-button label="Refresh Data" variant="outline" (click)="refreshData()"></app-button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- AI Insights Column -->
+        <div class="col-span-1 flex flex-col gap-6">
+            <div
+                class="bg-linear-to-br from-brand-secondary/20 to-brand-primary/20 rounded-xl border border-brand-secondary/30 p-6 flex flex-col gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-brand-secondary/30">
+                        <ng-icon name="heroSparkles" class="text-2xl text-brand-secondary"></ng-icon>
+                    </div>
+                    <h2 class="text-xl font-bold">AI Insights</h2>
+                </div>
+                <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
+                    <p class="font-medium text-brand-text">Ticket #TCK-892</p>
+                    <p class="text-sm text-brand-text-muted mt-1 flex items-center gap-2">
+                        <ng-icon name="heroExclamationTriangle" class="text-amber-500"></ng-icon>
+                        This ticket has been open for 6 days. It requires immediate attention due to SLA constraints.
+                    </p>
+                    <div class="mt-3 flex justify-end">
+                        <app-button label="View Ticket" variant="outline"></app-button>
+                    </div>
+                </div>
+                <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
+                    <p class="font-medium text-brand-text">Load Prediction</p>
+                    <p class="text-sm text-brand-text-muted mt-1 flex items-center gap-2">
+                        <ng-icon name="heroChartBar" class="text-blue-500"></ng-icon>
+                        Expect a 15% increase in tickets between 2 PM and 4 PM today.
+                    </p>
+                </div>
+            </div>
+
+            <app-card>
+                <div class="mt-2">
+                    <h3 class="text-brand-text-muted text-sm">Today's Total Tickets</h3>
+                    <h2 class="font-bold text-3xl mt-1 text-brand-primary">{{ todaysTicketsCount }}</h2>
+                </div>
+            </app-card>
+        </div>
+
+        <!-- Real-Time Tickets Column -->
+        <div
+            class="col-span-1 lg:col-span-2 bg-brand-surface rounded-xl border border-brand-border overflow-hidden flex flex-col">
+            <div class="flex justify-between items-center px-6 py-4 border-b border-brand-border">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></div>
+                    <h2 class="text-xl font-bold">Live Incoming Tickets</h2>
+                </div>
+                <div class="flex justify-center items-center p-2 rounded-lg bg-brand-primary/30 cursor-pointer hover:bg-brand-primary/40 transition-colors" (click)="openModal()">
+                    <ng-icon name="heroArrowTopRightOnSquare" class="text-xl text-brand-primary"></ng-icon>
+                </div>
+            </div>
+            <div class="flex-1 p-6 space-y-4 overflow-y-auto">
+                @for (ticket of unassignedTickets | slice:0:4; track ticket.ticketId) {
+                <div
+                    class="p-4 rounded-lg border border-brand-border hover:bg-brand-bg/50 transition-colors flex justify-between items-center animate-in slide-in-from-top-4 duration-300">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold uppercase px-2 py-0.5 rounded" [ngClass]="getPriorityColor(ticket.priorityName)">
+                                {{ ticket.priorityName }}
+                            </span>
+                            <span class="text-sm text-brand-text-muted">{{ getTimeAgo(ticket.createdAt) }}</span>
+                        </div>
+                        <h4 class="font-bold">{{ ticket.title }}</h4>
+                        <p class="text-sm text-brand-text-muted mt-1">{{ ticket.description | slice:0:100 }}{{ ticket.description.length > 100 ? '...' : '' }}</p>
+                    </div>
+                    <div class="flex h-full items-center justify-center">
+                        <app-button label="View Ticket" variant="primary" (click)="navigateToDetails(ticket.ticketId)"></app-button>
+                    </div>
+                </div>
+                } @empty {
+                    <div class="flex flex-col items-center justify-center gap-2">
+                        <ng-icon name="heroTicket" class="text-4xl text-brand-border"></ng-icon>
+                        <p>No tickets found</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Open Tickets Modal -->
+<div *ngIf="isModalOpen()" 
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm transition-opacity duration-300" 
+    aria-modal="true"
+    [class.opacity-100]="modalAnimationState()"
+    [class.opacity-0]="!modalAnimationState()">
+    
+    <div class="fixed inset-0 bg-black/60 transition-opacity" (click)="closeModal()"></div>
+    
+    <div class="relative w-full max-w-4xl max-h-[90vh] flex flex-col bg-brand-surface border border-brand-border rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 transition-all"
+        [class.scale-100]="modalAnimationState()"
+        [class.opacity-100]="modalAnimationState()"
+        [class.scale-95]="!modalAnimationState()"
+        [class.opacity-0]="!modalAnimationState()">
+        
+        <div class="flex items-center justify-between px-6 py-4 border-b border-brand-border bg-brand-surface/50">
+            <h2 class="text-xl font-bold">Open Tickets Overview</h2>
+            <button (click)="closeModal()" class="p-2 rounded-lg hover:bg-brand-bg/80 transition-colors text-brand-text-muted hover:text-brand-text">
+                <ng-icon name="heroXMark" class="text-xl"></ng-icon>
+            </button>
+        </div>
+        
+        <div class="flex gap-4 px-6 pt-4 border-b border-brand-border">
+            <button type="button" (click)="switchTab('unassigned')"
+                class="px-4 py-2 font-medium transition-colors border-b-2"
+                [class.border-brand-primary]="activeTab === 'unassigned'" [class.text-brand-primary]="activeTab === 'unassigned'"
+                [class.border-transparent]="activeTab !== 'unassigned'" [class.text-brand-text-muted]="activeTab !== 'unassigned'">
+                Unassigned Tickets
+            </button>
+           @if (isAdmin) {
+            <button type="button" (click)="switchTab('assigned')"
+                class="px-4 py-2 font-medium transition-colors border-b-2"
+                [class.border-brand-primary]="activeTab === 'assigned'" [class.text-brand-primary]="activeTab === 'assigned'"
+                [class.border-transparent]="activeTab !== 'assigned'" [class.text-brand-text-muted]="activeTab !== 'assigned'">
+                Assigned Tickets
+            </button>
+           } 
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-6 bg-brand-bg/30">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (ticket of (activeTab === 'unassigned' ? unassignedTickets : assignedTickets); track ticket.ticketId) {
+                    <div (click)="navigateToDetails(ticket.ticketId)" 
+                         class="group relative p-5 bg-brand-surface rounded-xl border border-brand-border hover:border-brand-primary/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden">
+                        
+                        <div class="absolute top-0 left-0 w-full h-0.75" [ngClass]="getPriorityColor(ticket.priorityName)"></div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-4 mt-1">
+                                <span class="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md" [ngClass]="getPriorityColor(ticket.priorityName)">
+                                    {{ ticket.priorityName }}
+                                </span>
+                                <span class="text-xs text-brand-text-muted font-medium flex items-center gap-1.5 bg-brand-bg px-2.5 py-1 rounded-md">
+                                    <ng-icon name="heroClock" class="text-brand-text-muted"></ng-icon>
+                                    {{ getTimeAgo(ticket.createdAt) }}
+                                </span>
+                            </div>
+
+                            <h4 class="font-bold text-lg text-brand-text group-hover:text-brand-primary transition-colors line-clamp-1 mb-2">
+                                {{ ticket.title }}
+                            </h4>
+                            <p class="text-sm text-brand-text-muted line-clamp-2 leading-relaxed">
+                                {{ ticket.description }}
+                            </p>
+                        </div>
+                        
+                        <div class="mt-5 pt-4 border-t border-brand-border/50 flex items-center justify-between">
+                            @if(ticket.assignedToUser) {
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-full bg-brand-primary/20 flex items-center justify-center text-brand-primary text-xs font-bold ring-2 ring-brand-surface">
+                                        {{ ticket.assignedToUser.charAt(0) }}
+                                    </div>
+                                    <span class="text-sm font-medium text-brand-text-muted truncate max-w-37.5">{{ ticket.assignedToUser }}</span>
+                                </div>
+                            } @else {
+                                <div class="flex items-center gap-2 text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded-md">
+                                    <ng-icon name="heroExclamationCircle" class="text-lg"></ng-icon>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest">Unassigned</span>
+                                </div>
+                            }
+                            
+                            <div class="w-8 h-8 rounded-full bg-brand-primary text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0 duration-300 shadow-md">
+                                <ng-icon name="heroArrowRight" class="text-sm"></ng-icon>
+                            </div>
+                        </div>
+                    </div>
+                } @empty {
+                    <div class="col-span-full py-16 text-center text-brand-text-muted flex flex-col items-center justify-center bg-brand-surface rounded-xl border border-dashed border-brand-border">
+                        <div class="w-16 h-16 bg-brand-bg rounded-full flex items-center justify-center mb-4">
+                            <ng-icon name="heroTicket" class="text-3xl text-brand-text-muted/50"></ng-icon>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-text mb-1">No tickets found</h3>
+                        <p class="text-sm max-w-sm">There are no open tickets matching this filter. Try checking the other tab.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

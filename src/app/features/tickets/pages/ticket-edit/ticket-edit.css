@@ -1,0 +1,23 @@
+.agent-card {
+    background-color: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.agent-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+}
+
+.agent-card--selected {
+    background-color: color-mix(in srgb, var(--color-primary) 5%, transparent);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.assign-trigger {
+    background-color: var(--background);
+}

@@ -11,6 +11,11 @@ export class CardComponent {
     @Input() title?: string;
     @Input() subtitle?: string;
 
+    // Stat-card inputs
+    @Input() label?: string;
+    @Input() value?: string | number;
+    @Input() valueClass: string = 'text-brand-text';
+
     // Optional styling overrides if needed
     @Input() class: string = '';
 }

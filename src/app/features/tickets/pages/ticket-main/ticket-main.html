@@ -1,0 +1,92 @@
+<section class="relative flex flex-col gap-8">
+    <div class="absolute inset-0 -z-10 pointer-events-none">
+        <div class="h-56 rounded-3xl bg-linear-to-r from-brand-primary/20 via-cyan-400/10 to-emerald-400/10 blur-2xl"></div>
+    </div>
+
+    <div class="rounded-3xl border border-brand-border bg-brand-surface shadow-sm overflow-hidden">
+        <div class="px-6 py-7 md:px-8 md:py-8 bg-linear-to-r from-brand-primary/10 via-brand-bg to-emerald-500/10">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                <div class="max-w-2xl space-y-3">
+                    <p class="inline-flex items-center rounded-full border border-brand-primary/30 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-primary">
+                        Your support hub
+                    </p>
+                    <h1 class="text-3xl md:text-4xl font-black leading-tight text-brand-text">
+                        Welcome. Manage your support requests in one place.
+                    </h1>
+                    <p class="text-sm md:text-base text-brand-text-muted">
+                        If something is not working as expected, report it in seconds and follow its progress in real time.
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                    <app-button label="Create Ticket" variant="primary" heroIcon="heroPlus"
+                        (click)="navigateToCreateTicket()"></app-button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-6 py-6 md:px-8 bg-brand-bg/30 border-t border-brand-border">
+            <app-card label="Total Tickets" [value]="ticketsCount.totalTickets"></app-card>
+            <app-card label="Open" [value]="ticketsCount.ticketsOpen" valueClass="text-brand-primary"></app-card>
+            <app-card label="Reopened" [value]="ticketsCount.ticketsReopen" valueClass="text-amber-500"></app-card>
+            <app-card label="Closed" [value]="ticketsCount.ticketsClosed" valueClass="text-emerald-500"></app-card>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-brand-border bg-brand-surface shadow-sm overflow-hidden">
+        <div class="px-5 pt-5 pb-4 md:px-6 border-b border-brand-border bg-brand-surface">
+            <div class="flex items-start justify-between gap-4">
+                <div class="space-y-1.5">
+                    <p class="text-xs uppercase tracking-[0.18em] text-brand-primary font-semibold">Frequent Incidents</p>
+                    <h2 class="text-xl md:text-2xl font-bold text-brand-text">Shortcuts to report issues faster</h2>
+                    <p class="text-sm text-brand-text-muted">Choose a common category and create your ticket in seconds.</p>
+                </div>
+                <span class="hidden sm:inline-flex items-center rounded-full border border-brand-border bg-brand-bg px-3 py-1 text-xs font-medium text-brand-text-muted">
+                    4 suggested categories
+                </span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-5 md:p-6 bg-brand-bg/30">
+            <article class="incident-card">
+                <span class="incident-card__tag">Software</span>
+                <h3 class="incident-card__title">Application installation</h3>
+                <p class="incident-card__description">Request support to install corporate tools or required software updates.</p>
+                <button class="incident-card__action"
+                    (click)="navigateToCreateTicketWithPreset('Application installation', 'I need support installing or updating a corporate application on my device.', 2)">
+                    Create ticket
+                </button>
+            </article>
+
+            <article class="incident-card">
+                <span class="incident-card__tag">Access</span>
+                <h3 class="incident-card__title">Get credentials</h3>
+                <p class="incident-card__description">User onboarding, password recovery, or access to internal systems.</p>
+                <button class="incident-card__action"
+                    (click)="navigateToCreateTicketWithPreset('Get credentials', 'I need account creation or credential recovery to access internal systems.', 3)">
+                    Create ticket
+                </button>
+            </article>
+
+            <article class="incident-card">
+                <span class="incident-card__tag">Network</span>
+                <h3 class="incident-card__title">Connection issues</h3>
+                <p class="incident-card__description">No internet, slow VPN, or intermittent disconnects on the corporate network.</p>
+                <button class="incident-card__action"
+                    (click)="navigateToCreateTicketWithPreset('Connection issues', 'I am experiencing connectivity problems (internet/VPN) that affect my work.', 4)">
+                    Create ticket
+                </button>
+            </article>
+
+            <article class="incident-card">
+                <span class="incident-card__tag">Support</span>
+                <h3 class="incident-card__title">Device is frozen or slow</h3>
+                <p class="incident-card__description">Frozen screens, unexpected restarts, or poor device performance.</p>
+                <button class="incident-card__action"
+                    (click)="navigateToCreateTicketWithPreset('Device is frozen or slow', 'My device is running slowly, freezing, or restarting unexpectedly.', 3)">
+                    Create ticket
+                </button>
+            </article>
+        </div>
+    </div>
+</section>

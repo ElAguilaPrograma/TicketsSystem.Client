@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { AuthService } from '../../../../core/auth.service';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserInfo';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,8 @@ import { RouterLink } from "@angular/router";
 })
 export class Login {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
+  private authenticationService = inject(AuthenticationService);
+  private router = inject(Router);
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,18 +24,28 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      console.log('Form Submit:', this.loginForm.value);
-      // TODO: Implement actual login logic via AuthService
+      this.authenticationService.login(this.loginForm.value).subscribe({
+        next: (res) => {
+          if (res?.role === 'Admin') {
+            this.router.navigate(['/dashboard']);
+          } 
+          else if (res?.role === 'Agent') {
+            this.router.navigate(['/control-panel']);
+          }
+          else {
+            this.router.navigate(['/ticket-main']);
+          }
+        },
+        error: (err) => {
+          alert('Login failed: ' + (err.error.error || err.statusText || 'Unknown error'));
+        }
+      })
     } else {
       this.loginForm.markAllAsTouched();
     }
   }
 
   isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
-
-  login() {
-    this.authService.login();
+    return this.authenticationService.isLoggedIn();
   }
 }

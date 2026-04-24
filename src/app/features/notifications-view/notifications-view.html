@@ -1,0 +1,122 @@
+<section class="flex flex-col gap-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h3 class="text-sm font-medium text-brand-text-muted">Notification Center</h3>
+      <h1 class="text-4xl font-bold">Notifications</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="nv-counter-badge">
+        <ng-icon name="heroBell" class="text-xl"></ng-icon>
+        @if (noReadNotifications.length > 0) {
+          <span class="nv-badge">{{ noReadNotifications.length }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden">
+    <div class="flex border-b border-brand-border">
+      <button
+        class="nv-tab"
+        [class.nv-tab--active]="activeTab() === 'unread'"
+        (click)="switchTab('unread')"
+      >
+        <ng-icon name="heroEnvelope" class="text-lg"></ng-icon>
+        <span>Unread</span>
+        @if (noReadNotifications.length > 0) {
+          <span class="nv-tab-count">{{ noReadNotifications.length }}</span>
+        }
+      </button>
+      <button
+        class="nv-tab"
+        [class.nv-tab--active]="activeTab() === 'read'"
+        (click)="switchTab('read')"
+      >
+        <ng-icon name="heroEnvelopeOpen" class="text-lg"></ng-icon>
+        <span>Read</span>
+        @if (readNotifications.length > 0) {
+          <span class="nv-tab-count nv-tab-count--muted">{{ readNotifications.length }}</span>
+        }
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="nv-content">
+      @if (loading) {
+        <div class="nv-empty-state">
+          <ng-icon name="heroArrowPath" class="text-4xl text-brand-text-muted nv-spin"></ng-icon>
+          <p class="text-brand-text-muted mt-3">Loading notifications...</p>
+        </div>
+      } @else {
+
+        <!-- Unread Tab -->
+        @if (activeTab() === 'unread') {
+          @if (noReadNotifications.length === 0) {
+            <div class="nv-empty-state">
+              <ng-icon name="heroCheckCircle" class="text-5xl text-emerald-500"></ng-icon>
+              <p class="text-lg font-semibold mt-3">All up to date!</p>
+              <p class="text-brand-text-muted text-sm mt-1">You don't have any unread notifications</p>
+            </div>
+          } @else {
+            <div class="nv-list">
+              @for (n of noReadNotifications; track n.notificationId) {
+                <div class="nv-item nv-item--unread" 
+                  (click)="toogleNotificationReadStatus(n.notificationId)
+                  ; sendToContent(n)">
+                  <div class="nv-item-indicator"></div>
+                  <div class="nv-item-icon" [class]="'nv-item-icon nv-item-icon--' + n.type">
+                    <ng-icon [name]="getTypeIcon(n.type)" class="text-lg"></ng-icon>
+                  </div>
+                  <div class="nv-item-body">
+                    <div class="nv-item-header">
+                      <span class="nv-item-type">{{ getTypeLabel(n.type) }}</span>
+                      <span class="nv-item-time">
+                        <ng-icon name="heroClock" class="text-xs"></ng-icon>
+                        {{ getTimeAgo(n.createdAt) }}
+                      </span>
+                    </div>
+                    <p class="nv-item-message">{{ n.message }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        }
+
+        <!-- Read Tab -->
+        @if (activeTab() === 'read') {
+          @if (readNotifications.length === 0) {
+            <div class="nv-empty-state">
+              <ng-icon name="heroEnvelopeOpen" class="text-5xl text-brand-text-muted"></ng-icon>
+              <p class="text-lg font-semibold mt-3">No read notifications</p>
+              <p class="text-brand-text-muted text-sm mt-1">Notifications you read will appear here</p>
+            </div>
+          } @else {
+            <div class="nv-list">
+              @for (n of readNotifications; track n.notificationId) {
+                <div class="nv-item nv-item--read" (click)="sendToContent(n)">
+                  <div class="nv-item-icon nv-item-icon--read">
+                    <ng-icon [name]="getTypeIcon(n.type)" class="text-lg"></ng-icon>
+                  </div>
+                  <div class="nv-item-body">
+                    <div class="nv-item-header">
+                      <span class="nv-item-type nv-item-type--read">{{ getTypeLabel(n.type) }}</span>
+                      <span class="nv-item-time">
+                        <ng-icon name="heroClock" class="text-xs"></ng-icon>
+                        {{ getTimeAgo(n.createdAt) }}
+                      </span>
+                    </div>
+                    <p class="nv-item-message nv-item-message--read">{{ n.message }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        }
+
+      }
+    </div>
+  </div>
+</section>

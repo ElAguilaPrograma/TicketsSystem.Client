@@ -1,0 +1,30 @@
+<div class="notif-wrapper">
+  @for (n of notificationService.notifications(); track n.id) {
+  <div class="notif-card border-l-4"
+    [class]="'notif-card border-l-4 ' + accentClass(n.type) + (n.exiting ? ' notif-exit' : '') + (n.route ? ' notif-clickable' : '')"
+    role="alert" (click)="n.route ? onClick(n.id) : null">
+    <!-- Type Icon -->
+    <div class="notif-icon-badge" [class]="'notif-icon-badge ' + iconBgClass(n.type)">
+      <ng-icon [name]="iconName(n.type)" class="text-lg" />
+    </div>
+
+    <!-- Text content -->
+    <div class="notif-body">
+      <span class="notif-title">{{ n.title }}</span>
+
+      @if (n.subtitle) {
+      <span class="notif-subtitle">{{ n.subtitle }}</span>
+      }
+
+      <span class="notif-message">{{ n.message }}</span>
+    </div>
+
+    <!-- Dismiss button -->
+    @if (n.dismissible !== false) {
+    <button class="notif-close-btn" (click)="dismiss($event, n.id)" aria-label="Close notification">
+      <ng-icon name="heroXMark" class="text-base" />
+    </button>
+    }
+  </div>
+  }
+</div>

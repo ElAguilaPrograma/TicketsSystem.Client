@@ -1,0 +1,18 @@
+.comments-resize-target {
+	will-change: height;
+}
+
+.comments-hide-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.comments-hide-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.comments-resize-target {
+		transition: none !important;
+	}
+}

@@ -5,6 +5,7 @@
 @theme {
     --color-brand-primary: var(--color-primary);
     --color-brand-secondary: var(--color-secondary);
+    --color-brand-thirdary: var(--color-thirdary);
     --color-brand-bg: var(--background);
     --color-brand-surface: var(--surface); 
     --color-brand-text: var(--text-main);
@@ -16,6 +17,7 @@
     color-scheme: light;
     --color-primary: #1d4ed8;    
     --color-secondary: #7c3aed;
+    --color-thirdary: #f97316;
     --background: #f8fafc;       
     --surface: #ffffff;          
     --text-main: #0f172a;        
@@ -28,6 +30,7 @@
     color-scheme: dark;
     --color-primary: #135bec;
     --color-secondary: #8b5cf6;
+    --color-thirdary: #f97316;
     --background: #101622;
     --surface: #101828;
     --text-main: #f9fafb;

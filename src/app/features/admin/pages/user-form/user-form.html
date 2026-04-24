@@ -1,0 +1,83 @@
+<section class="max-w-3xl mx-auto flex flex-col gap-6">
+    <div class="flex items-center gap-4">
+        <button (click)="goBack()"
+            class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
+            <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
+        </button>
+        <div>
+            <h3 class="text-sm font-medium text-brand-text-muted">User Administration</h3>
+            <h1 class="text-4xl font-bold">Add New User</h1>
+        </div>
+    </div>
+
+    <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden">
+        <div class="p-6 border-b border-brand-border">
+            <h2 class="text-xl font-bold">User Information</h2>
+            <p class="text-sm text-brand-text-muted mt-1">Provide the necessary details and assign roles carefully.</p>
+        </div>
+        <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+            <div class="p-6 space-y-6">
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-brand-text">Full Name <span
+                            class="text-red-500">*</span></label>
+                    <input type="text" placeholder="e.g., Jane" formControlName="fullName"
+                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-brand-text">Email Address <span
+                            class="text-red-500">*</span></label>
+                    <input type="email" placeholder="jane.doe@company.com" formControlName="email"
+                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <app-select label="Role" [options]="roleOptions" [required]="true" variant="primary"
+                            formControlName="role"></app-select>
+                    </div>
+                    <div class="space-y-2">
+                        <app-select label="Account Status" [options]="statusOptions" [required]="true" variant="primary"
+                            formControlName="isActive"></app-select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Password <span
+                                class="text-red-500">*</span></label>
+                        <input type="password" placeholder="********" formControlName="password"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"
+                            [class.border-red-500]="createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched">
+                        @if (createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched) {
+                            <p class="text-sm text-red-500">Password must be at least 5 characters long, contain at least
+                                one uppercase letter, and one number.</p>
+                        }
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-brand-text">Confirm Password <span
+                                class="text-red-500">*</span></label>
+                        <input type="password" placeholder="********" formControlName="confirmPassword"
+                            class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"
+                            [class.border-red-500]="createUserForm.get('confirmPassword')?.invalid && createUserForm.get('confirmPassword')?.touched">
+                        @if (createUserForm.get('confirmPassword')?.invalid && createUserForm.get('confirmPassword')?.touched) {
+                            <p class="text-sm text-red-500">Passwords do not match.</p>
+                        }
+                    </div>
+                </div>
+
+                <!--
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-brand-text">Notes (Optional)</label>
+                    <textarea rows="3" placeholder="Department, extra requirements..."
+                        class="w-full px-4 py-2.5 rounded-lg bg-brand-bg border border-brand-border focus:border-brand-primary focus:outline-none transition-colors"></textarea>
+                </div>
+                -->
+            </div>
+            <div class="px-6 py-4 bg-brand-bg/30 border-t border-brand-border flex justify-end gap-3">
+                <app-button label="Cancel" variant="outline" (click)="goBack()"></app-button>
+                <app-button label="Create User" variant="primary" type="submit" [disabled]="createUserForm.invalid"></app-button>
+            </div>
+        </form>
+    </div>
+</section>
