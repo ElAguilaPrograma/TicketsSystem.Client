@@ -13,7 +13,6 @@
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/5 rounded-full blur-3xl"></div>
     </div>
 
-    <!-- Filters -->
     <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm">
         <div class="p-4 border-b border-brand-border flex gap-4 bg-brand-bg/30">
             <div class="w-10/12">
@@ -43,7 +42,7 @@
                 </thead>
                 <tbody>
                     @for (ticket of myTickets; track ticket.ticketId) {
-                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors cursor-pointer group" (click)="navigateToViewTicket(ticket.ticketId)">
+                    <tr class="hover:bg-brand-bg/50 transition-colors cursor-pointer group" (click)="navigateToViewTicket(ticket.ticketId)">
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
                                 <span class="text-brand-text font-medium group-hover:text-brand-primary transition-colors">{{ ticket.title }}</span>

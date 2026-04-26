@@ -43,6 +43,19 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-
 # Mcp files
 .playwright-mcp/
+test-results/
+seed.spec.ts
+playwright.config.ts
+specs/
+playwright-report/
+e2e/
+pruebas-e2e-con-ia.md
+
+# Opencode
+.opencode/
+opencode.json
+
+# Prototypes
+prototypes/

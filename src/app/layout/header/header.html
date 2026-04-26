@@ -3,8 +3,15 @@
     'shadow-lg/30': !this.authService.isLoggedIn() || this.isHomeRoute() 
     }">
     <div class="flex items-center gap-3">
-        <div class="flex flex-col">
+        <div class="flex">
             @if (this.authService.isLoggedIn() && !this.isHomeRoute()) {
+                <app-icon-button (click)="sidebarService.toggle()" class="mr-4 lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 6.633h16.5M3.75 12h16.5m-16.5 5.367h16.5" />
+                    </svg>
+                </app-icon-button>
                 <nav class="flex flex-wrap items-center gap-1.5 text-sm md:text-base font-bold leading-tight" aria-label="Breadcrumb">
                     @if (this.breadcrumbService.breadcrumbs().length === 0) {
                         <span class="text-brand-text">SupportFlow AI</span>
