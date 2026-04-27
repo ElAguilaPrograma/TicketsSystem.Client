@@ -48,13 +48,7 @@ export const routes: Routes = [
             { path: "user-form", component: UserForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Create User' } },
             { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Edit User' } },
             { path: "notifications", component: NotificationsView, data: { breadcrumb: 'Notifications' } },
-            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])], data: { breadcrumb: 'My Workspace' } },
-
-            // ── PROTOTYPES: rutas de exploración UI, no son para producción ──
-            { path: "prot-1-ticket-history", component: Prot1TicketHistory, data: { breadcrumb: 'Prototype 1 - Kanban Board' } },
-            { path: "prot-2-ticket-history", component: Prot2TicketHistory, data: { breadcrumb: 'Prototype 2 - Data Table' } },
-            { path: "prot-3-ticket-history", component: Prot3TicketHistory, data: { breadcrumb: 'Prototype 3 - Date Groups' } },
-            { path: "prot-4-ticket-history", component: Prot4TicketHistory, data: { breadcrumb: 'Prototype 4 - Activity Stream' } },
+            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])], data: { breadcrumb: 'My Workspace' } }
         ]
     },
 
