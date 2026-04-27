@@ -1,5 +1,5 @@
 <section class="flex flex-col gap-6">
-    <div class="flex justify-between items-center bg-brand-surface p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-hidden">
+    <div class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center gap-4 bg-brand-surface p-4 sm:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-visible sm:overflow-hidden">
         <div class="relative z-10">
             <div class="flex items-center gap-3 mb-2">
                 <div class="bg-brand-primary/10 p-2 rounded-lg flex">
@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-bold text-brand-text">User Administration</h1>
             <p class="text-brand-text-muted mt-1 text-sm">Manage users, roles, and permissions.</p>
         </div>
-        <div class="flex gap-3 relative z-10">
+        <div class="flex flex-nowrap gap-2 sm:gap-3 relative z-10 w-full sm:w-auto min-w-0 [&>app-button]:flex-1 [&>app-button]:min-w-0 sm:[&>app-button]:flex-none [&>app-button>button]:w-full [&>app-button>button]:px-2 [&>app-button>button]:py-2 [&>app-button>button]:text-[11px] [&>app-button>button]:leading-tight [&>app-button>button]:whitespace-nowrap sm:[&>app-button>button]:px-5 sm:[&>app-button>button]:py-2.5 sm:[&>app-button>button]:text-sm sm:[&>app-button>button]:leading-normal">
             <app-button label="Export Users" variant="outline" heroIcon="heroDocumentChartBar" 
                 (click)="exportUsers()"></app-button>
             <app-button label="Add New User" variant="primary" heroIcon="heroUserPlus"

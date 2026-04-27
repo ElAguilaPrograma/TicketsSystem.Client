@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroUserPlus } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
@@ -13,7 +13,7 @@ import { BreadcrumbService } from '../../../../core/services/breadcrumb.service'
 @Component({
   selector: 'app-user-form',
   imports: [CommonModule, ButtonComponent, NgIcon, ReactiveFormsModule, Select],
-  viewProviders: [provideIcons({ heroArrowLeft })],
+  viewProviders: [provideIcons({ heroArrowLeft, heroUserPlus })],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
 })
