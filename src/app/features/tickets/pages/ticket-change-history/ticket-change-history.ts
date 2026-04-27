@@ -16,7 +16,7 @@ export type HighlightType = 'created' | 'closed' | 'reopened' | 'assigned' | nul
 
 @Component({
   selector: 'app-ticket-change-history',
-  imports: [CommonModule, ButtonComponent, NgIcon],
+  imports: [CommonModule, NgIcon],
   providers: [
     DatePipe
   ],

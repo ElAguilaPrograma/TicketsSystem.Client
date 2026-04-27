@@ -5,8 +5,8 @@
 
     <div class="rounded-3xl border border-brand-border bg-brand-surface shadow-sm overflow-hidden">
         <div class="px-6 py-7 md:px-8 md:py-8 bg-linear-to-r from-brand-primary/10 via-brand-bg to-emerald-500/10">
-            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-                <div class="max-w-2xl space-y-3">
+            <div class="flex flex-col lg:flex-row lg:justify-between gap-6 text-center lg:text-left items-center lg:items-stretch">
+                <div class="max-w-2xl space-y-3 flex flex-col items-center lg:items-start">
                     <p class="inline-flex items-center rounded-full border border-brand-primary/30 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-primary">
                         Your support hub
                     </p>
@@ -18,7 +18,7 @@
                     </p>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
+                <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-center lg:justify-end">
                     <app-button label="Create Ticket" variant="primary" heroIcon="heroPlus"
                         (click)="navigateToCreateTicket()"></app-button>
                 </div>
