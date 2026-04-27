@@ -2,7 +2,18 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft, heroPencil, heroArrowRight, heroUser, heroPlus, heroAdjustmentsHorizontal, heroLockClosed, heroArrowPath, heroCheckBadge } from '@ng-icons/heroicons/outline';
+import { 
+  heroArrowLeft, 
+  heroPencil, 
+  heroArrowRight, 
+  heroUser, 
+  heroPlus, 
+  heroAdjustmentsHorizontal, 
+  heroLockClosed, 
+  heroArrowPath, 
+  heroCheckBadge,
+  heroArrowDown } 
+  from '@ng-icons/heroicons/outline';
 import { ActivatedRoute } from '@angular/router';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { ITicketHistoryGroup } from '../../../../api/interfaces/tickets/history/ITicketHistoryGroup';
@@ -20,7 +31,17 @@ export type HighlightType = 'created' | 'closed' | 'reopened' | 'assigned' | nul
   providers: [
     DatePipe
   ],
-  viewProviders: [provideIcons({ heroArrowLeft, heroPencil, heroArrowRight, heroUser, heroPlus, heroAdjustmentsHorizontal, heroLockClosed, heroArrowPath, heroCheckBadge })],
+  viewProviders: [provideIcons({ 
+    heroArrowLeft, 
+    heroPencil, 
+    heroArrowRight, 
+    heroUser, 
+    heroPlus, 
+    heroAdjustmentsHorizontal, 
+    heroLockClosed, 
+    heroArrowPath, 
+    heroCheckBadge, 
+    heroArrowDown })],
   templateUrl: './ticket-change-history.html',
   styleUrl: './ticket-change-history.css',
 })

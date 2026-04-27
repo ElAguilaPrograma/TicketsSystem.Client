@@ -1,16 +1,16 @@
-<section class="flex flex-col gap-6">
+<section class="flex flex-col gap-4 md:gap-6">
 
   <div class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center gap-4 
-    bg-brand-surface p-4 sm:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-visible sm:overflow-hidden">
-        <div class="relative z-10">
-            <div class="flex items-center gap-3 mb-2">
+    bg-brand-surface p-4 md:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-hidden">
+        <div class="relative z-10 min-w-0">
+            <div class="flex items-center gap-3 mb-1 md:mb-2">
                 <div class="bg-brand-primary/10 p-2 rounded-lg flex">
                     <ng-icon name="heroClock" class="text-xl text-brand-primary"></ng-icon>
                 </div>
-                <h3 class="text-sm font-semibold text-brand-primary tracking-wider uppercase">System Overview</h3>
+                <h3 class="text-xs md:text-sm font-semibold text-brand-primary tracking-wider uppercase">System Overview</h3>
             </div>
-            <h1 class="text-3xl font-bold text-brand-text">Ticket History</h1>
-            <p class="text-brand-text-muted mt-1 text-sm">Browse and manage all tickets in the system.</p>
+            <h1 class="text-2xl md:text-3xl font-bold text-brand-text leading-tight">Ticket History</h1>
+            <p class="text-brand-text-muted mt-1 text-xs md:text-sm">Browse and manage all tickets in the system.</p>
         </div>
         <div class="flex flex-nowrap gap-2 sm:gap-3 relative z-10 w-full sm:w-auto min-w-0 [&>app-button]:flex-1 [&>app-button]:min-w-0 sm:[&>app-button]:flex-none [&>app-button>button]:w-full [&>app-button>button]:px-2 [&>app-button>button]:py-2 [&>app-button>button]:text-[11px] [&>app-button>button]:leading-tight [&>app-button>button]:whitespace-nowrap sm:[&>app-button>button]:px-5 sm:[&>app-button>button]:py-2.5 sm:[&>app-button>button]:text-sm sm:[&>app-button>button]:leading-normal">
             <app-button label="Refresh Data" variant="outline" heroIcon="heroArrowPath" (click)="loadTickets()" [disabled]="disabledBotton"></app-button>
