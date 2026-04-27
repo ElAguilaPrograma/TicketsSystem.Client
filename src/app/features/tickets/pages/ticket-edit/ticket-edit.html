@@ -1,15 +1,15 @@
 <section class="max-w-3xl mx-auto flex flex-col gap-6">
     <div class="flex justify-between items-center bg-brand-surface p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-hidden">
-        <div class="flex items-center gap-4 relative z-10">
+        <div class="flex items-center gap-4 relative z-10 min-w-0 flex-1">
             <button (click)="goBack()"
                 class="p-2 rounded-full hover:bg-brand-bg text-brand-text-muted hover:text-brand-text transition-colors">
                 <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
             </button>
-            <div>
+            <div class="min-w-0">
                 <div class="flex items-center gap-3 mb-2">
                     <h3 class="text-sm font-semibold text-brand-primary tracking-wider uppercase">Edit Ticket</h3>
                 </div>
-                <h1 class="text-3xl font-bold text-brand-text">{{ ticketData.title }}</h1>
+                <h1 class="text-3xl font-bold text-brand-text wrap-break-word break-all max-w-full overflow-hidden line-clamp-2">{{ ticketData.title }}</h1>
                 <p class="text-brand-text-muted mt-1 text-sm">Modify ticket details and update progress.</p>
             </div>
         </div>
@@ -23,38 +23,7 @@
                 <p class="text-sm text-brand-text-muted mt-1">Update the necessary fields to reflect current progress.
                 </p>
             </div>
-            @switch (ticketData.statusName) {
-                @case ('Open') {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-500/10 text-blue-500 border border-blue-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-                @case ('InProgress') {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-                @case ('OnHold') {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-purple-500/10 text-purple-500 border border-purple-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-purple-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-                @case ('Closed') {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-                @case ('Reopened') {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-                @default {
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-slate-500/10 text-slate-500 border border-slate-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500 mr-2"></span> {{ ticketData.statusName }}
-                    </span>
-                }
-            }
+            <app-status-chip [status]="ticketData.statusName" size="sm"></app-status-chip>
         </div>
         <form [formGroup]="updateTicketForm" (ngSubmit)="onSubmit()">
             <div class="p-6 space-y-6">

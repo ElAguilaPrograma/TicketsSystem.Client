@@ -69,18 +69,18 @@
             <div class="flex-1 p-6 space-y-4 overflow-y-auto">
                 @for (ticket of unassignedTickets | slice:0:4; track ticket.ticketId) {
                 <div
-                    class="p-4 rounded-lg border border-brand-border hover:bg-brand-bg/50 transition-colors flex justify-between items-center animate-in slide-in-from-top-4 duration-300">
-                    <div>
+                    class="p-4 rounded-lg border border-brand-border hover:bg-brand-bg/50 transition-colors flex justify-between items-center gap-4 animate-in slide-in-from-top-4 duration-300">
+                    <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-1">
                             <span class="text-xs font-bold uppercase px-2 py-0.5 rounded" [ngClass]="getPriorityColor(ticket.priorityName)">
                                 {{ ticket.priorityName }}
                             </span>
                             <span class="text-sm text-brand-text-muted">{{ getTimeAgo(ticket.createdAt) }}</span>
                         </div>
-                        <h4 class="font-bold">{{ ticket.title }}</h4>
-                        <p class="text-sm text-brand-text-muted mt-1">{{ ticket.description | slice:0:100 }}{{ ticket.description.length > 100 ? '...' : '' }}</p>
+                        <h4 class="font-bold wrap-break-word line-clamp-1">{{ ticket.title }}</h4>
+                        <p class="text-sm text-brand-text-muted mt-1 wrap-break-word line-clamp-2">{{ ticket.description | slice:0:100 }}{{ ticket.description.length > 100 ? '...' : '' }}</p>
                     </div>
-                    <div class="flex h-full items-center justify-center">
+                    <div class="flex h-full items-center justify-center shrink-0">
                         <app-button label="View Ticket" variant="primary" (click)="navigateToDetails(ticket.ticketId)"></app-button>
                     </div>
                 </div>

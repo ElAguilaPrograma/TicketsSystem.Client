@@ -1,5 +1,7 @@
-<section class="flex flex-col gap-6 h-full border-box">
-    <div class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center gap-4 bg-brand-surface p-4 sm:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-visible sm:overflow-hidden">
+<section class="flex flex-col gap-6">
+
+  <div class="flex flex-col sm:flex-row justify-start sm:justify-between items-start sm:items-center gap-4 
+    bg-brand-surface p-4 sm:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-visible sm:overflow-hidden">
         <div class="relative z-10">
             <div class="flex items-center gap-3 mb-2">
                 <div class="bg-brand-primary/10 p-2 rounded-lg flex">
@@ -15,182 +17,169 @@
             <app-button label="Export History" variant="outline" heroIcon="heroArrowDownTray" (click)="exportHistory()" [disabled]="disabledBotton"></app-button>
         </div>
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="bg-brand-surface rounded-xl border border-brand-border flex flex-col">
+
+    <div class="flex border-b border-brand-border px-4 sm:px-6 pt-4 gap-6">
+      <button
+            class="pb-3 text-sm transition-colors relative"
+            [ngClass]="activeTab === 'my-tickets' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
+            (click)="switchTab('my-tickets')">
+            My Tickets
+            @if (activeTab === 'my-tickets') {
+            <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
+            }
+      </button>
+      @if (isAdmin) {
+        <button
+            class="pb-3 text-sm transition-colors relative"
+            [ngClass]="activeTab === 'all' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
+            (click)="switchTab('all')">
+            All Tickets
+            @if (activeTab === 'all') {
+                <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
+          }
+        </button>
+      }
     </div>
 
-    <div class="bg-brand-surface rounded-xl border border-brand-border flex flex-col min-h-125">
-        <!-- Tabs -->
-        <div class="flex border-b border-brand-border px-6 pt-4 gap-6">
-            <button class="pb-3 text-sm transition-colors relative"
-                [ngClass]="activeTab === 'my-tickets' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
-                (click)="switchTab('my-tickets')">
-                My Tickets
-                @if (activeTab === 'my-tickets') {
-                    <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
+    <div class="p-4 border-b border-brand-border flex flex-col sm:flex-row gap-3 bg-brand-bg/30 items-center">
+        <div class="flex-1 w-full sm:w-auto">
+            <app-searchbar placeholder="Search tickets by ID, subject..." (search)="searchTickets($event)"></app-searchbar>
+        </div>
+        <div class="flex flex-row gap-3 w-full sm:w-auto justify-center">
+            <app-select
+                label="Status" [options]="statusOptions" [showLabel]="false" variant="surface"
+                [(ngModel)]="statusFilter" (ngModelChange)="loadTickets()">
+            </app-select>
+            <app-select
+                label="Priority" [options]="priorityOptions" [showLabel]="false" variant="surface"
+                [(ngModel)]="priorityFilter" (ngModelChange)="loadTickets()">
+            </app-select>
+        </div>
+    </div>
+
+    <div class="flex flex-col flex-1 divide-y divide-brand-border">
+      @for (ticket of recentTickets; track ticket.ticketId; let last = $last) {
+        <div
+          class="flex gap-3 sm:gap-4 px-4 sm:px-6 py-4 cursor-pointer transition-colors hover:bg-brand-bg/50 group"
+          (click)="navigateToTicketsDetails(ticket.ticketId)">
+
+          <div class="flex flex-col items-center gap-1 pt-0.5">
+                <app-status-chip variant="icon" [status]="ticket.statusName"></app-status-chip>
+                @if (!last) {
+                <div class="w-px flex-1 bg-brand-border/70 min-h-4"></div>
                 }
-            </button>
-            @if (isAdmin) {
-                <button class="pb-3 text-sm transition-colors relative"
-                    [ngClass]="activeTab === 'all' ? 'text-brand-primary font-bold' : 'text-brand-text-muted font-medium hover:text-brand-text'"
-                    (click)="switchTab('all')">
-                    All Tickets
-                    @if (activeTab === 'all') {
-                        <div class="absolute bottom-0 left-0 w-full h-0.5 bg-brand-primary"></div>
-                    }
-                </button>
-            }
-        </div>
+          </div>
 
-        <div class="p-4 bg-brand-bg/50 flex gap-4 border-b border-brand-border">
-            <div class="w-10/12">
-                <app-searchbar placeholder="Search tickets by ID, subject..." (search)="searchTickets($event)"></app-searchbar>
-            </div>  
-            <div class="w-2/12 flex gap-4">
-                <app-select class="w-full" label="Status" [options]="statusOptions" [showLabel]="false" variant="surface"
-                    [(ngModel)]="statusFilter" (ngModelChange)="loadTickets()"></app-select>
+          <div class="flex-1 min-w-0 pb-1">
+                <div class="flex items-start justify-between gap-2 mb-1">
+                    <p class="text-sm font-semibold text-brand-text group-hover:text-brand-primary transition-colors leading-snug">
+                        <span class="text-brand-text-muted font-medium"># {{ ticket.ticketId | slice:0:8 }} ·</span>
+                        {{ ticket.title }}
+                    </p>
+                    <span class="text-xs text-brand-text-muted whitespace-nowrap shrink-0">
+                        {{ ticket.updatedAt | date:'MMM d' }}
+                    </span>
+                </div>
+
+                <p class="text-xs text-brand-text-muted leading-relaxed mb-3 line-clamp-1">
+                {{ ticket.description }}
+                </p>
+
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <app-status-chip [status]="ticket.statusName"></app-status-chip>
+
+                    @switch (ticket.priorityName) {
+                    @case ('Critical') {
+                        <app-label [label]="ticket.priorityName" variant="Critical" class="shrink-0"></app-label>
+                    }
+                    @case ('High') {
+                        <app-label [label]="ticket.priorityName" variant="High" class="shrink-0"></app-label>
+                    }
+                    @case ('Medium') {
+                        <app-label [label]="ticket.priorityName" variant="Medium" class="shrink-0"></app-label>
+                    }
+                    @case ('Low') {
+                        <app-label [label]="ticket.priorityName" variant="Low" class="shrink-0"></app-label>
+                    }
+                    }
+
+                    @if (ticket.assignedToUser) {
+                        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-bg text-brand-text-muted border border-brand-border">
+                        <ng-icon name="heroUser" class="text-xs"></ng-icon>
+                        {{ ticket.assignedToUser }}
+                        </span>
+                    } @else {
+                        <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-bg text-brand-text-muted border border-brand-border border-dashed">
+                        TBD
+                        </span>
+                    }
+                </div>
+          </div>
+        </div>
+      }
+
+      @empty {
+        <div class="flex flex-col items-center justify-center gap-3 py-16 text-brand-text-muted">
+            <div class="bg-brand-bg p-4 rounded-full">
+                <ng-icon name="heroTicket" class="text-4xl text-brand-border"></ng-icon>
             </div>
-            <div class="w-2/12 flex gap-4">
-                <app-select class="w-full" label="Priority" [options]="priorityOptions" [showLabel]="false" variant="surface"
-                    [(ngModel)]="priorityFilter" (ngModelChange)="loadTickets()"></app-select>
+            <p class="text-sm font-medium">No tickets found</p>
+            <p class="text-xs">Try adjusting the filters above.</p>
+        </div>
+      }
+    </div>
+
+    <div class="px-4 sm:px-6 pt-3 sm:py-3 border-t rounded-b-xl border-brand-border bg-linear-to-r from-brand-bg/10 via-brand-surface to-brand-bg/10 
+        backdrop-blur supports-backdrop-filter:bg-brand-surface/90">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="flex items-center justify-center sm:justify-start gap-2 text-xs text-brand-text-muted">
+                <span class="px-2.5 py-1 rounded-full border border-brand-border bg-brand-bg/40">
+                    Page {{ currentPage }} / {{ totalPages }}
+                </span>
+                <span class="hidden sm:inline">•</span>
+                <span class="hidden sm:inline">Showing {{ recentTickets.length }} of {{ totalCount }}</span>
             </div>
-        </div>
 
-        <!-- Table from ticket-main -->
-        <div class="overflow-hidden flex-1">
-            <table class="w-full table-fixed">
-                <thead>
-                    <tr class="bg-brand-bg/20 border-b border-brand-border">
-                        <th class="w-[25%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Subject</th>
-                        <th class="w-[12%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Status</th>
-                        <th class="w-[12%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Priority</th>
-                        <th class="w-[15%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Assigned To</th>
-                        <th class="w-[14%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Created At</th>
-                        <th class="w-[14%] px-6 py-3 text-left text-xs font-medium text-brand-text-muted uppercase tracking-wider">Updated At</th>
-                        <th class="w-[8%] px-6 py-3 text-center text-xs font-medium text-brand-text-muted uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (ticket of recentTickets; track ticket.ticketId) {
-                    <tr class="border-b border-brand-border hover:bg-brand-bg/50 transition-colors cursor-pointer" 
-                        (click)="navigateToTicketsDetails(ticket.ticketId)">
-                        <td class="px-6 py-4">
-                            <div class="flex flex-col">
-                                <span class="text-brand-text font-medium hover:text-brand-primary transition-colors">{{ ticket.title }}</span>
-                                <span class="text-brand-text-muted font-medium text-xs truncate">{{ ticket.description }}</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                @switch (ticket.statusName) {
-                                    @case ('Open') {
-                                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                    @case ('InProgress') {
-                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                    @case ('OnHold') {
-                                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                    @case ('Closed') {
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                    @case ('Reopened') {
-                                        <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                    @default {
-                                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                                        <span class="text-brand-text text-sm">{{ ticket.statusName }}</span>
-                                    }
-                                }
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            @switch (ticket.priorityName) {
-                                @case ('Critical') {
-                                    <app-label [label]="ticket.priorityName" variant="Critical"></app-label>
-                                }
-                                @case ('High') {
-                                    <app-label [label]="ticket.priorityName" variant="High"></app-label>
-                                }
-                                @case ('Medium') {
-                                    <app-label [label]="ticket.priorityName" variant="Medium"></app-label>
-                                }
-                                @case ('Low') {
-                                    <app-label [label]="ticket.priorityName" variant="Low"></app-label>
-                                }
-                            }
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-fit px-3 py-1.5 rounded-full border border-brand-primary/30 flex items-center justify-center shadow-sm"
-                                    [ngClass]="{'bg-brand-primary/10': ticket.assignedToUser, 'bg-brand-surface': !ticket.assignedToUser}">
-                                    <span class="text-brand-primary font-bold text-sm truncate max-w-full">{{ ticket.assignedToUser ?? 'TBD'}}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-brand-text-muted">{{ ticket.createdAt | date: 'MMM dd, yyyy HH:mm' }}</td>
-                        <td class="px-6 py-4 text-sm text-brand-text-muted">{{ ticket.updatedAt | date: 'MMM dd, yyyy HH:mm' }}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-center gap-1">
-                                <button class="p-1 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"
-                                        (click)="navigateToTicketsDetails(ticket.ticketId)" title="View Details">
-                                    <ng-icon name="heroArrowTopRightOnSquare"></ng-icon>
-                                </button>
-                                <button class="p-1 text-brand-text-muted hover:text-brand-primary transition-colors rounded hover:bg-brand-bg"
-                                        (click)="navigateToTicketHistoy(ticket.ticketId)" title="View Change History">
-                                    <ng-icon name="heroClock"></ng-icon>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    }
-                    @empty {
-                    <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-brand-text-muted text-sm border-b border-brand-border">
-                            <div class="flex flex-col items-center justify-center gap-2">
-                                <ng-icon name="heroTicket" class="text-4xl text-brand-border"></ng-icon>
-                                <p>No tickets found</p>
-                            </div>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Footer from user-admin -->
-        <div class="px-6 py-4 rounded-b-xl border-t border-brand-border flex justify-between items-center text-sm text-brand-text-muted bg-brand-surface">
-            <span>{{ currentPage }} of {{ totalPages }} | Showing {{ recentTickets.length }} of {{ totalCount }} entries</span>
-            <div class="flex gap-1">
+            <div class="flex items-center justify-center gap-2">
                 <button
-                    class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === 1 || disabledBotton" (click)="goToPreviousPage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
+                    class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    [disabled]="currentPage === 1 || disabledBotton"
+                    (click)="goToPreviousPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                     </svg>
                 </button>
 
-                @for (page of pageNumbers; track page) {
+                <div class="hidden md:flex items-center gap-1 px-1 py-1 rounded-xl border border-brand-border bg-brand-bg/30">
+                    @for (page of pageNumbers; track page) {
+                    <button
+                        class="min-w-8 h-8 px-2 text-xs border border-transparent rounded-lg transition-colors disabled:cursor-not-allowed"
+                        [class.bg-brand-primary]="page === currentPage"
+                        [class.text-white]="page === currentPage"
+                        [class.border-brand-primary]="page === currentPage"
+                        [class.text-brand-text-muted]="page !== currentPage"
+                        [class.hover:bg-brand-bg]="page !== currentPage"
+                        (click)="goToPage(page)"
+                        [disabled]="disabledBotton">
+                        {{ page }}
+                    </button>
+                    }
+                </div>
+
                 <button
-                    class="px-3 py-1.5 border border-brand-border rounded disabled:cursor-not-allowed transition-colors"
-                    [class.bg-brand-primary]="page === currentPage" [class.text-white]="page === currentPage"
-                    [class.hover\:bg-brand-bg]="page !== currentPage" (click)="goToPage(page)" disabled>{{ page }}</button>
-                }
-                
-                <button
-                    class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === totalPages || disabledBotton" (click)="goToNextPage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
+                    class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    [disabled]="currentPage === totalPages || disabledBotton"
+                    (click)="goToNextPage()">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
                 </button>
             </div>
         </div>
     </div>
+
+  </div>
 </section>

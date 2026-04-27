@@ -16,6 +16,7 @@ import { IUser } from '../../../../api/interfaces/user/IUser';
 import { IPagedResult } from '../../../../api/interfaces/IPagedResult';
 import { Select } from '../../../../shared/components/select/select';
 import { ChangeDetectorRef } from '@angular/core';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
 
 @Component({
   selector: 'app-ticket-edit',
@@ -25,7 +26,8 @@ import { ChangeDetectorRef } from '@angular/core';
     NgIcon, Select, 
     ReactiveFormsModule, 
     ModalComponent, 
-    Searchbar],
+    Searchbar,
+    StatusChipComponent],
   viewProviders: [provideIcons({ heroArrowLeft, heroMagnifyingGlass, heroUserCircle, heroChevronDown, heroPencilSquare })],
   templateUrl: './ticket-edit.html',
   styleUrl: './ticket-edit.css',

@@ -19,7 +19,7 @@
         <div class="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/5 rounded-full blur-3xl"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center lg:text-left">
         <app-card label="Total Users" [value]="usersCount.totalUsers"></app-card>
         <app-card label="Users" [value]="usersCount.users" valueClass="text-emerald-500"></app-card>
         <app-card label="Admins" [value]="usersCount.admins" valueClass="text-brand-secondary"></app-card>
@@ -27,21 +27,23 @@
     </div>
 
     <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm">
-        <div class="p-4 border-b border-brand-border flex gap-4 bg-brand-bg/30">
-            <div class="w-11/12">
+        <div class="p-4 border-b border-brand-border flex flex-col sm:flex-row gap-3 bg-brand-bg/30 items-center">
+            <div class="flex-1 w-full sm:w-auto">
                 <app-searchbar placeholder="Search users by name, email or ID..." (search)="searchUsers($event)"></app-searchbar>
-            </div>  
-            <div class="w-3/12">
-                <app-select label="Role" [options]="roleOptions" [showLabel]="false" variant="surface"
-                    [(ngModel)]="roleFilterSelected" (ngModelChange)="loadUsers()"></app-select>
             </div>
-            <div class="w-3/12">
-                <app-select label="Status" [options]="isActiveOptions" [showLabel]="false" variant="surface"
-                    [(ngModel)]="isActiveFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+            <div class="flex flex-row gap-3 w-full sm:w-auto justify-center">
+                <div class="flex-1 sm:flex-none sm:w-44">
+                    <app-select class="w-full" label="Role" [options]="roleOptions" [showLabel]="false" variant="surface"
+                        [(ngModel)]="roleFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+                </div>
+                <div class="flex-1 sm:flex-none sm:w-44">
+                    <app-select class="w-full" label="Status" [options]="isActiveOptions" [showLabel]="false" variant="surface"
+                        [(ngModel)]="isActiveFilterSelected" (ngModelChange)="loadUsers()"></app-select>
+                </div>
             </div>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto hidden md:block">
             <table class="w-full table-fixed">
                 <thead>
                     <tr class="bg-brand-bg/20 border-b border-brand-border">
@@ -108,34 +110,112 @@
                 </tbody>
             </table>
         </div>
-        <div
-            class="px-6 py-4 rounded-bl-xl rounded-br-xl border-t border-brand-border flex justify-between items-center text-sm text-brand-text-muted bg-brand-surface">
-            <span>{{ currentPage }} of {{ totalPages }} | Showing {{ users.length }} of {{ totalCount }} entries</span>
-            <div class="flex gap-1">
-                <button
-                    class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === 1 || disabledBotton" (click)="goToPreviousPage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
-                </button>
 
-                @for (page of pageNumbers; track page) {
-                <button
-                    class="px-3 py-1.5 border border-brand-border rounded disabled:cursor-not-allowed transition-colors"
-                    [class.bg-brand-primary]="page === currentPage" [class.text-white]="page === currentPage"
-                    [class.hover\:bg-brand-bg]="page !== currentPage" (click)="goToPage(page)" disabled>{{ page
-                    }}</button>
-                }
-                <button
-                    class="w-8 h-8 flex items-center justify-center rounded text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    [disabled]="currentPage === totalPages || disabledBotton" (click)="goToNextPage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                    </svg>
-                </button>
+        <!-- Cards — visible solo en móvil -->
+        <div class="md:hidden flex flex-col divide-y divide-brand-border">
+            @for (user of users; track user.userId) {
+            <div class="p-4">
+                <!-- Fila superior: avatar + nombre + badge de rol -->
+                <div class="flex items-center gap-3 mb-3">
+                <div class="w-9 h-9 rounded-full bg-brand-secondary/20 text-brand-secondary 
+                            flex items-center justify-center font-bold text-xs shrink-0">
+                    {{ user.fullName | slice:0:2 | uppercase }}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-brand-text truncate">{{ user.fullName }}</p>
+                    <p class="text-xs text-brand-text-muted truncate">{{ user.email }}</p>
+                </div>
+                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold 
+                            text-brand-secondary bg-brand-secondary/10 border 
+                            border-brand-secondary/20 shrink-0">
+                    {{ user.role }}
+                </span>
+                </div>
+
+                <!-- Fila inferior: estado + fecha + acciones -->
+                <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center gap-1.5 text-xs text-brand-text-muted">
+                    <span class="w-2 h-2 rounded-full"
+                        [ngClass]="user.isActive ? 'bg-emerald-500' : 'bg-red-500'">
+                    </span>
+                    {{ user.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                    <span class="text-xs text-brand-text-muted">
+                    {{ user.createdAt | date:'MMM d, yyyy' }}
+                    </span>
+                </div>
+                <div class="flex gap-1">
+                    <button class="p-1.5 rounded-lg text-brand-text-muted hover:text-brand-primary 
+                                hover:bg-brand-bg transition-colors"
+                            (click)="navigateToEditUser(user.userId)">
+                    <ng-icon name="heroPencilSquare" class="text-base"></ng-icon>
+                    </button>
+                    <button class="p-1.5 rounded-lg text-brand-text-muted transition-colors"
+                            [ngClass]="user.isActive 
+                            ? 'hover:text-red-500 hover:bg-red-50' 
+                            : 'hover:text-emerald-500 hover:bg-emerald-50'"
+                            (click)="selectedUserId = user.userId; openConfirmDialog()">
+                    <ng-icon name="heroPower" class="text-base"></ng-icon>
+                    </button>
+                </div>
+                </div>
+            </div>
+            }
+
+            @empty {
+            <div class="py-10 text-center text-sm text-brand-text-muted">
+                No users found.
+            </div>
+            }
+        </div>
+
+        <div class="px-4 sm:px-6 pt-3 sm:py-3 border-t rounded-b-xl border-brand-border bg-linear-to-r from-brand-bg/10 via-brand-surface to-brand-bg/10 
+            backdrop-blur supports-backdrop-filter:bg-brand-surface/90">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div class="flex items-center justify-center sm:justify-start gap-2 text-xs text-brand-text-muted">
+                    <span class="px-2.5 py-1 rounded-full border border-brand-border bg-brand-bg/40">
+                        Page {{ currentPage }} / {{ totalPages }}
+                    </span>
+                    <span class="hidden sm:inline">•</span>
+                    <span class="hidden sm:inline">Showing {{ users.length }} of {{ totalCount }}</span>
+                </div>
+
+                <div class="flex items-center justify-center gap-2">
+                    <button
+                        class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        [disabled]="currentPage === 1 || disabledBotton"
+                        (click)="goToPreviousPage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                        </svg>
+                    </button>
+
+                    <div class="hidden md:flex items-center gap-1 px-1 py-1 rounded-xl border border-brand-border bg-brand-bg/30">
+                        @for (page of pageNumbers; track page) {
+                        <button
+                            class="min-w-8 h-8 px-2 text-xs border border-transparent rounded-lg transition-colors disabled:cursor-not-allowed"
+                            [class.bg-brand-primary]="page === currentPage"
+                            [class.text-white]="page === currentPage"
+                            [class.border-brand-primary]="page === currentPage"
+                            [class.text-brand-text-muted]="page !== currentPage"
+                            [class.hover:bg-brand-bg]="page !== currentPage"
+                            (click)="goToPage(page)"
+                            [disabled]="disabledBotton">
+                            {{ page }}
+                        </button>
+                        }
+                    </div>
+
+                    <button
+                        class="w-9 h-9 flex items-center justify-center rounded-lg border border-brand-border text-brand-text-muted hover:bg-brand-bg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        [disabled]="currentPage === totalPages || disabledBotton"
+                        (click)="goToNextPage()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

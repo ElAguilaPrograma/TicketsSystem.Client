@@ -111,11 +111,11 @@ export class TicketChangeHistory implements OnInit {
 
   getHighlightBgClass(highlightType: HighlightType): string {
     switch (highlightType) {
-      case 'created': return 'bg-emerald-500';
-      case 'closed': return 'bg-rose-500';
-      case 'reopened': return 'bg-amber-500';
-      case 'assigned': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'created': return 'bg-sky-500';
+      case 'closed': return 'bg-emerald-500';
+      case 'reopened': return 'bg-rose-500';
+      case 'assigned': return 'bg-indigo-500';
+      default: return 'bg-slate-500';
     }
   }
 

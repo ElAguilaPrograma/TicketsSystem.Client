@@ -9,10 +9,11 @@ import { Searchbar } from '../../../../shared/components/searchbar/searchbar';
 import { Select } from '../../../../shared/components/select/select';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
 
 @Component({
   selector: 'app-myworkspace',
-  imports: [CommonModule, FormsModule, NgIcon, Searchbar, Select, Label],
+  imports: [CommonModule, FormsModule, NgIcon, Searchbar, Select, Label, StatusChipComponent],
   viewProviders: [provideIcons({ heroBriefcase, heroArrowTopRightOnSquare, heroTicket })],
   templateUrl: './myworkspace.html'
 })

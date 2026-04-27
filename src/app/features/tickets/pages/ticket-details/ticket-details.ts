@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ElementRef, Vi
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList, heroArrowTopRightOnSquare } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
@@ -17,16 +17,36 @@ import { ICurrentUserInfo } from '../../../../api/interfaces/user/ICurrentUserIn
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
 import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+import { ITicketHistoryGroup } from '../../../../api/interfaces/tickets/history/ITicketHistoryGroup';
+import { ITicketHistoryRead } from '../../../../api/interfaces/tickets/history/ITicketHistoryRead';
+import { StatusEnum } from '../../../../core/enums/status_enum';
+import { PriorityEnum } from '../../../../core/enums/priority_enum';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
 
 @Component({
   selector: 'app-ticket-details',
-  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, ConfirmDialog, ModalComponent],
-  viewProviders: [provideIcons({ heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList })],
+  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, ConfirmDialog, ModalComponent, StatusChipComponent],
+  viewProviders: [provideIcons({ heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList, heroArrowTopRightOnSquare })],
   templateUrl: './ticket-details.html',
   styleUrl: './ticket-details.css',
 })
 export class TicketDetails implements OnInit, OnDestroy {
   private readonly resizeAnimationMs = 320;
+  private readonly fieldNameMap: Record<string, string> = {
+    'ticket created': 'Ticket Created',
+    'title': 'Title',
+    'description': 'Description',
+    'statusid': 'Status',
+    'status': 'Status',
+    'priorityid': 'Priority',
+    'priority': 'Priority',
+    'assignedtouserid': 'Assigned To',
+    'createdbyuserid': 'Created By',
+    'updatedat': 'Updated At',
+    'createdat': 'Created At',
+    'closedat': 'Closed At',
+  };
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
@@ -44,6 +64,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   ticketsComments: ITicketsReadComment[] = [];
   ticketCommentsNotInternal: ITicketsReadComment[] = [];
   ticketCommentsInternal: ITicketsReadComment[] = [];
+  latestHistoryGroup: ITicketHistoryGroup | null = null;
 
   commentContentNotInternal: string = "";
   commentContentInternal: string = "";
@@ -74,6 +95,7 @@ export class TicketDetails implements OnInit, OnDestroy {
     })
     this.loadTicketDetails();
     this.loadTicketComments();
+    this.loadTicketHistory();
     
     this.commentSubscription = this.signalRService.ticketComment$.subscribe(newComment => {
       if (newComment.ticketId === this.ticketId) {
@@ -209,6 +231,146 @@ export class TicketDetails implements OnInit, OnDestroy {
         console.error(error);
       }
     })
+  }
+
+  loadTicketHistory(): void {
+    this.ticketService.getTicketHistory(this.ticketId).subscribe({
+      next: (history) => {
+        this.latestHistoryGroup = this.getLatestHistoryGroup(history);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+  private getLatestHistoryGroup(history: ITicketHistoryGroup[]): ITicketHistoryGroup | null {
+    if (!history.length) return null;
+
+    return history.reduce((latest, current) => {
+      const latestDate = new Date(latest.changedAt).getTime();
+      const currentDate = new Date(current.changedAt).getTime();
+      return currentDate > latestDate ? current : latest;
+    });
+  }
+
+  get latestHistoryPrimaryChange(): ITicketHistoryRead | null {
+    if (!this.latestHistoryGroup?.changes?.length) return null;
+    return this.latestHistoryGroup.changes[0];
+  }
+
+  get latestHistorySummary(): string {
+    if (!this.latestHistoryGroup) {
+      return 'No changes recorded yet for this ticket.';
+    }
+
+    const primaryChange = this.latestHistoryPrimaryChange;
+    if (!primaryChange) {
+      return 'A change was recorded for this ticket.';
+    }
+
+    if (this.isCreationChange(primaryChange)) {
+      return 'A new ticket was created in the system.';
+    }
+
+    if (this.latestHistoryGroup.changes.length > 1) {
+      const fields = this.latestHistoryGroup.changes
+        .slice(0, 3)
+        .map(change => this.getDisplayFieldName(change.fieldName))
+        .join(', ');
+      const remaining = this.latestHistoryGroup.changes.length - 3;
+      return remaining > 0
+        ? `Multiple properties changed: ${fields} and ${remaining} more.`
+        : `Multiple properties changed: ${fields}.`;
+    }
+
+    const field = this.getDisplayFieldName(primaryChange.fieldName);
+    const oldValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.oldValue);
+    const newValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.newValue);
+
+    if (this.hasValue(oldValue) && this.hasValue(newValue)) {
+      return `${field} changed from "${oldValue}" to "${newValue}".`;
+    }
+
+    if (this.hasValue(newValue)) {
+      return `${field} set to "${newValue}".`;
+    }
+
+    if (this.hasValue(oldValue)) {
+      return `${field} removed (was "${oldValue}").`;
+    }
+
+    return `${field} was updated.`;
+  }
+
+  getDisplayFieldName(fieldName: string): string {
+    const key = fieldName?.toLowerCase() || '';
+    if (this.fieldNameMap[key]) {
+      return this.fieldNameMap[key];
+    }
+
+    return fieldName
+      .replace(/Id$/g, '')
+      .replace(/([A-Z])/g, ' $1')
+      .trim();
+  }
+
+  private getStatusName(value: string): string {
+    const map: Record<number, string> = {
+      [StatusEnum.Open]: 'Open',
+      [StatusEnum.InProgress]: 'In Progress',
+      [StatusEnum.OnHold]: 'On Hold',
+      [StatusEnum.Closed]: 'Closed',
+      [StatusEnum.Reopened]: 'Reopened',
+    };
+
+    const num = Number(value);
+    if (!isNaN(num) && map[num]) {
+      return map[num];
+    }
+
+    return value;
+  }
+
+  private getPriorityName(value: string): string {
+    const map: Record<number, string> = {
+      [PriorityEnum.Low]: 'Low',
+      [PriorityEnum.Medium]: 'Medium',
+      [PriorityEnum.High]: 'High',
+      [PriorityEnum.Critical]: 'Critical',
+    };
+
+    const num = Number(value);
+    if (!isNaN(num) && map[num]) {
+      return map[num];
+    }
+
+    return value;
+  }
+
+  getDisplayValue(fieldName: string, value: string | null): string {
+    if (!this.hasValue(value)) return '';
+
+    const key = fieldName?.toLowerCase() || '';
+
+    if (key.includes('status') || key === 'status' || key === 'statusid') {
+      return this.getStatusName(value!);
+    }
+
+    if (key.includes('priority') || key === 'priority' || key === 'priorityid') {
+      return this.getPriorityName(value!);
+    }
+
+    return value!;
+  }
+
+  isCreationChange(change: ITicketHistoryRead): boolean {
+    return change.fieldName?.toLowerCase() === 'ticket created';
+  }
+
+  hasValue(value: string | null | undefined): boolean {
+    return value !== null && value !== undefined && value !== '';
   }
 
   closeTicket(): void {

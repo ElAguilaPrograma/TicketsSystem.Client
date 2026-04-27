@@ -14,84 +14,75 @@
     </div>
 
   <div class="bg-brand-surface rounded-xl border border-brand-border shadow-sm">
-    <div class="p-4 border-b border-brand-border flex flex-col sm:flex-row gap-3 bg-brand-bg/30 items-center">
-      <div class="flex-1 w-full sm:w-auto">
-        <app-searchbar placeholder="Search by ID, subject..." (search)="searchTickets($event)"></app-searchbar>
-      </div>
-      <div class="flex flex-row gap-3 w-full sm:w-auto justify-center">
-        <app-select label="Status" [options]="statusOptions" [showLabel]="false" variant="surface"
-            [(ngModel)]="statusFilter" (ngModelChange)="loadTickets()"></app-select>
-        <app-select label="Priority" [options]="priorityOptions" [showLabel]="false" variant="surface"
-            [(ngModel)]="priorityFilter" (ngModelChange)="loadTickets()"></app-select>
-      </div>
-    </div>
+        <div class="p-4 border-b border-brand-border flex flex-col sm:flex-row gap-3 bg-brand-bg/30 items-center">
+            <div class="flex-1 w-full sm:w-auto">
+                <app-searchbar placeholder="Search by ID, subject..." (search)="searchTickets($event)"></app-searchbar>
+            </div>
+            <div class="flex flex-row gap-3 w-full sm:w-auto justify-center">
+                <app-select label="Status" [options]="statusOptions" [showLabel]="false" variant="surface"
+                    [(ngModel)]="statusFilter" (ngModelChange)="loadTickets()"></app-select>
+                <app-select label="Priority" [options]="priorityOptions" [showLabel]="false" variant="surface"
+                    [(ngModel)]="priorityFilter" (ngModelChange)="loadTickets()"></app-select>
+            </div>
+        </div>
 
-    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-      @for (ticket of myTickets; track ticket.ticketId) {
-        <div class="bg-brand-surface border border-brand-border rounded-xl p-4 
-                    hover:border-brand-primary/50 hover:shadow-sm transition-all 
-                    cursor-pointer group"
-             (click)="navigateToViewTicket(ticket.ticketId)">
+        <div class="p-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            @for (ticket of myTickets; track ticket.ticketId) {
+                <div class="bg-brand-surface border border-brand-border rounded-xl p-4 
+                            hover:border-brand-primary/50 hover:shadow-sm transition-all 
+                            cursor-pointer group"
+                    (click)="navigateToViewTicket(ticket.ticketId)">
 
-          <div class="flex items-start justify-between gap-2 mb-2">
-            <p class="text-brand-text font-medium text-sm leading-snug 
-                       group-hover:text-brand-primary transition-colors line-clamp-2">
-              {{ ticket.title }}
-            </p>
-            @switch (ticket.priorityName) {
-              @case ('Critical') {
-                <app-label [label]="ticket.priorityName" variant="Critical" class="shrink-0"></app-label>
-              }
-              @case ('High') {
-                <app-label [label]="ticket.priorityName" variant="High" class="shrink-0"></app-label>
-              }
-              @case ('Medium') {
-                <app-label [label]="ticket.priorityName" variant="Medium" class="shrink-0"></app-label>
-              }
-              @case ('Low') {
-                <app-label [label]="ticket.priorityName" variant="Low" class="shrink-0"></app-label>
-              }
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <p class="text-brand-text font-medium text-sm leading-snug 
+                                group-hover:text-brand-primary transition-colors line-clamp-2">
+                            {{ ticket.title }}
+                        </p>
+                        @switch (ticket.priorityName) {
+                            @case ('Critical') {
+                                <app-label [label]="ticket.priorityName" variant="Critical" class="shrink-0"></app-label>
+                            }
+                            @case ('High') {
+                                <app-label [label]="ticket.priorityName" variant="High" class="shrink-0"></app-label>
+                            }
+                            @case ('Medium') {
+                                <app-label [label]="ticket.priorityName" variant="Medium" class="shrink-0"></app-label>
+                            }
+                            @case ('Low') {
+                                <app-label [label]="ticket.priorityName" variant="Low" class="shrink-0"></app-label>
+                            }
+                        }
+                    </div>
+
+                    <p class="text-brand-text-muted text-xs line-clamp-2 mb-4 truncate">
+                        {{ ticket.description }}
+                    </p>
+
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            <app-status-chip [status]="ticket.statusName"></app-status-chip>
+                        </div>
+
+                        <div class="flex items-center gap-1.5 ml-auto">
+                            <div class="w-5 h-5 rounded-full bg-brand-bg flex items-center justify-center text-[9px] font-medium text-brand-text-muted shrink-0">
+                                {{ ticket.createdByUser | slice:0:2 | uppercase }}
+                            </div>
+                            <span class="text-brand-text-muted text-xs truncate max-w-20">{{ ticket.createdByUser }}</span>
+                            <span class="text-brand-text-muted text-xs">· {{ ticket.createdAt | date:'MMM d' }}</span>
+                        </div>
+                    </div>
+                </div>
             }
-          </div>
 
-          <p class="text-brand-text-muted text-xs line-clamp-2 mb-4 truncate">
-            {{ ticket.description }}
-          </p>
-
-          <div class="flex items-center justify-between gap-2 flex-wrap">
-            <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full shrink-0"
-                [ngClass]="{
-                  'bg-blue-400':    ticket.statusName === 'Open',
-                  'bg-amber-400':   ticket.statusName === 'InProgress',
-                  'bg-purple-400':  ticket.statusName === 'OnHold',
-                  'bg-emerald-400': ticket.statusName === 'Closed',
-                  'bg-rose-400':    ticket.statusName === 'Reopened',
-                  'bg-slate-400':   true
-                }"></span>
-              <span class="text-brand-text-muted text-xs">{{ ticket.statusName }}</span>
-            </div>
-
-            <div class="flex items-center gap-1.5 ml-auto">
-              <div class="w-5 h-5 rounded-full bg-brand-bg flex items-center justify-center text-[9px] font-medium text-brand-text-muted shrink-0">
-                {{ ticket.createdByUser | slice:0:2 | uppercase }}
-              </div>
-              <span class="text-brand-text-muted text-xs truncate max-w-20">{{ ticket.createdByUser }}</span>
-              <span class="text-brand-text-muted text-xs">· {{ ticket.createdAt | date:'MMM d' }}</span>
-            </div>
-          </div>
+            @empty {
+                <div class="col-span-full py-12 flex flex-col items-center gap-3 text-brand-text-muted">
+                    <div class="bg-brand-bg p-4 rounded-full">
+                        <ng-icon name="heroBriefcase" class="text-4xl text-brand-text-muted/50"></ng-icon>
+                    </div>
+                    <p class="text-sm font-medium">No tienes tickets asignados</p>
+                    <p class="text-xs">Descansa o toma uno del Panel de Control.</p>
+                </div>
+            }
         </div>
-      }
-
-      @empty {
-        <div class="col-span-full py-12 flex flex-col items-center gap-3 text-brand-text-muted">
-          <div class="bg-brand-bg p-4 rounded-full">
-            <ng-icon name="heroBriefcase" class="text-4xl text-brand-text-muted/50"></ng-icon>
-          </div>
-          <p class="text-sm font-medium">No tienes tickets asignados</p>
-          <p class="text-xs">Descansa o toma uno del Panel de Control.</p>
-        </div>
-      }
-    </div>
   </div>
 </section>
