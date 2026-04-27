@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft, heroMagnifyingGlass, heroUserCircle, heroChevronDown } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroMagnifyingGlass, heroUserCircle, heroChevronDown, heroPencilSquare } from '@ng-icons/heroicons/outline';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { TicketService } from '../../../../api/services/ticket.service';
@@ -16,6 +16,7 @@ import { IUser } from '../../../../api/interfaces/user/IUser';
 import { IPagedResult } from '../../../../api/interfaces/IPagedResult';
 import { Select } from '../../../../shared/components/select/select';
 import { ChangeDetectorRef } from '@angular/core';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
 
 @Component({
   selector: 'app-ticket-edit',
@@ -25,8 +26,9 @@ import { ChangeDetectorRef } from '@angular/core';
     NgIcon, Select, 
     ReactiveFormsModule, 
     ModalComponent, 
-    Searchbar],
-  viewProviders: [provideIcons({ heroArrowLeft, heroMagnifyingGlass, heroUserCircle, heroChevronDown })],
+    Searchbar,
+    StatusChipComponent],
+  viewProviders: [provideIcons({ heroArrowLeft, heroMagnifyingGlass, heroUserCircle, heroChevronDown, heroPencilSquare })],
   templateUrl: './ticket-edit.html',
   styleUrl: './ticket-edit.css',
 })

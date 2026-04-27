@@ -10,6 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map, filter, startWith } from 'rxjs'
 import { DarkModeService } from '../../core/darkMode.service';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
+import { SidebarService } from '../../core/services/sidebar.service';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +25,7 @@ export class Header {
   public darkModeService = inject(DarkModeService);
   public authService = inject(AuthenticationService);
   public breadcrumbService = inject(BreadcrumbService);
+  public sidebarService = inject(SidebarService);
   private router = inject(Router);
   private events$ = this.router.events.pipe(
     filter(event => event instanceof NavigationEnd),

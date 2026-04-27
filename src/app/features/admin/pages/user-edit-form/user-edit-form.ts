@@ -7,13 +7,13 @@ import { ButtonComponent } from "../../../../shared/components/button/button.com
 import { NgIcon, provideIcons } from "@ng-icons/core";
 import { Select } from '../../../../shared/components/select/select';
 import { ConfirmDialog } from '../../../../shared/components/confirm-dialog/confirm-dialog';
-import { heroArrowLeft, heroLockClosed, heroEyeSlash } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroLockClosed, heroEyeSlash, heroPencilSquare } from '@ng-icons/heroicons/outline';
 import { BreadcrumbService } from '../../../../core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-user-edit-form',
   imports: [ButtonComponent, NgIcon, Select, ReactiveFormsModule, ConfirmDialog],
-  viewProviders: [provideIcons({ heroArrowLeft, heroLockClosed, heroEyeSlash })],
+  viewProviders: [provideIcons({ heroArrowLeft, heroLockClosed, heroEyeSlash, heroPencilSquare })],
   templateUrl: './user-edit-form.html',
   styleUrl: './user-edit-form.css',
 })

@@ -1,0 +1,12 @@
+@if (variant === 'icon') {
+  <span [class]="iconClasses">
+    <ng-icon class="text-sm" [name]="tone.iconName"></ng-icon>
+  </span>
+} @else {
+  <span [class]="chipClasses">
+    @if (showDot) {
+      <span class="w-1.5 h-1.5 rounded-full" [class]="tone.dot"></span>
+    }
+    {{ statusLabel }}
+  </span>
+}

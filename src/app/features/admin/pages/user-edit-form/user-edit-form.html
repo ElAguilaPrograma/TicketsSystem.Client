@@ -1,13 +1,19 @@
-<section class="max-w-3xl mx-auto flex flex-col gap-6">
-    <div class="flex items-center gap-4">
-        <button (click)="goBack()"
-            class="p-2 rounded-full hover:bg-brand-surface text-brand-text-muted hover:text-brand-text transition-colors">
-            <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
-        </button>
-        <div>
-            <h3 class="text-sm font-medium text-brand-text-muted">User Administration</h3>
-            <h1 class="text-4xl font-bold">Edit User</h1>
+<section class="max-w-3xl mx-auto flex flex-col gap-4 md:gap-6 px-4 md:px-0">
+    <div class="flex justify-between items-center bg-brand-surface p-4 md:p-6 rounded-2xl border border-brand-border/50 shadow-sm relative overflow-hidden">
+        <div class="flex items-center gap-3 md:gap-4 relative z-10 min-w-0 flex-1">
+            <button (click)="goBack()"
+                class="p-2 rounded-full hover:bg-brand-bg text-brand-text-muted hover:text-brand-text transition-colors shrink-0">
+                <ng-icon name="heroArrowLeft" class="text-xl"></ng-icon>
+            </button>
+            <div class="min-w-0">
+                <div class="flex items-center gap-3 mb-1 md:mb-2">
+                    <h3 class="text-xs md:text-sm font-semibold text-brand-primary tracking-wider uppercase">User Administration</h3>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-brand-text leading-tight">Edit User</h1>
+                <p class="text-brand-text-muted mt-1 text-xs md:text-sm">Update user details and role assignments.</p>
+            </div>
         </div>
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-brand-primary/5 rounded-full blur-3xl"></div>
     </div>
 
     <div class="bg-brand-surface rounded-xl border border-brand-border overflow-hidden">

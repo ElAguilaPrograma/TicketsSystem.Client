@@ -4,17 +4,18 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { CardComponent } from "../../../../shared/components/card/card.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight } from '@ng-icons/heroicons/outline';
+import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal } from '@ng-icons/heroicons/outline';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { SignalRService } from '../../../../api/services/signalR.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 import { Router, RouterLink } from "@angular/router";
 import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { getTimeAgo } from '../../../../core/helpers/get_time_ago';
 
 @Component({
   selector: 'app-control-panel',
   imports: [CommonModule, ButtonComponent, CardComponent, NgIcon],
-  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight })],
+  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal })],
   templateUrl: './control-panel.html',
   styleUrl: './control-panel.css',
 })
@@ -88,19 +89,7 @@ export class ControlPanel implements OnInit {
     return 'bg-slate-500/20 text-slate-500';
   }
 
-  getTimeAgo(dateInput: string | Date | undefined): string {
-    if (!dateInput) return '';
-    const date = new Date(dateInput);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    if (diffMs < 0) return 'Just now'; 
-    const diffMins = Math.floor(diffMs / 60000);
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} mins ago`;
-    const diffHours = Math.floor(diffMins / 60);
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    return `${Math.floor(diffHours / 24)} days ago`;
-  }
+  getTimeAgo = getTimeAgo;
 
   openModal() {
     this.isModalOpen.set(true);

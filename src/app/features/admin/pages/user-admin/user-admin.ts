@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar } from '@ng-icons/heroicons/outline';
+import { heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar, heroUserGroup } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
 import { IUser } from '../../../../api/interfaces/user/IUser';
@@ -16,7 +16,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 @Component({
   selector: 'app-user-admin',
   imports: [CommonModule, ButtonComponent, NgIcon, ConfirmDialog, FormsModule, Select, Searchbar, CardComponent],
-  viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar })],
+  viewProviders: [provideIcons({ heroUserPlus, heroMagnifyingGlass, heroPencilSquare, heroTrash, heroPower, heroDocumentChartBar, heroUserGroup })],
   templateUrl: './user-admin.html',
   styleUrl: './user-admin.css',
 })

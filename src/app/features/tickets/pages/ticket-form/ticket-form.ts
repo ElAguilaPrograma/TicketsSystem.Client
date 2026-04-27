@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroArrowLeft, heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
+import { heroArrowLeft, heroArrowUpOnSquare, heroPlus } from '@ng-icons/heroicons/outline';
 import { Select } from "../../../../shared/components/select/select";
 import { FormsModule, FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { BreadcrumbService } from '../../../../core/services/breadcrumb.service'
 @Component({
   selector: 'app-ticket-form',
   imports: [CommonModule, ButtonComponent, NgIcon, Select, FormsModule, ReactiveFormsModule],
-  viewProviders: [provideIcons({ heroArrowLeft, heroArrowUpOnSquare })],
+  viewProviders: [provideIcons({ heroArrowLeft, heroArrowUpOnSquare, heroPlus })],
   templateUrl: './ticket-form.html',
   styleUrl: './ticket-form.css',
 })

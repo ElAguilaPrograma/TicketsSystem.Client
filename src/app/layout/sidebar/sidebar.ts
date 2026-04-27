@@ -21,6 +21,7 @@ import {
 import { ConfirmDialog } from "../../shared/components/confirm-dialog/confirm-dialog";
 import { DarkModeService } from '../../core/darkMode.service';
 import { ICurrentUserInfo } from '../../api/interfaces/user/ICurrentUserInfo';
+import { SidebarService } from '../../core/services/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -45,18 +46,14 @@ import { ICurrentUserInfo } from '../../api/interfaces/user/ICurrentUserInfo';
   styleUrl: './sidebar.css',
 })
 export class Sidebar implements OnInit {
-  isOpen = signal(false);
   showConfirmDialog = signal(false);
   public authenticationService = inject(AuthenticationService);
   public darkModeService = inject(DarkModeService);
   public userInfo = signal<ICurrentUserInfo | null>(null);
+  public sidebarService = inject(SidebarService);
 
   ngOnInit(): void {
     this.getUserInfo();
-  }
-
-  toggleSidebar() {
-    this.isOpen.update((v) => !v);
   }
 
   openConfirmDialog() {

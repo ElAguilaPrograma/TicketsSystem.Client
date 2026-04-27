@@ -43,7 +43,7 @@ export const routes: Routes = [
             { path: "user-form", component: UserForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Create User' } },
             { path: "user-edit-form/:userId", component: UserEditForm, canActivate: [roleGuard(['Admin'])], data: { breadcrumb: 'Edit User' } },
             { path: "notifications", component: NotificationsView, data: { breadcrumb: 'Notifications' } },
-            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])], data: { breadcrumb: 'My Workspace' } },
+            { path: "my-workspace", component: Myworkspace, canActivate: [roleGuard(['Admin', 'Agent'])], data: { breadcrumb: 'My Workspace' } }
         ]
     },
 

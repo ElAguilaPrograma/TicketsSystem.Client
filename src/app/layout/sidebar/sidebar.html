@@ -1,12 +1,8 @@
-@if (isOpen()) {
-<div class="fixed inset-0 bg-black/50 z-40 lg:hidden" (click)="toggleSidebar()"></div>
-}
-
 <app-confirm-dialog [(isOpen)]="showConfirmDialog" title="Logout" message="Do you want to log out of your session?"
     (confirm)="handleConfirm()"></app-confirm-dialog>
 
-<aside [class.-translate-x-full]="!isOpen()"
-    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform lg:translate-x-0 border-r border-brand-border flex flex-col">
+<aside [class.-translate-x-full]="!sidebarService.isOpen()"
+    class="fixed top-0 left-0 z-40 w-64 h-screen bg-brand-bg transition-transform lg:translate-x-0 border-r border-brand-border flex flex-col shadow-2xl">
 
     <div class="px-6 py-6 flex items-center gap-3">
         <div

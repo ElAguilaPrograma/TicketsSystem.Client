@@ -2,7 +2,17 @@ import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroEye, heroClock, heroArrowPath, heroArrowDownTray, heroTicket, heroArrowTopRightOnSquare } from '@ng-icons/heroicons/outline';
+import { 
+  heroEye, 
+  heroClock, 
+  heroArrowPath, 
+  heroArrowDownTray, 
+  heroTicket, 
+  heroArrowTopRightOnSquare,
+  heroArrowUturnLeft,
+  heroUser,
+  heroEnvelopeOpen
+  } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { Label } from '../../../../shared/components/label/label';
 import { Select } from '../../../../shared/components/select/select';
@@ -11,11 +21,21 @@ import { FormsModule } from '@angular/forms';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 import { AuthenticationService } from '../../../../api/services/authentication.service';
+import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
 
 @Component({
   selector: 'app-ticket-history',
-  imports: [CommonModule, ButtonComponent, NgIcon, Label, DatePipe, Select, Searchbar, FormsModule],
-  viewProviders: [provideIcons({ heroEye, heroClock, heroArrowPath, heroArrowDownTray, heroTicket, heroArrowTopRightOnSquare })],
+  imports: [CommonModule, ButtonComponent, NgIcon, Label, DatePipe, Select, Searchbar, FormsModule, StatusChipComponent],
+  viewProviders: [provideIcons({ 
+    heroEye, 
+    heroClock, 
+    heroArrowPath, 
+    heroArrowDownTray, 
+    heroTicket, 
+    heroArrowTopRightOnSquare, 
+    heroArrowUturnLeft, 
+    heroUser, 
+    heroEnvelopeOpen})],
   providers: [DatePipe],
   templateUrl: './ticket-history.html',
   styleUrl: './ticket-history.css',
@@ -32,7 +52,7 @@ export class TicketHistory implements OnInit {
   isAdmin: boolean = this.authService.getCurrentUserRole() === 'Admin';
 
   currentPage: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 4;
   totalPages: number = 1;
   totalCount: number = 0;
   disabledBotton: boolean = false;
