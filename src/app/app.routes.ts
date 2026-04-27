@@ -21,11 +21,6 @@ import { roleGuard } from './core/guards/role.guard';
 import { ErrorLayout } from './layout/error-layout/error-layout';
 import { NotificationsView } from './features/notifications-view/notifications-view';
 import { Myworkspace } from './features/tickets/pages/myworkspace/myworkspace';
-// ── PROTOTYPES (UI exploratorios, no producción) ──
-import { Prot1TicketHistory } from './prototypes/prot-1-ticket-history/prot-1-ticket-history';
-import { Prot2TicketHistory } from './prototypes/prot-2-ticket-history/prot-2-ticket-history';
-import { Prot3TicketHistory } from './prototypes/prot-3-ticket-history/prot-3-ticket-history';
-import { Prot4TicketHistory } from './prototypes/prot-4-ticket-history/prot-4-ticket-history';
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
