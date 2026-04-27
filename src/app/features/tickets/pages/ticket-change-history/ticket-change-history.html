@@ -12,7 +12,6 @@
                 <p class="text-brand-text-muted mt-1 font-medium text-sm">Reviewing modifications for {{ ticketId() | slice:0:8 }}</p>
             </div>
         </div>
-        <app-button label="Back to Ticket" variant="outline" (click)="goBack()"></app-button>
     </div>
 
     <div class="bg-brand-surface rounded-xl border border-brand-border p-8 shadow-sm">
@@ -25,43 +24,86 @@
             class="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-linear-to-b before:from-brand-border before:to-transparent">
 
             @for (group of historyGroups(); track group.changeGroupId) {
+                @let highlight = getHighlightType(group);
             <div
                 class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 <div
                     class="flex items-center justify-center w-10 h-10 rounded-full border-4 border-brand-surface text-white shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10"
-                    [ngClass]="getBgClassForField(group.changes.length > 0 ? group.changes[0].fieldName : '')">
-                    <ng-icon [name]="getIconForField(group.changes.length > 0 ? group.changes[0].fieldName : '')" class="text-sm"></ng-icon>
+                    [ngClass]="highlight ? getHighlightBgClass(highlight) : getBgClassForField(group.changes.length > 0 ? group.changes[0].fieldName : '')">
+                    <ng-icon [name]="highlight ? getHighlightIcon(highlight) : getIconForField(group.changes.length > 0 ? group.changes[0].fieldName : '')" class="text-sm"></ng-icon>
                 </div>
                 <!-- Card -->
                 <div
-                    class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border border-brand-border bg-brand-surface shadow-sm">
+                    class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded border shadow-sm transition-all"
+                    [ngClass]="highlight ? getHighlightCardClass(highlight) : 'border-brand-border bg-brand-surface'">
                     <div class="flex items-center justify-between space-x-2 mb-2">
-                        <div class="font-bold text-sm text-brand-text flex items-center gap-2">
-                            <div
-                                class="w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
-                                [ngClass]="getColorClassForUser(group.changedByUserFullName || 'System')">
-                                {{ getInitials(group.changedByUserFullName || 'System') }}</div>
-                            {{ group.changedByUserFullName || 'System' }}
+                        <div class="flex items-center gap-2">
+                            @if (highlight) {
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold" [ngClass]="getHighlightBadgeClass(highlight)">
+                                    <ng-icon [name]="getHighlightIcon(highlight)" class="text-xs"></ng-icon>
+                                    {{ getHighlightBadge(highlight) }}
+                                </span>
+                            }
+                            <div class="font-bold text-sm text-brand-text flex items-center gap-2">
+                                <div
+                                    class="w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
+                                    [ngClass]="getColorClassForUser(group.changedByUserFullName || 'System')">
+                                    {{ getInitials(group.changedByUserFullName || 'System') }}</div>
+                                {{ group.changedByUserFullName || 'System' }}
+                            </div>
                         </div>
                         <time class="text-xs font-medium text-brand-text-muted">{{ group.changedAt | date:'medium' }}</time>
                     </div>
                     <div class="text-sm text-brand-text">
                         @if (group.changes.length === 1) {
-                            <p class="mb-2"><span class="font-semibold">{{ group.changes[0].fieldName }} changed:</span></p>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs font-medium mt-2">
-                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text-muted truncate max-w-full sm:max-w-50" [title]="group.changes[0].oldValue || 'None'">
-                                    {{ group.changes[0].oldValue || 'None' }}
-                                </span>
-                                <ng-icon name="heroArrowRight" class="text-brand-text-muted hidden sm:block"></ng-icon>
-                                <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text truncate max-w-full sm:max-w-50" [title]="group.changes[0].newValue || 'None'">
-                                    {{ group.changes[0].newValue || 'None' }}
-                                </span>
-                            </div>
+                            @if (isCreationChange(group.changes[0])) {
+                                <p class="text-brand-text font-medium">A new ticket was created in the system.</p>
+                            } @else {
+                                <p class="mb-2"><span class="font-semibold">{{ getDisplayFieldName(group.changes[0].fieldName) }}</span></p>
+                                @if (hasValue(group.changes[0].oldValue) && hasValue(group.changes[0].newValue)) {
+                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 text-xs font-medium mt-2">
+                                        <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text-muted line-through opacity-70 truncate max-w-full sm:max-w-50"
+                                              [title]="getDisplayValue(group.changes[0].fieldName, group.changes[0].oldValue)">
+                                            {{ getDisplayValue(group.changes[0].fieldName, group.changes[0].oldValue) }}
+                                        </span>
+                                        <ng-icon name="heroArrowRight" class="text-brand-text-muted hidden sm:block"></ng-icon>
+                                        <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text truncate max-w-full sm:max-w-50"
+                                              [title]="getDisplayValue(group.changes[0].fieldName, group.changes[0].newValue)">
+                                            {{ getDisplayValue(group.changes[0].fieldName, group.changes[0].newValue) }}
+                                        </span>
+                                    </div>
+                                } @else if (hasValue(group.changes[0].newValue)) {
+                                    <div class="text-xs font-medium mt-2">
+                                        <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text">
+                                            {{ getDisplayValue(group.changes[0].fieldName, group.changes[0].newValue) }}
+                                        </span>
+                                    </div>
+                                } @else if (hasValue(group.changes[0].oldValue)) {
+                                    <div class="text-xs font-medium mt-2">
+                                        <span class="px-2 py-1 bg-brand-bg rounded border border-brand-border text-brand-text-muted line-through opacity-70">
+                                            {{ getDisplayValue(group.changes[0].fieldName, group.changes[0].oldValue) }}
+                                        </span>
+                                    </div>
+                                }
+                            }
                         } @else {
                             <p><span class="font-semibold text-brand-text">Multiple properties changed:</span></p>
                             <ul class="mt-2 pl-4 list-disc text-xs text-brand-text-muted space-y-1 relative z-0">
                                 @for (change of group.changes; track change.fieldName) {
-                                    <li><span class="font-semibold">{{ change.fieldName }}</span> changed from <span class="font-bold text-brand-text line-through opacity-70">{{ change.oldValue || 'None' }}</span> to <span class="font-bold text-brand-text">{{ change.newValue || 'None' }}</span></li>
+                                    <li>
+                                        @if (isCreationChange(change)) {
+                                            <span class="font-semibold">Ticket Created</span>
+                                        } @else {
+                                            <span class="font-semibold">{{ getDisplayFieldName(change.fieldName) }}</span>:
+                                            @if (hasValue(change.oldValue) && hasValue(change.newValue)) {
+                                                from <span class="font-bold text-brand-text line-through opacity-70">{{ getDisplayValue(change.fieldName, change.oldValue) }}</span> to <span class="font-bold text-brand-text">{{ getDisplayValue(change.fieldName, change.newValue) }}</span>
+                                            } @else if (hasValue(change.newValue)) {
+                                                set to <span class="font-bold text-brand-text">{{ getDisplayValue(change.fieldName, change.newValue) }}</span>
+                                            } @else if (hasValue(change.oldValue)) {
+                                                removed — was <span class="font-bold text-brand-text line-through opacity-70">{{ getDisplayValue(change.fieldName, change.oldValue) }}</span>
+                                            }
+                                        }
+                                    </li>
                                 }
                             </ul>
                         }

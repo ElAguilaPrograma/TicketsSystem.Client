@@ -1,0 +1,43 @@
+.highlight-card-created {
+  background-color: rgba(16, 185, 129, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-left: 4px solid #10b981;
+}
+
+.highlight-card-closed {
+  background-color: rgba(244, 63, 94, 0.05);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  border-left: 4px solid #f43f5e;
+}
+
+.highlight-card-reopened {
+  background-color: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-left: 4px solid #f59e0b;
+}
+
+.highlight-card-assigned {
+  background-color: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-left: 4px solid #3b82f6;
+}
+
+.badge-created {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+.badge-closed {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #e11d48;
+}
+
+.badge-reopened {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.badge-assigned {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
+}
