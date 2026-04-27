@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   heroBellAlert,
@@ -21,7 +22,7 @@ import { getTimeAgo } from '../../core/helpers/get_time_ago';
 @Component({
   selector: 'app-notifications-view',
   standalone: true,
-  imports: [NgIcon],
+  imports: [CommonModule, NgIcon],
   viewProviders: [
     provideIcons({
       heroBellAlert,

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { CardComponent } from "../../../../shared/components/card/card.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight } from '@ng-icons/heroicons/outline';
+import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal } from '@ng-icons/heroicons/outline';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { SignalRService } from '../../../../api/services/signalR.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
@@ -15,7 +15,7 @@ import { getTimeAgo } from '../../../../core/helpers/get_time_ago';
 @Component({
   selector: 'app-control-panel',
   imports: [CommonModule, ButtonComponent, CardComponent, NgIcon],
-  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight })],
+  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal })],
   templateUrl: './control-panel.html',
   styleUrl: './control-panel.css',
 })
