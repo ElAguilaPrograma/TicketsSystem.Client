@@ -25,7 +25,7 @@ import { StatusChipComponent } from '../../../../shared/components/status-chip/s
 
 @Component({
   selector: 'app-ticket-details',
-  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, StatusChipComponent, ModalComponent],
+  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, StatusChipComponent, ModalComponent, ConfirmDialog],
   viewProviders: [provideIcons({ heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList, heroArrowTopRightOnSquare })],
   templateUrl: './ticket-details.html',
   styleUrl: './ticket-details.css',
@@ -65,11 +65,12 @@ export class TicketDetails implements OnInit, OnDestroy {
   ticketCommentsNotInternal: ITicketsReadComment[] = [];
   ticketCommentsInternal: ITicketsReadComment[] = [];
   latestHistoryGroup: ITicketHistoryGroup | null = null;
+  historyGroups: ITicketHistoryGroup[] = [];
 
   commentContentNotInternal: string = "";
   commentContentInternal: string = "";
   isInternal: boolean = false;
-  isCommentsModalOpen: boolean = true;
+  isCommentsModalOpen: boolean = false;
   isInternalCommentsModalOpen: boolean = false;
 
   closeTicketConfirmDialogOpen = signal(false);
@@ -184,6 +185,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   loadTicketHistory(): void {
     this.ticketService.getTicketHistory(this.ticketId).subscribe({
       next: (history) => {
+        this.historyGroups = history;
         this.latestHistoryGroup = this.getLatestHistoryGroup(history);
         this.cdr.detectChanges();
       },
@@ -191,6 +193,12 @@ export class TicketDetails implements OnInit, OnDestroy {
         console.error(error);
       }
     });
+  }
+
+  get recentHistoryGroups(): ITicketHistoryGroup[] {
+    return [...this.historyGroups]
+      .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())
+      .slice(0, 3);
   }
 
   private getLatestHistoryGroup(history: ITicketHistoryGroup[]): ITicketHistoryGroup | null {
@@ -206,6 +214,81 @@ export class TicketDetails implements OnInit, OnDestroy {
   get latestHistoryPrimaryChange(): ITicketHistoryRead | null {
     if (!this.latestHistoryGroup?.changes?.length) return null;
     return this.latestHistoryGroup.changes[0];
+  }
+
+  getHistorySummaryForGroup(group: ITicketHistoryGroup): string {
+    if (!group?.changes?.length) {
+      return 'A change was recorded for this ticket.';
+    }
+
+    const primaryChange = group.changes[0];
+    if (this.isCreationChange(primaryChange)) {
+      return 'Ticket created in the system.';
+    }
+
+    if (group.changes.length > 1) {
+      const fields = group.changes
+        .slice(0, 2)
+        .map(change => this.getDisplayFieldName(change.fieldName))
+        .join(', ');
+      const remaining = group.changes.length - 2;
+      return remaining > 0
+        ? `Multiple changes: ${fields} and ${remaining} more.`
+        : `Multiple changes: ${fields}.`;
+    }
+
+    const field = this.getDisplayFieldName(primaryChange.fieldName);
+    const oldValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.oldValue);
+    const newValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.newValue);
+
+    if (this.hasValue(oldValue) && this.hasValue(newValue)) {
+      return `${field} changed from "${oldValue}" to "${newValue}".`;
+    }
+
+    if (this.hasValue(newValue)) {
+      return `${field} set to "${newValue}".`;
+    }
+
+    if (this.hasValue(oldValue)) {
+      return `${field} removed (was "${oldValue}").`;
+    }
+
+    return `${field} was updated.`;
+  }
+
+  getHistoryDotClass(group: ITicketHistoryGroup): string {
+    switch (this.getHistoryHighlightType(group)) {
+      case 'created':
+        return 'bg-sky-500';
+      case 'closed':
+        return 'bg-emerald-500';
+      case 'reopened':
+        return 'bg-rose-500';
+      case 'assigned':
+        return 'bg-indigo-500';
+      default:
+        return 'bg-brand-primary';
+    }
+  }
+
+  private getHistoryHighlightType(group: ITicketHistoryGroup): 'created' | 'closed' | 'reopened' | 'assigned' | null {
+    for (const change of group.changes ?? []) {
+      const field = change.fieldName?.toLowerCase() || '';
+
+      if (field === 'ticket created') return 'created';
+
+      if (field.includes('status') || field === 'statusid') {
+        const newVal = this.getDisplayValue(change.fieldName, change.newValue)?.toLowerCase();
+        if (newVal === 'closed') return 'closed';
+        if (newVal === 'reopened') return 'reopened';
+      }
+
+      if (field.includes('assignedtouserid') && this.hasValue(change.newValue)) {
+        return 'assigned';
+      }
+    }
+
+    return null;
   }
 
   get latestHistorySummary(): string {
