@@ -3,13 +3,10 @@ import { Subscription } from 'rxjs';
 import { SignalRService } from '../../api/services/signalR.service';
 import { NotificationService } from './notification.service';
 
-/**
- * Bridges SignalR real-time events to the NotificationService.
- * Call `init()` once (e.g. in App component constructor).
- */
 @Injectable({
   providedIn: 'root'
 })
+
 export class SignalrNotificationInitializer implements OnDestroy {
   private signalR = inject(SignalRService);
   private notifications = inject(NotificationService);
@@ -20,7 +17,7 @@ export class SignalrNotificationInitializer implements OnDestroy {
     if (this.initialized) return;
     this.initialized = true;
 
-    // 🟠 New ticket created → high urgency
+    // New ticket created → high urgency
     this.subs.push(
       this.signalR.newTicket$.subscribe(ticket => {
         this.notifications.high(
@@ -31,7 +28,7 @@ export class SignalrNotificationInitializer implements OnDestroy {
       })
     );
 
-    // 🔵 Ticket status changed → update
+    // Ticket status changed → update
     this.subs.push(
       this.signalR.ticketStatusChanged$.subscribe(ticket => {
         this.notifications.update(
@@ -42,7 +39,7 @@ export class SignalrNotificationInitializer implements OnDestroy {
       })
     );
 
-    // ⚪ New comment on ticket → info
+    // New comment on ticket → info
     this.subs.push(
       this.signalR.ticketComment$.subscribe(comment => {
         this.notifications.info(

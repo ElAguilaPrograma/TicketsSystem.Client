@@ -8,7 +8,7 @@ import { heroArrowRightEndOnRectangle } from '@ng-icons/heroicons/outline';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, filter, startWith } from 'rxjs'
-import { DarkModeService } from '../../core/darkMode.service';
+import { DarkModeService } from '../../core/services/darkMode.service';
 import { BreadcrumbService } from '../../core/services/breadcrumb.service';
 import { SidebarService } from '../../core/services/sidebar.service';
 
