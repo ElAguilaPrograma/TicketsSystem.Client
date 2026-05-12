@@ -25,7 +25,7 @@ import { StatusChipComponent } from '../../../../shared/components/status-chip/s
 
 @Component({
   selector: 'app-ticket-details',
-  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, ConfirmDialog, ModalComponent, StatusChipComponent],
+  imports: [CommonModule, ButtonComponent, NgIcon, Label, RouterLink, FormsModule, StatusChipComponent, ModalComponent, ConfirmDialog],
   viewProviders: [provideIcons({ heroArrowLeft, heroSparkles, heroDocument, heroChatBubbleLeftRight, heroPaperClip, heroTicket, heroClipboardDocumentList, heroArrowTopRightOnSquare })],
   templateUrl: './ticket-details.html',
   styleUrl: './ticket-details.css',
@@ -65,6 +65,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   ticketCommentsNotInternal: ITicketsReadComment[] = [];
   ticketCommentsInternal: ITicketsReadComment[] = [];
   latestHistoryGroup: ITicketHistoryGroup | null = null;
+  historyGroups: ITicketHistoryGroup[] = [];
 
   commentContentNotInternal: string = "";
   commentContentInternal: string = "";
@@ -75,6 +76,8 @@ export class TicketDetails implements OnInit, OnDestroy {
   closeTicketConfirmDialogOpen = signal(false);
   closeReopenTicketConfirmDialogOpen = signal(false);
   private hasLoadedCommentsOnce = false;
+
+  activeCommentTab: 'public' | 'internal' = 'public';
   
   get recentCommentsNotInternal(): ITicketsReadComment[] {
     return this.ticketCommentsNotInternal.slice(-4);
@@ -84,8 +87,6 @@ export class TicketDetails implements OnInit, OnDestroy {
     return this.ticketCommentsInternal.slice(-2);
   }
 
-  @ViewChild('publicCommentsCard') private publicCommentsCard?: ElementRef<HTMLElement>;
-  @ViewChild('internalCommentsCard') private internalCommentsCard?: ElementRef<HTMLElement>;
   @ViewChild('commentsScrollContainer') private commentsScrollContainer?: ElementRef<HTMLElement>;
   @ViewChild('internalCommentsScrollContainer') private internalCommentsScrollContainer?: ElementRef<HTMLElement>;
 
@@ -96,6 +97,7 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.loadTicketDetails();
     this.loadTicketComments();
     this.loadTicketHistory();
+    this.scrollToBottom();
     
     this.commentSubscription = this.signalRService.ticketComment$.subscribe(newComment => {
       if (newComment.ticketId === this.ticketId) {
@@ -119,61 +121,8 @@ export class TicketDetails implements OnInit, OnDestroy {
     });
   }
 
-  private getResizableContainers(): HTMLElement[] {
-    const containers = [
-      this.publicCommentsCard?.nativeElement,
-      this.internalCommentsCard?.nativeElement,
-      this.commentsScrollContainer?.nativeElement,
-      this.internalCommentsScrollContainer?.nativeElement,
-    ];
-
-    return containers.filter((container): container is HTMLElement => !!container);
-  }
-
-  private captureHeights(containers: HTMLElement[]): Map<HTMLElement, number> {
-    const heights = new Map<HTMLElement, number>();
-
-    for (const container of containers) {
-      heights.set(container, container.getBoundingClientRect().height);
-    }
-
-    return heights;
-  }
-
-  private animateContainerResize(previousHeights: Map<HTMLElement, number>): void {
-    if (!previousHeights.size) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      for (const [container, previousHeight] of previousHeights) {
-        const nextHeight = container.getBoundingClientRect().height;
-
-        if (Math.abs(nextHeight - previousHeight) < 1) {
-          continue;
-        }
-
-        container.style.height = `${previousHeight}px`;
-        container.style.overflow = 'hidden';
-        container.style.transition = 'none';
-        void container.offsetHeight;
-
-        container.style.transition = `height ${this.resizeAnimationMs}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-        container.style.height = `${nextHeight}px`;
-
-        window.setTimeout(() => {
-          container.style.height = '';
-          container.style.overflow = '';
-          container.style.transition = '';
-        }, this.resizeAnimationMs + 50);
-      }
-    });
-  }
-
   private applyCommentsState(comments: ITicketsReadComment[]): void {
     const shouldAnimateResize = this.hasLoadedCommentsOnce;
-    const containers = shouldAnimateResize ? this.getResizableContainers() : [];
-    const previousHeights = shouldAnimateResize ? this.captureHeights(containers) : new Map<HTMLElement, number>();
 
     this.ticketsComments = comments;
     this.ticketCommentsNotInternal = this.ticketsComments.filter(comment => !comment.isInternal);
@@ -181,7 +130,6 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.cdr.detectChanges();
 
     if (shouldAnimateResize) {
-      this.animateContainerResize(previousHeights);
       this.scrollToBottom(this.resizeAnimationMs);
     } else {
       this.scrollToBottom();
@@ -197,6 +145,7 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.ticketCommentService.createTicketComment(this.ticketId, content, false).subscribe({
       next: () => {
         this.loadTicketComments();
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error(error);
@@ -236,6 +185,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   loadTicketHistory(): void {
     this.ticketService.getTicketHistory(this.ticketId).subscribe({
       next: (history) => {
+        this.historyGroups = history;
         this.latestHistoryGroup = this.getLatestHistoryGroup(history);
         this.cdr.detectChanges();
       },
@@ -243,6 +193,12 @@ export class TicketDetails implements OnInit, OnDestroy {
         console.error(error);
       }
     });
+  }
+
+  get recentHistoryGroups(): ITicketHistoryGroup[] {
+    return [...this.historyGroups]
+      .sort((a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime())
+      .slice(0, 3);
   }
 
   private getLatestHistoryGroup(history: ITicketHistoryGroup[]): ITicketHistoryGroup | null {
@@ -258,6 +214,81 @@ export class TicketDetails implements OnInit, OnDestroy {
   get latestHistoryPrimaryChange(): ITicketHistoryRead | null {
     if (!this.latestHistoryGroup?.changes?.length) return null;
     return this.latestHistoryGroup.changes[0];
+  }
+
+  getHistorySummaryForGroup(group: ITicketHistoryGroup): string {
+    if (!group?.changes?.length) {
+      return 'A change was recorded for this ticket.';
+    }
+
+    const primaryChange = group.changes[0];
+    if (this.isCreationChange(primaryChange)) {
+      return 'Ticket created in the system.';
+    }
+
+    if (group.changes.length > 1) {
+      const fields = group.changes
+        .slice(0, 2)
+        .map(change => this.getDisplayFieldName(change.fieldName))
+        .join(', ');
+      const remaining = group.changes.length - 2;
+      return remaining > 0
+        ? `Multiple changes: ${fields} and ${remaining} more.`
+        : `Multiple changes: ${fields}.`;
+    }
+
+    const field = this.getDisplayFieldName(primaryChange.fieldName);
+    const oldValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.oldValue);
+    const newValue = this.getDisplayValue(primaryChange.fieldName, primaryChange.newValue);
+
+    if (this.hasValue(oldValue) && this.hasValue(newValue)) {
+      return `${field} changed from "${oldValue}" to "${newValue}".`;
+    }
+
+    if (this.hasValue(newValue)) {
+      return `${field} set to "${newValue}".`;
+    }
+
+    if (this.hasValue(oldValue)) {
+      return `${field} removed (was "${oldValue}").`;
+    }
+
+    return `${field} was updated.`;
+  }
+
+  getHistoryDotClass(group: ITicketHistoryGroup): string {
+    switch (this.getHistoryHighlightType(group)) {
+      case 'created':
+        return 'bg-sky-500';
+      case 'closed':
+        return 'bg-emerald-500';
+      case 'reopened':
+        return 'bg-rose-500';
+      case 'assigned':
+        return 'bg-indigo-500';
+      default:
+        return 'bg-brand-primary';
+    }
+  }
+
+  private getHistoryHighlightType(group: ITicketHistoryGroup): 'created' | 'closed' | 'reopened' | 'assigned' | null {
+    for (const change of group.changes ?? []) {
+      const field = change.fieldName?.toLowerCase() || '';
+
+      if (field === 'ticket created') return 'created';
+
+      if (field.includes('status') || field === 'statusid') {
+        const newVal = this.getDisplayValue(change.fieldName, change.newValue)?.toLowerCase();
+        if (newVal === 'closed') return 'closed';
+        if (newVal === 'reopened') return 'reopened';
+      }
+
+      if (field.includes('assignedtouserid') && this.hasValue(change.newValue)) {
+        return 'assigned';
+      }
+    }
+
+    return null;
   }
 
   get latestHistorySummary(): string {
@@ -395,36 +426,15 @@ export class TicketDetails implements OnInit, OnDestroy {
     })
   }
 
-  openCommentsModal(): void {
-    if (this.ticketCommentsNotInternal.length > 4) {
-      this.isCommentsModalOpen = true;
-      setTimeout(() => this.scrollToBottom(80), 150);
-    }
-  }
-
   closeCommentsModal(): void {
     this.isCommentsModalOpen = false;
-  }
-
-  openInternalCommentsModal(): void {
-    if (this.ticketCommentsInternal.length > 2) {
-      this.isInternalCommentsModalOpen = true;
-      setTimeout(() => this.scrollToBottom(80), 150);
-    }
-  }
-
-  closeInternalCommentsModal(): void {
-    this.isInternalCommentsModalOpen = false;
   }
 
   scrollToBottom(delay = 50): void {
     setTimeout(() => {
       try {
-        if (this.isCommentsModalOpen && this.commentsScrollContainer) {
+        if (this.commentsScrollContainer) {
           this.commentsScrollContainer.nativeElement.scrollTop = this.commentsScrollContainer.nativeElement.scrollHeight;
-        }
-        if (this.isInternalCommentsModalOpen && this.internalCommentsScrollContainer) {
-          this.internalCommentsScrollContainer.nativeElement.scrollTop = this.internalCommentsScrollContainer.nativeElement.scrollHeight;
         }
       } catch (err) { }
     }, delay);
@@ -494,5 +504,14 @@ export class TicketDetails implements OnInit, OnDestroy {
 
   goBack(): void {
     this.breadcrumbService.goBack('/ticket-main');
+  }
+
+  switchCommentTab(tab: 'public' | 'internal'): void {
+    this.activeCommentTab = tab;
+  }
+
+  openCommentsModal(): void {
+    this.isCommentsModalOpen = true;
+    setTimeout(() => this.scrollToBottom(80), 150);
   }
 }

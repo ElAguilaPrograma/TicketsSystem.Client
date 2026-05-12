@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
-import { DarkModeService } from '../../core/darkMode.service';
+import { DarkModeService } from '../../core/services/darkMode.service';
 
 @Component({
   selector: 'app-error-layout',
