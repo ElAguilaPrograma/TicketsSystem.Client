@@ -26,6 +26,7 @@ import { TicketAttachmentService } from '../../../../api/services/ticket-attachm
 import { ITicketAttachment } from '../../../../api/interfaces/ticket-attachment/ITicketAttachment';
 import { StorageService } from '../../../../api/services/storage.service';
 import { StorageBucket } from '../../../../core/enums/storage_bucket';
+import { UserAdminService } from '../../../../api/services/user-admin.service';
 
 @Component({
   selector: 'app-ticket-details',
@@ -61,6 +62,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   private breadcrumbService = inject(BreadcrumbService);
   private attachmentService = inject(TicketAttachmentService);
   private storageService = inject(StorageService);
+  private userAdminService = inject(UserAdminService);
   private commentSubscription?: Subscription;
 
   ticketId: string = "";
@@ -74,6 +76,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   historyGroups: ITicketHistoryGroup[] = [];
   attachments: ITicketAttachment[] = [];
   selectedAttachment: ITicketAttachment | null = null;
+  assignedUserProfileUrl: string | null = null;
 
   commentContentNotInternal: string = "";
   commentContentInternal: string = "";
@@ -184,12 +187,33 @@ export class TicketDetails implements OnInit, OnDestroy {
     this.ticketService.getTicketById(this.ticketId).subscribe({
       next: (response) => {
         this.ticketData = response;
+        this.loadAssignedUserProfilePic();
         this.cdr.detectChanges();
       },
       error: (error) => {
         console.error(error);
       }
     })
+  }
+
+  private loadAssignedUserProfilePic(): void {
+    const assignedUserId = this.ticketData.assignedToUserId;
+    if (!assignedUserId) {
+      this.assignedUserProfileUrl = null;
+      return;
+    }
+
+    this.userAdminService.getUserProfilePicUrl(assignedUserId).subscribe({
+      next: (response) => {
+        this.assignedUserProfileUrl = response.url;
+        console.log(`[TicketDetails] Assigned user profile picture URL loaded:`, response.url);
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        console.error(`[TicketDetails] Failed to load assigned user profile picture for userId ${assignedUserId}`);
+        this.assignedUserProfileUrl = null;
+      }
+    });
   }
 
   loadTicketHistory(): void {
@@ -567,5 +591,43 @@ export class TicketDetails implements OnInit, OnDestroy {
   openCommentsModal(): void {
     this.isCommentsModalOpen = true;
     setTimeout(() => this.scrollToBottom(80), 150);
+  }
+
+  getAssigneeName(): string {
+    if (!this.ticketData.assignedToUserId) {
+      return 'TBD';
+    }
+
+    if (this.ticketData.assignedToUserId === this.currentUserInfo?.userId) {
+      return 'Me';
+    }
+
+    return this.ticketData.assignedToUser ?? 'TBD';
+  }
+
+  getAssigneeInitials(): string {
+    if (!this.ticketData.assignedToUserId) {
+      return 'TBD';
+    }
+
+    const name = this.ticketData.assignedToUserId === this.currentUserInfo?.userId
+      ? this.currentUserInfo?.fullName
+      : this.ticketData.assignedToUser;
+
+    return this.getInitials(name);
+  }
+
+  getInitials(fullName: string | null | undefined): string {
+    if (!fullName) {
+      return 'U';
+    }
+
+    return fullName
+      .split(' ')
+      .filter(Boolean)
+      .map((namePart) => namePart[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 }

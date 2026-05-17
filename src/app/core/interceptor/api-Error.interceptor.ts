@@ -60,6 +60,20 @@ export const apiErrorInterceptor: HttpInterceptorFn = (req, next) => {
                         'Internal Server Error'
                     );
                     break;
+                case 413:
+                    toastService.warning(
+                        'File too large',
+                        errorMessage,
+                        'Payload Too Large'
+                    );
+                    break;
+                case 415:
+                    toastService.warning(
+                        'Unsupported media type',
+                        errorMessage,
+                        'Unsupported Media Type'
+                    );
+                    break;
                 default:
                     toastService.error(
                         'Unexpected error',

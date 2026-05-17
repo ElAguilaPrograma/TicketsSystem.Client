@@ -113,6 +113,7 @@ export class UserAdmin implements OnInit {
             this.storageService.getUrlForProfilePic(StorageBucket.ProfilePics, user.profilePicPath).subscribe({
               next: (res) => {
                 user.profilePicUrl = res.url
+                this.cdr.detectChanges();
                 console.log(`[UserAdmin] Profile picture URL loaded for user ${user.userId}:`, res.url);
               },
               error: (err) => console.error(`[UserAdmin] Error loading profile picture for user ${user.userId}:`, err)

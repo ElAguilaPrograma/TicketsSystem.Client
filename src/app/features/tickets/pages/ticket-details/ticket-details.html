@@ -321,14 +321,14 @@
                         <span class="text-brand-text-muted">Assignee</span>
                         <span class="font-medium flex items-center gap-2">
                             <div
-                                class="w-5 h-5 rounded-full bg-blue-500 text-[10px] text-white flex items-center justify-center">
-                                JD</div>
-                            @if (ticketData.assignedToUserId === currentUserInfo?.userId) {
-                                Me
-                            }
-                            @else {
-                                {{ ticketData.assignedToUser ?? "TBD" }}
-                            }
+                                class="w-5 h-5 rounded-full bg-blue-500 text-[10px] text-white flex items-center justify-center overflow-hidden">
+                                @if (assignedUserProfileUrl) {
+                                    <img [src]="assignedUserProfileUrl" alt="Assignee" class="w-full h-full object-cover">
+                                } @else {
+                                    {{ getAssigneeInitials() }}
+                                }
+                            </div>
+                            {{ getAssigneeName() }}
                         </span>
                     </div>
                     <div class="flex justify-between">

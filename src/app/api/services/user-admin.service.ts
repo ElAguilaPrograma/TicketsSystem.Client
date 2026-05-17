@@ -64,6 +64,10 @@ export class UserAdminService {
         return this.http.get<IUser>(`${this.apiUrl}/getuserbyid/${userId}`, { withCredentials: true });
     }
 
+    getUserProfilePicUrl(userId: string) {
+        return this.http.get<{ url: string }>(`${this.apiUrl}/getprofilepic/${userId}`, { withCredentials: true });
+    }
+
     exportUsers(role: string = "All Roles", isActive: string = "All", timezoneOffsetMinutes: number): Observable<Blob> {
         const params = new HttpParams()
             .set('role', role)
