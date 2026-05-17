@@ -65,6 +65,7 @@ export class TicketEdit implements OnInit {
   selectedAgentId: string | null = null;
   selectedAgentName: string = 'Unassigned';
   agents: IUser[] = [];
+  agentProfileUrls: Record<string, string | null> = {};
   agentSearchQuery = '';
   currentPage = 1;
   pageSize = 6;
@@ -128,6 +129,7 @@ export class TicketEdit implements OnInit {
       .subscribe({
         next: (res: IPagedResult<IUser>) => {
           this.agents = res.data;
+          this.loadAgentProfilePics(this.agents);
           this.totalCount = res.totalCount;
           this.totalPages = res.totalPages;
           this.currentPage = res.page;
@@ -139,6 +141,24 @@ export class TicketEdit implements OnInit {
           console.log(err);
         }
       });
+  }
+
+  private loadAgentProfilePics(agents: IUser[]): void {
+    for (const agent of agents) {
+      if (this.agentProfileUrls[agent.userId] !== undefined) {
+        continue;
+      }
+
+      this.userAdminService.getUserProfilePicUrl(agent.userId).subscribe({
+        next: (response) => {
+          this.agentProfileUrls[agent.userId] = response.url;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.agentProfileUrls[agent.userId] = null;
+        }
+      });
+    }
   }
 
   searchAgents(query: string) {
@@ -167,8 +187,18 @@ export class TicketEdit implements OnInit {
     this.updateTicketForm.patchValue({ assignedToUserId: null });
   }
 
-  getInitials(fullName: string): string {
-    return fullName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  getInitials(fullName: string | null | undefined): string {
+    if (!fullName) {
+      return 'U';
+    }
+
+    return fullName
+      .split(' ')
+      .filter(Boolean)
+      .map((namePart) => namePart[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   goToPage(page: number) {
