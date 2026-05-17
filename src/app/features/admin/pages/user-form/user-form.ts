@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -23,6 +23,7 @@ export class UserForm {
   private userAdminService = inject(UserAdminService);
   private userValidations = inject(UserValidations);
   private breadcrumbService = inject(BreadcrumbService);
+  private cdk = inject(ChangeDetectorRef);
 
   statusOptions = [
     { label: 'Active', value: true },
@@ -35,13 +36,20 @@ export class UserForm {
     { label: 'Administrator', value: 'Admin' }
   ];
 
+  previewImage: string | null = null;
+
+  get profilePicActionLabel(): string {
+    return this.createUserForm.get('profilePic')?.value ? 'Change File' : 'Upload File';
+  }
+
   createUserForm: FormGroup = this.fb.group({
     fullName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     role: ['User', [Validators.required, this.userValidations.validateRole()]],
     isActive: [true, [Validators.required]],
     password: ['', [Validators.required, this.userValidations.validatePassword()]],
-    confirmPassword: ['', [Validators.required, this.userValidations.validateConfirmPassword()]]
+    confirmPassword: ['', [Validators.required, this.userValidations.validateConfirmPassword()]],
+    profilePic: [null, [this.userValidations.validateProfilePic()]]
   })
 
   onSubmit() {
@@ -58,6 +66,51 @@ export class UserForm {
     } else {
       this.createUserForm.markAllAsTouched();
     }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      this.createUserForm.get('profilePic')?.setErrors({ 'invalidFileType': true });
+      return;
+    }
+
+    // Validar tamaño (máximo 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.createUserForm.get('profilePic')?.setErrors({ 'fileTooLarge': true });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64String = e.target?.result as string;
+      this.previewImage = base64String;
+      this.createUserForm.get('profilePic')?.setValue(file);
+      this.createUserForm.get('profilePic')?.setErrors(null);
+      this.cdk.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  clearSelectedImage(fileInput: HTMLInputElement): void {
+    fileInput.value = '';
+    this.previewImage = null;
+
+    const profilePicControl = this.createUserForm.get('profilePic');
+    profilePicControl?.setValue(null);
+    profilePicControl?.setErrors(null);
+    profilePicControl?.markAsPristine();
+    profilePicControl?.markAsUntouched();
+
+    this.cdk.detectChanges();
   }
 
   goBack(): void {

@@ -65,6 +65,20 @@ export class Sidebar implements OnInit {
     this.authenticationService.logout();
   }
 
+  getInitials(fullName: string | null | undefined): string {
+    if (!fullName) {
+      return 'U';
+    }
+
+    return fullName
+      .split(' ')
+      .filter(Boolean)
+      .map((namePart) => namePart[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  }
+
   getUserInfo() {
     this.authenticationService.checkStatus$().subscribe({
       next: (res) => {

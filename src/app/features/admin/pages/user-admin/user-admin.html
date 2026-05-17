@@ -70,8 +70,13 @@
                         <td class="px-4 py-2.5">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-8 h-8 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center font-bold text-xs">
-                                    EM</div>
+                                    class="w-8 h-8 rounded-full bg-brand-secondary/20 text-brand-secondary flex items-center justify-center font-bold text-xs overflow-hidden">
+                                    @if (user.profilePicUrl) {
+                                        <img [src]="user.profilePicUrl" alt="User" class="w-full h-full object-cover">
+                                    } @else {
+                                        <span>{{ getInitials(user.fullName) }}</span>
+                                    }
+                                </div>
                                 <div>
                                     <p class="font-bold text-sm text-brand-text">{{ user.fullName }}</p>
                                     <p class="text-xs text-brand-text-muted">{{ user.email }}</p>
@@ -118,8 +123,12 @@
                 <!-- Fila superior: avatar + nombre + badge de rol -->
                 <div class="flex items-center gap-3 mb-3">
                 <div class="w-9 h-9 rounded-full bg-brand-secondary/20 text-brand-secondary 
-                            flex items-center justify-center font-bold text-xs shrink-0">
-                    {{ user.fullName | slice:0:2 | uppercase }}
+                            flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden">
+                    @if (user.profilePicUrl) {
+                        <img [src]="user.profilePicUrl" alt="User" class="w-full h-full object-cover">
+                    } @else {
+                        {{ getInitials(user.fullName) }}
+                    }
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-semibold text-brand-text truncate">{{ user.fullName }}</p>

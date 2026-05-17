@@ -12,6 +12,8 @@ import { IUserCount } from '../../../../api/interfaces/user/IUserCount';
 import { Select } from '../../../../shared/components/select/select';
 import { Searchbar } from "../../../../shared/components/searchbar/searchbar";
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { StorageBucket } from '../../../../core/enums/storage_bucket';
+import { StorageService } from '../../../../api/services/storage.service';
 
 @Component({
   selector: 'app-user-admin',
@@ -23,6 +25,7 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 export class UserAdmin implements OnInit {
   private router = inject(Router);
   private userAdminService = inject(UserAdminService);
+  private storageService = inject(StorageService);
   private cdr = inject(ChangeDetectorRef);
 
   users: IUser[] = [];
@@ -105,6 +108,19 @@ export class UserAdmin implements OnInit {
         this.isLoading = false;
         this.disabledBotton = false;
 
+        for (let user of this.users) {
+          if (user.profilePicPath){
+            this.storageService.getUrlForProfilePic(StorageBucket.ProfilePics, user.profilePicPath).subscribe({
+              next: (res) => {
+                user.profilePicUrl = res.url
+                console.log(`[UserAdmin] Profile picture URL loaded for user ${user.userId}:`, res.url);
+              },
+              error: (err) => console.error(`[UserAdmin] Error loading profile picture for user ${user.userId}:`, err)
+            })
+          }
+        }
+
+
         this.cdr.detectChanges();
 
         console.log('[UserAdmin] Users loaded successfully:', this.users);
@@ -116,6 +132,20 @@ export class UserAdmin implements OnInit {
         this.disabledBotton = false;
       }
     });
+  }
+
+  getInitials(fullName: string | null | undefined): string {
+    if (!fullName) {
+      return 'U';
+    }
+
+    return fullName
+      .split(' ')
+      .filter(Boolean)
+      .map((namePart) => namePart[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   }
 
   openConfirmDialog(): void {

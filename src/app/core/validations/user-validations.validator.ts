@@ -57,4 +57,14 @@ export class UserValidations {
             return null;
         };
     }
+
+    validateProfilePic(): ValidatorFn {
+        return (control) => {
+            const value = control.value;
+            if (!value) {
+                return null;
+            }
+            return null;
+        };
+    }
 }

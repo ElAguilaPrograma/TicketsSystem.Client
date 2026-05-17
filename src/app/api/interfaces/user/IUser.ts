@@ -4,5 +4,7 @@ export interface IUser {
     email: string,
     role: string,
     isActive: boolean,
+    profilePicUrl?: string,
+    profilePicPath?: string,
     createdAt: Date
 }
