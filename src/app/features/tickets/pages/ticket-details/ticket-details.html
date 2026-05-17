@@ -213,12 +213,7 @@
                                 (keydown.control.enter)="createTicketCommentNotInternal()"
                                 class="w-full px-3 pt-2.5 pb-1 bg-transparent text-xs text-brand-text placeholder-brand-text-muted/60 focus:outline-none resize-none">
                             </textarea>
-                            <div class="flex items-center justify-between px-2 pb-2">
-                                <button
-                                    class="p-1.5 rounded-md text-brand-text-muted hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
-                                    title="Attach file">
-                                    <ng-icon name="heroPaperClip" class="text-sm"></ng-icon>
-                                </button>
+                            <div class="flex items-center justify-end px-2 pb-2">
                                 <button
                                     class="text-[11px] font-medium px-3 py-1.5 rounded-md bg-brand-primary text-white hover:bg-brand-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                                     [disabled]="!commentContentNotInternal.trim()"
@@ -528,12 +523,7 @@
                 (keydown.control.enter)="createTicketCommentNotInternal()"
                 class="w-full bg-transparent text-sm text-brand-text placeholder-brand-text-muted/50 focus:outline-none resize-none">
             </textarea>
-            <div class="flex items-center justify-between pt-2 mt-2 border-t border-brand-border/50">
-                <button
-                    class="p-2 rounded-lg text-brand-text-muted hover:text-brand-primary hover:bg-brand-primary/10 transition-colors"
-                    title="Attach file">
-                    <ng-icon name="heroPaperClip" class="text-base"></ng-icon>
-                </button>
+            <div class="flex items-center justify-end pt-2 mt-2 border-t border-brand-border/50">
                 <button
                     class="text-sm font-medium px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-primary/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                     [disabled]="!commentContentNotInternal.trim()"
