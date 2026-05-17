@@ -1,13 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { environment } from "../../env/enviroment";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Router } from "@angular/router";
 import { ICurrentUserTicketsCount } from "../interfaces/tickets/ICurrentUserTicketsCount";
 import { Observable } from "rxjs";
 import { IPagedResult } from "../interfaces/IPagedResult";
 import { IReadTickets } from "../interfaces/tickets/IReadTickets";
 import { IUpdateTicket } from "../interfaces/tickets/IUpdateTicket";
-import { ICreateTicket } from "../interfaces/tickets/ICreateTicket";
 import { ITicketHistoryGroup } from "../interfaces/tickets/history/ITicketHistoryGroup";
 
 @Injectable({
@@ -16,7 +14,6 @@ import { ITicketHistoryGroup } from "../interfaces/tickets/history/ITicketHistor
 export class TicketService {
     private readonly apiUrl = `${environment.apiUrl}/Tickets`;
     private http = inject(HttpClient);
-    private router = inject(Router);
 
     constructor() { }
 
@@ -96,7 +93,7 @@ export class TicketService {
         return this.http.post<void>(`${this.apiUrl}/reopentickets/${ticketId}`, { withCredentials: true });
     }
 
-    public createATicket(ticketData: ICreateTicket): Observable<void> {
+    public createATicket(ticketData: FormData): Observable<void> {
         return this.http.post<void>(`${this.apiUrl}/createticket`, ticketData, { withCredentials: true });
     }
 

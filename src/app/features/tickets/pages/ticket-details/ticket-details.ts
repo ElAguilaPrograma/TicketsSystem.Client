@@ -22,6 +22,10 @@ import { ITicketHistoryRead } from '../../../../api/interfaces/tickets/history/I
 import { StatusEnum } from '../../../../core/enums/status_enum';
 import { PriorityEnum } from '../../../../core/enums/priority_enum';
 import { StatusChipComponent } from '../../../../shared/components/status-chip/status-chip';
+import { TicketAttachmentService } from '../../../../api/services/ticket-attachment.service';
+import { ITicketAttachment } from '../../../../api/interfaces/ticket-attachment/ITicketAttachment';
+import { StorageService } from '../../../../api/services/storage.service';
+import { StorageBucket } from '../../../../core/enums/storage_bucket';
 
 @Component({
   selector: 'app-ticket-details',
@@ -55,6 +59,8 @@ export class TicketDetails implements OnInit, OnDestroy {
   private ticketCommentService = inject(TicketCommentService);
   private signalRService = inject(SignalRService);
   private breadcrumbService = inject(BreadcrumbService);
+  private attachmentService = inject(TicketAttachmentService);
+  private storageService = inject(StorageService);
   private commentSubscription?: Subscription;
 
   ticketId: string = "";
@@ -66,6 +72,8 @@ export class TicketDetails implements OnInit, OnDestroy {
   ticketCommentsInternal: ITicketsReadComment[] = [];
   latestHistoryGroup: ITicketHistoryGroup | null = null;
   historyGroups: ITicketHistoryGroup[] = [];
+  attachments: ITicketAttachment[] = [];
+  selectedAttachment: ITicketAttachment | null = null;
 
   commentContentNotInternal: string = "";
   commentContentInternal: string = "";
@@ -75,6 +83,7 @@ export class TicketDetails implements OnInit, OnDestroy {
 
   closeTicketConfirmDialogOpen = signal(false);
   closeReopenTicketConfirmDialogOpen = signal(false);
+  attachmentConfirmDialogOpen = signal(false);
   private hasLoadedCommentsOnce = false;
 
   activeCommentTab: 'public' | 'internal' = 'public';
@@ -93,11 +102,12 @@ export class TicketDetails implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.ticketId = params.get('ticketId')!;
+      this.loadTicketDetails();
+      this.loadTicketComments();
+      this.loadTicketHistory();
+      this.loadTicketAttachments();
+      this.scrollToBottom();
     })
-    this.loadTicketDetails();
-    this.loadTicketComments();
-    this.loadTicketHistory();
-    this.scrollToBottom();
     
     this.commentSubscription = this.signalRService.ticketComment$.subscribe(newComment => {
       if (newComment.ticketId === this.ticketId) {
@@ -187,6 +197,18 @@ export class TicketDetails implements OnInit, OnDestroy {
       next: (history) => {
         this.historyGroups = history;
         this.latestHistoryGroup = this.getLatestHistoryGroup(history);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+  loadTicketAttachments(): void {
+    this.attachmentService.getAttachmentsForTicket(this.ticketId).subscribe({
+      next: (attachments) => {
+        this.attachments = attachments;
         this.cdr.detectChanges();
       },
       error: (error) => {
@@ -460,6 +482,38 @@ export class TicketDetails implements OnInit, OnDestroy {
   handleReopenTicketConfirm() {
     this.closeReopenTicketConfirmDialogOpen.set(false);
     this.reopenTicket();
+  }
+
+  openAttachmentConfirm(attachment: ITicketAttachment): void {
+    this.selectedAttachment = attachment;
+    this.attachmentConfirmDialogOpen.set(true);
+  }
+
+  closeAttachmentConfirm(): void {
+    this.attachmentConfirmDialogOpen.set(false);
+    this.selectedAttachment = null;
+  }
+
+  handleAttachmentConfirm(): void {
+    if (!this.selectedAttachment) {
+      this.closeAttachmentConfirm();
+      return;
+    }
+
+    this.storageService.getFileUrl(StorageBucket.TicketAttachments, this.selectedAttachment.filePath).subscribe({
+      next: (response) => {
+        this.triggerDownload(response.url, this.selectedAttachment?.fileName ?? 'attachment');
+        this.closeAttachmentConfirm();
+      },
+      error: (error) => {
+        console.log(`Bucket: ${StorageBucket.TicketAttachments}, Path: ${this.selectedAttachment?.filePath}`);
+        console.error(error);
+      }
+    });
+  }
+
+  private triggerDownload(url: string, fileName: string): void {
+    window.open(url, '_blank', 'noopener');
   }
 
   isUserAdminOrAgent(): boolean {

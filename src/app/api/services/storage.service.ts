@@ -11,6 +11,10 @@ export class StorageService {
     private http = inject(HttpClient);
 
     getUrlForProfilePic(bucketName: StorageBucket, path: string) {
+        return this.getFileUrl(bucketName, path);
+    }
+
+    getFileUrl(bucketName: StorageBucket, path: string) {
         const params = new HttpParams()
             .set('bucketName', bucketName.toString())
             .set('path', path);
