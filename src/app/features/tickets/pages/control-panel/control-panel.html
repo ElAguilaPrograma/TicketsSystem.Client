@@ -21,29 +21,121 @@
         <div class="col-span-1 flex flex-col gap-6">
             <div
                 class="bg-linear-to-br from-brand-secondary/20 to-brand-primary/20 rounded-xl border border-brand-secondary/30 p-6 flex flex-col gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 rounded-lg bg-brand-secondary/30">
-                        <ng-icon name="heroSparkles" class="text-2xl text-brand-secondary"></ng-icon>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 rounded-lg bg-brand-secondary/30">
+                            <ng-icon name="heroSparkles" class="text-2xl text-brand-secondary"></ng-icon>
+                        </div>
+                        <h2 class="text-xl font-bold">AI Insights</h2>
                     </div>
-                    <h2 class="text-xl font-bold">AI Insights</h2>
+                    <button (click)="loadAiInsights()" [disabled]="aiInsightsLoading"
+                        class="flex justify-center items-center p-2 rounded-lg bg-brand-surface/60 text-brand-text-muted hover:text-brand-secondary hover:bg-brand-surface/90 transition-colors disabled:opacity-40">
+                        <ng-icon name="heroArrowPath" class="text-lg"></ng-icon>
+                    </button>
                 </div>
-                <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
-                    <p class="font-medium text-brand-text">Ticket #TCK-892</p>
-                    <p class="text-sm text-brand-text-muted mt-1 flex items-center gap-2">
-                        <ng-icon name="heroExclamationTriangle" class="text-amber-500"></ng-icon>
-                        This ticket has been open for 6 days. It requires immediate attention due to SLA constraints.
-                    </p>
-                    <div class="mt-3 flex justify-end">
-                        <app-button label="View Ticket" variant="outline"></app-button>
+
+                @if (aiInsightsLoading) {
+                    <div class="flex flex-col gap-3 bg-brand-surface/80 rounded-lg p-4 border border-brand-border">
+                        <div class="skeleton-line w-3/4 h-5"></div>
+                        <div class="skeleton-line w-full h-3"></div>
+                        <div class="skeleton-line w-11/12 h-3"></div>
+                        <div class="skeleton-line w-2/3 h-3"></div>
                     </div>
-                </div>
-                <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
-                    <p class="font-medium text-brand-text">Load Prediction</p>
-                    <p class="text-sm text-brand-text-muted mt-1 flex items-center gap-2">
-                        <ng-icon name="heroChartBar" class="text-blue-500"></ng-icon>
-                        Expect a 15% increase in tickets between 2 PM and 4 PM today.
-                    </p>
-                </div>
+                    <div class="flex flex-col gap-3 bg-brand-surface/80 rounded-lg p-4 border border-brand-border">
+                        <div class="skeleton-line w-1/2 h-5"></div>
+                        <div class="skeleton-line w-full h-3"></div>
+                        <div class="skeleton-line w-3/4 h-3"></div>
+                    </div>
+                } @else if (aiInsightsError) {
+                    <div class="flex flex-col items-center gap-3 py-6 bg-brand-surface/80 rounded-lg border border-brand-border">
+                        <ng-icon name="heroExclamationTriangle" class="text-3xl text-amber-500"></ng-icon>
+                        <p class="text-sm text-brand-text-muted">Failed to load AI insights.</p>
+                        <button (click)="loadAiInsights()"
+                            class="text-xs font-medium px-4 py-2 rounded-lg bg-brand-secondary/20 text-brand-secondary hover:bg-brand-secondary/30 transition-colors">
+                            Retry
+                        </button>
+                    </div>
+                } @else if (aiInsights) {
+                    @if (aiInsights.agingTickets.length > 0) {
+                        <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
+                            <div class="flex items-center gap-2 mb-3">
+                                <ng-icon name="heroExclamationTriangle" class="text-amber-500 text-lg"></ng-icon>
+                                <h3 class="font-bold text-sm text-brand-text">Aging Tickets ({{ aiInsights.agingTickets.length }})</h3>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                @for (ticket of aiInsights.agingTickets.slice(0, 5); track ticket.ticketId) {
+                                    <a [routerLink]="['/ticket-details', ticket.ticketId]"
+                                        class="flex items-center gap-2 p-2 rounded-lg hover:bg-brand-bg/50 transition-colors group">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs font-semibold text-brand-text truncate group-hover:text-brand-primary transition-colors">
+                                                    {{ ticket.title }}
+                                                </span>
+                                            </div>
+                                            <div class="flex items-center gap-2 mt-0.5">
+                                                <span class="text-[10px] font-medium px-1.5 py-0.5 rounded"
+                                                    [ngClass]="ticket.daysOpen > 14 ? 'bg-red-500/15 text-red-600' : ticket.daysOpen > 7 ? 'bg-amber-500/15 text-amber-600' : 'bg-blue-500/15 text-blue-600'">
+                                                    <ng-icon name="heroClock" class="text-[10px] inline"></ng-icon>
+                                                    {{ ticket.daysOpen }} days
+                                                </span>
+                                                <span class="text-[10px] text-brand-text-muted">{{ ticket.status }}</span>
+                                                @if (ticket.assignedTo) {
+                                                    <span class="text-[10px] text-brand-text-muted">· {{ ticket.assignedTo }}</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <ng-icon name="heroArrowRight" class="text-brand-text-muted opacity-0 group-hover:opacity-100 transition-opacity text-sm"></ng-icon>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (aiInsights.recurringPatterns.length > 0) {
+                        <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
+                            <div class="flex items-center gap-2 mb-3">
+                                <ng-icon name="heroChartBar" class="text-blue-500 text-lg"></ng-icon>
+                                <h3 class="font-bold text-sm text-brand-text">Recurring Patterns ({{ aiInsights.recurringPatterns.length }})</h3>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                @for (pattern of aiInsights.recurringPatterns.slice(0, 5); track pattern.pattern) {
+                                    <details class="group">
+                                        <summary class="flex items-center gap-2 cursor-pointer text-xs text-brand-text hover:text-brand-primary transition-colors list-none">
+                                            <div class="w-5 h-5 rounded bg-brand-secondary/20 flex items-center justify-center text-[10px] font-bold text-brand-secondary shrink-0">
+                                                {{ pattern.ticketCount }}
+                                            </div>
+                                            <span class="truncate font-medium">{{ pattern.pattern }}</span>
+                                        </summary>
+                                        <div class="mt-1 ml-7 flex flex-col gap-0.5">
+                                            @for (title of pattern.ticketTitles; track title) {
+                                                <span class="text-[11px] text-brand-text-muted">· {{ title }}</span>
+                                            }
+                                        </div>
+                                    </details>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    @if (aiInsights.aiAnalysis) {
+                        <div class="bg-brand-surface/80 rounded-lg p-4 border border-brand-border shadow-sm">
+                            <div class="flex items-center gap-2 mb-2">
+                                <ng-icon name="heroSparkles" class="text-brand-secondary text-lg"></ng-icon>
+                                <h3 class="font-bold text-sm text-brand-text">AI Analysis</h3>
+                            </div>
+                            <div class="text-xs text-brand-text-muted leading-relaxed whitespace-pre-line line-clamp-6">
+                                {{ aiInsights.aiAnalysis }}
+                            </div>
+                        </div>
+                    }
+
+                    @if (aiInsights.agingTickets.length > 5 || aiInsights.recurringPatterns.length > 5 || aiInsights.aiAnalysis.length > 300) {
+                        <button (click)="openInsightsModal()"
+                            class="w-full py-2 text-xs font-medium text-brand-secondary hover:text-brand-primary bg-brand-surface/60 hover:bg-brand-surface/90 rounded-lg border border-brand-border/50 transition-colors">
+                            View Full Insights
+                        </button>
+                    }
+                }
             </div>
 
             <app-card>
@@ -67,7 +159,7 @@
                 </div>
             </div>
             <div class="flex-1 p-6 space-y-4 overflow-y-auto">
-                @for (ticket of unassignedTickets | slice:0:4; track ticket.ticketId) {
+                @for (ticket of unassignedTickets | slice:0:6; track ticket.ticketId) {
                 <div
                     class="p-4 rounded-lg border border-brand-border hover:bg-brand-bg/50 transition-colors flex justify-between items-center gap-4 animate-in slide-in-from-top-4 duration-300">
                     <div class="flex-1 min-w-0">
@@ -94,6 +186,92 @@
         </div>
     </div>
 </section>
+
+<!-- AI Insights Modal -->
+<app-modal [isOpen]="isInsightsModalOpen()" (close)="closeInsightsModal()" size="xl" title="AI Insights" [scrollableBody]="true">
+    @if (aiInsights) {
+        @if (aiInsights.agingTickets.length > 0) {
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <ng-icon name="heroExclamationTriangle" class="text-amber-500 text-lg"></ng-icon>
+                    <h3 class="font-bold text-base text-brand-text">Aging Tickets ({{ aiInsights.agingTickets.length }})</h3>
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    @for (ticket of aiInsights.agingTickets; track ticket.ticketId) {
+                        <a [routerLink]="['/ticket-details', ticket.ticketId]" (click)="closeInsightsModal()"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-brand-bg/50 transition-colors group border border-brand-border/50">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm font-semibold text-brand-text truncate group-hover:text-brand-primary transition-colors">
+                                        {{ ticket.title }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-3 mt-1">
+                                    <span class="text-xs font-medium px-1.5 py-0.5 rounded"
+                                        [ngClass]="ticket.daysOpen > 14 ? 'bg-red-500/15 text-red-600' : ticket.daysOpen > 7 ? 'bg-amber-500/15 text-amber-600' : 'bg-blue-500/15 text-blue-600'">
+                                        <ng-icon name="heroClock" class="text-xs inline"></ng-icon>
+                                        {{ ticket.daysOpen }} days
+                                    </span>
+                                    <span class="text-xs text-brand-text-muted">{{ ticket.status }}</span>
+                                    <span class="text-xs font-medium px-1.5 py-0.5 rounded"
+                                        [ngClass]="getPriorityColor(ticket.priority)">
+                                        {{ ticket.priority }}
+                                    </span>
+                                    @if (ticket.assignedTo) {
+                                        <span class="text-xs text-brand-text-muted">· {{ ticket.assignedTo }}</span>
+                                    }
+                                </div>
+                            </div>
+                            <ng-icon name="heroArrowRight" class="text-brand-text-muted opacity-0 group-hover:opacity-100 transition-opacity text-sm shrink-0"></ng-icon>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (aiInsights.recurringPatterns.length > 0) {
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <ng-icon name="heroChartBar" class="text-blue-500 text-lg"></ng-icon>
+                    <h3 class="font-bold text-base text-brand-text">Recurring Patterns ({{ aiInsights.recurringPatterns.length }})</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    @for (pattern of aiInsights.recurringPatterns; track pattern.pattern) {
+                        <div class="bg-brand-bg/50 rounded-lg p-3 border border-brand-border/50">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <div class="w-5 h-5 rounded bg-brand-secondary/20 flex items-center justify-center text-[10px] font-bold text-brand-secondary shrink-0">
+                                    {{ pattern.ticketCount }}
+                                </div>
+                                <span class="text-xs font-semibold text-brand-text">{{ pattern.pattern }}</span>
+                            </div>
+                            <div class="flex flex-col gap-0.5 ml-7">
+                                @for (title of pattern.ticketTitles.slice(0, 3); track title) {
+                                    <span class="text-[11px] text-brand-text-muted">· {{ title }}</span>
+                                }
+                                @if (pattern.ticketTitles.length > 3) {
+                                    <span class="text-[10px] text-brand-text-muted">+{{ pattern.ticketTitles.length - 3 }} more</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (aiInsights.aiAnalysis) {
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <ng-icon name="heroSparkles" class="text-brand-secondary text-lg"></ng-icon>
+                    <h3 class="font-bold text-base text-brand-text">AI Analysis</h3>
+                </div>
+                <div class="text-sm text-brand-text-muted leading-relaxed whitespace-pre-line bg-brand-bg/50 rounded-lg p-4 border border-brand-border/50">
+                    {{ aiInsights.aiAnalysis }}
+                </div>
+            </div>
+        }
+    }
+</app-modal>
+
 <!-- Open Tickets Modal -->
 <div *ngIf="isModalOpen()" 
     class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm transition-opacity duration-300" 

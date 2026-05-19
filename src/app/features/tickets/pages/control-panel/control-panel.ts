@@ -4,18 +4,21 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
 import { CardComponent } from "../../../../shared/components/card/card.component";
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal } from '@ng-icons/heroicons/outline';
+import { heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal, heroArrowPath } from '@ng-icons/heroicons/outline';
 import { TicketService } from '../../../../api/services/ticket.service';
 import { SignalRService } from '../../../../api/services/signalR.service';
 import { IReadTickets } from '../../../../api/interfaces/tickets/IReadTickets';
 import { Router, RouterLink } from "@angular/router";
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { AuthenticationService } from '../../../../api/services/authentication.service';
 import { getTimeAgo } from '../../../../core/helpers/get_time_ago';
+import { McpService } from '../../../../api/services/mcp.service';
+import { IAiInsightsResponse } from '../../../../api/interfaces/mcp/IAiInsightsResponse';
 
 @Component({
   selector: 'app-control-panel',
-  imports: [CommonModule, ButtonComponent, CardComponent, NgIcon],
-  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal })],
+  imports: [CommonModule, ButtonComponent, CardComponent, NgIcon, RouterLink, ModalComponent],
+  viewProviders: [provideIcons({ heroSparkles, heroExclamationTriangle, heroChartBar, heroArrowTopRightOnSquare, heroXMark, heroTicket, heroClock, heroExclamationCircle, heroArrowRight, heroAdjustmentsHorizontal, heroArrowPath })],
   templateUrl: './control-panel.html',
   styleUrl: './control-panel.css',
 })
@@ -26,6 +29,7 @@ export class ControlPanel implements OnInit {
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthenticationService);
+  private mcpService = inject(McpService);
 
   todaysTicketsCount: number = 0;
   allTickets: IReadTickets[] = [];
@@ -33,13 +37,19 @@ export class ControlPanel implements OnInit {
   assignedTickets: IReadTickets[] = [];
 
   isModalOpen = signal(false);
+  isInsightsModalOpen = signal(false);
   modalAnimationState = signal(false);
   activeTab: 'unassigned' | 'assigned' = 'unassigned';
   isAdmin: boolean = false;
 
+  aiInsights: IAiInsightsResponse | null = null;
+  aiInsightsLoading = false;
+  aiInsightsError = false;
+
   ngOnInit() {
     this.loadTodaysCount();
     this.loadInitialLiveTickets();
+    this.loadAiInsights();
     this.isAdmin = this.authService.getCurrentUserRole() === 'Admin';
     
     this.signalrService.newTicketToControlPanel$
@@ -62,6 +72,23 @@ export class ControlPanel implements OnInit {
     this.ticketService.getTodaysTicketsCount().subscribe({
       next: (count) => this.todaysTicketsCount = count,
       error: () => this.todaysTicketsCount = 0
+    });
+  }
+
+  loadAiInsights() {
+    this.aiInsightsLoading = true;
+    this.aiInsightsError = false;
+    this.mcpService.getAiInsights().subscribe({
+      next: (response) => {
+        this.aiInsights = response;
+        this.aiInsightsLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.aiInsightsLoading = false;
+        this.aiInsightsError = true;
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -111,10 +138,19 @@ export class ControlPanel implements OnInit {
   refreshData() {
     this.loadInitialLiveTickets();
     this.loadTodaysCount();
+    this.loadAiInsights();
     this.cdr.detectChanges();
   }
 
   navigateToDetails(ticketId: string) {
     this.router.navigate(['/ticket-details', ticketId]);
+  }
+
+  openInsightsModal() {
+    this.isInsightsModalOpen.set(true);
+  }
+
+  closeInsightsModal() {
+    this.isInsightsModalOpen.set(false);
   }
 }

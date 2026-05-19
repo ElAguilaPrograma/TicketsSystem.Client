@@ -27,6 +27,8 @@ import { ITicketAttachment } from '../../../../api/interfaces/ticket-attachment/
 import { StorageService } from '../../../../api/services/storage.service';
 import { StorageBucket } from '../../../../core/enums/storage_bucket';
 import { UserAdminService } from '../../../../api/services/user-admin.service';
+import { McpService } from '../../../../api/services/mcp.service';
+import { ITicketSummaryResponse } from '../../../../api/interfaces/mcp/ITicketSummaryResponse';
 
 @Component({
   selector: 'app-ticket-details',
@@ -63,6 +65,7 @@ export class TicketDetails implements OnInit, OnDestroy {
   private attachmentService = inject(TicketAttachmentService);
   private storageService = inject(StorageService);
   private userAdminService = inject(UserAdminService);
+  private mcpService = inject(McpService);
   private commentSubscription?: Subscription;
 
   ticketId: string = "";
@@ -90,6 +93,10 @@ export class TicketDetails implements OnInit, OnDestroy {
   private hasLoadedCommentsOnce = false;
 
   activeCommentTab: 'public' | 'internal' = 'public';
+
+  aiSummary: ITicketSummaryResponse | null = null;
+  aiSummaryLoading = false;
+  aiSummaryError = false;
   
   get recentCommentsNotInternal(): ITicketsReadComment[] {
     return this.ticketCommentsNotInternal.slice(-4);
@@ -110,6 +117,7 @@ export class TicketDetails implements OnInit, OnDestroy {
       this.loadTicketHistory();
       this.loadTicketAttachments();
       this.scrollToBottom();
+      this.loadAiSummary();
     })
     
     this.commentSubscription = this.signalRService.ticketComment$.subscribe(newComment => {
@@ -237,6 +245,24 @@ export class TicketDetails implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error(error);
+      }
+    });
+  }
+
+  loadAiSummary(): void {
+    if (!this.isUserAdminOrAgent()) return;
+    this.aiSummaryLoading = true;
+    this.aiSummaryError = false;
+    this.mcpService.getSummaryFromTicket(this.ticketId).subscribe({
+      next: (response) => {
+        this.aiSummary = response;
+        this.aiSummaryLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.aiSummaryLoading = false;
+        this.aiSummaryError = true;
+        this.cdr.detectChanges();
       }
     });
   }
