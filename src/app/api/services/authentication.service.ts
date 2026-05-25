@@ -55,6 +55,18 @@ export class AuthenticationService {
         return this.currentUser();
     }
 
+    uploadProfilePic(profilePic: File, userId: string) {
+        const formData = new FormData();
+        if (profilePic instanceof Blob) {
+            formData.append('file', profilePic, profilePic.name);
+        }
+        return this.http.put(`${this.apiUrlAuth}/uploadprofilepic/${userId}`, formData, { withCredentials: true });
+    }
+
+    removeProfilePic(userId: string) {
+        return this.http.delete(`${this.apiUrlAuth}/removeprofilepic/${userId}`, { withCredentials: true });
+    }
+
     logout() {
         this.http.post(`${this.apiUrlAuth}/logout`, {}, { withCredentials: true })
             .subscribe({ 
