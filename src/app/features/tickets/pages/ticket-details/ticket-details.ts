@@ -211,14 +211,26 @@ export class TicketDetails implements OnInit, OnDestroy {
       return;
     }
 
-    this.userAdminService.getUserProfilePicUrl(assignedUserId).subscribe({
-      next: (response) => {
-        this.assignedUserProfileUrl = response.url;
-        console.log(`[TicketDetails] Assigned user profile picture URL loaded:`, response.url);
-        this.cdr.detectChanges();
+    this.userAdminService.getUserById(assignedUserId).subscribe({
+      next: (user) => {
+        if (!user.profilePicPath) {
+          this.assignedUserProfileUrl = null;
+          return;
+        }
+
+        this.userAdminService.getUserProfilePicUrl(assignedUserId).subscribe({
+          next: (response) => {
+            this.assignedUserProfileUrl = response.url;
+            console.log(`[TicketDetails] Assigned user profile picture URL loaded:`, response.url);
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            console.error(`[TicketDetails] Failed to load assigned user profile picture for userId ${assignedUserId}`);
+            this.assignedUserProfileUrl = null;
+          }
+        });
       },
       error: () => {
-        console.error(`[TicketDetails] Failed to load assigned user profile picture for userId ${assignedUserId}`);
         this.assignedUserProfileUrl = null;
       }
     });
