@@ -153,7 +153,8 @@
                     </svg>
                 </button>
 
-                <div class="hidden md:flex items-center gap-1 px-1 py-1 rounded-xl border border-brand-border bg-brand-bg/30">
+                <div class="hidden md:flex items-center gap-1 px-1 py-1 rounded-xl border border-brand-border bg-brand-bg/30"
+                    [class.page-scroll]="totalPages > 10">
                     @for (page of pageNumbers; track page) {
                     <button
                         class="min-w-8 h-8 px-2 text-xs border border-transparent rounded-lg transition-colors disabled:cursor-not-allowed"

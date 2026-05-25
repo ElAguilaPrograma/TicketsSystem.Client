@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
@@ -44,6 +44,7 @@ export class Main implements OnInit {
   private router = inject(Router);
   private dashboardService = inject(DashboardService);
   private ticketService = inject(TicketService);
+  private cdr = inject(ChangeDetectorRef);
 
   totalTickets: number = 0;
   openTickets: number = 0;
@@ -131,6 +132,7 @@ export class Main implements OnInit {
 
         this.isLoading = false;
         this.disabledButton = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Error loading dashboard: ' + err;

@@ -67,7 +67,7 @@
                             <p class="text-brand-text-muted text-sm mt-1">You don't have any unread notifications</p>
                         </div>
                     } @else {
-                    <div class="flex flex-col">
+                    <div class="flex flex-col-reverse">
                         @for (n of noReadNotifications; track n.notificationId) {
                             <div class="nv-item group relative flex items-start gap-3.5 px-9 py-4 border-b border-brand-border last:border-b-0 cursor-pointer transition-all duration-150"
                                 (click)="toogleNotificationReadStatus(n.notificationId); sendToContent(n)">
@@ -104,7 +104,7 @@
                             <p class="text-brand-text-muted text-sm mt-1">Notifications you read will appear here</p>
                         </div>
                     } @else {
-                        <div class="flex flex-col">
+                        <div class="flex flex-col-reverse">
                             @for (n of readNotifications; track n.notificationId) {
                                 <div class="nv-item group relative flex items-start gap-3.5 px-5 py-4 border-b border-brand-border last:border-b-0 cursor-pointer opacity-70 transition-all duration-150"
                                     (click)="sendToContent(n)">

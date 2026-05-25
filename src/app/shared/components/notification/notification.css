@@ -216,10 +216,12 @@
   .notif-wrapper {
     left: max(0.75rem, env(safe-area-inset-left));
     right: max(0.75rem, env(safe-area-inset-right));
-    top: calc(5.45rem + env(safe-area-inset-top));
+    top: calc(5.45rem + env(safe-area-inset-top) + 6.5rem);
     width: auto;
     max-width: none;
     gap: 0.5rem;
+    max-height: calc(100vh - (5.45rem + env(safe-area-inset-top) + 6.5rem) - 1rem);
+    overflow-y: auto;
   }
 
   .notif-card {

@@ -1,0 +1,10 @@
+.page-scroll {
+  max-width: 22rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.page-scroll::-webkit-scrollbar {
+  display: none;
+}
